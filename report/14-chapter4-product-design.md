@@ -84,12 +84,12 @@ Esta disposición expone primero la información que impulsa la conversión y de
 
 **Web Application**
 
-Dentro de la aplicación se combinan tres esquemas según la naturaleza de cada módulo. Se aplica organización secuencial (step-by-step) en los flujos de onboarding:
+Dentro de la aplicación se combinan tres esquemas según la naturaleza de cada módulo. Se aplica organización secuencial (step-by-step) en el flujo de onboarding, dividido en cuatro pasos:
 
-1. Configuración de meta
-2. Datos físicos
-3. Restricciones alimentarias
-4. Confirmación
+1. Datos personales (sexo, fecha de nacimiento, altura)
+2. Objetivo y nivel de actividad
+3. Medidas y ubicación (peso, cintura, ciudad)
+4. Perfil de salud (restricciones alimentarias y condiciones)
 
 Y en el registro de comidas:
 
@@ -121,9 +121,9 @@ Las etiquetas empleadas en NutriSense priorizan la brevedad y la claridad, evita
 | Nutrition Log | Registro de comidas por momento del día y Smart Scan (análisis visual de platos y menús) |
 | Recommendations | Sugerencias contextuales (clima, viaje) y Pantry (Ingredientes disponibles y recetas) |
 | Body Progress | Registro de peso, talla, BMI y TDEE |
-| Activity | Conexión con Google Fit |
+| Activity | Conexión con Google Health (Health Connect) y otros wearables (pasos, calorías quemadas) |
 | Analytics | Historial y reportes de progreso |
-| Profile & Settings| Datos personales, restricciones, suscripción, planes y facturación |
+| Profile & Settings| Datos personales, restricciones alimentarias, facturación y seguridad/privacidad |
 
 Las etiquetas de encabezado dentro de cada módulo siguen la misma lógica de concisión: "Today's Summary", "Log a Meal", "Scan a Dish", "My Pantry", "Weekly Report". En todas las vistas se usan atributos `alt` descriptivos en imágenes e íconos para garantizar accesibilidad con lectores de pantalla.
 
@@ -200,7 +200,7 @@ Los resultados se presentan como tarjetas con: nombre de la receta, imagen refer
 
 **Analytics**
 
-En la pantalla de análisis, el usuario puede filtrar su historial por: rango de fechas (última semana, último mes, rango personalizado), métrica a visualizar (calorías, proteínas, carbohidratos, grasas, peso corporal) y tipo de vista (gráfico de líneas, gráfico de barras, tabla de datos). Los filtros aplicados se muestran como chips activos sobre el gráfico, con opción de eliminarlos individualmente.
+En la pantalla de análisis, el usuario filtra su historial mediante un selector de rango de fechas con cuatro opciones: última semana (7d), último mes (30d), últimos tres meses (90d) y rango personalizado. La disponibilidad de cada rango depende del plan del usuario: Basic accede solo a 7d, Pro suma 30d, y Premium habilita 90d y el rango personalizado. A partir del rango seleccionado, la pantalla recompone secciones fijas de análisis (KPIs, gráfico de barras de calorías diarias, dona de macronutrientes, gráfico de evolución de peso y racha de adherencia). El usuario puede además exportar el reporte del rango activo a PDF, seleccionando las secciones a incluir.
 
 ### 4.2.5. Navigation Systems
 
@@ -210,7 +210,7 @@ La navegación del Landing Page se articula mediante una barra fija en la parte 
   <img src="../assets/img/information-architecture/landing.png" alt="nav-system of landing"/>
 </div>
 
-La Web Application utiliza una barra lateral de navegación persistente (sidebar) que organiza los módulos en dos bloques: acciones principales en la parte superior (Dashboard, Nutrition Log, Smart Scan, Recommendations, Pantry, Body Tracking) y configuración en la parte inferior (Analytics, Wearable, Profile, Subscriptions), permitiendo al usuario acceder a cualquier módulo en un solo clic desde cualquier pantalla. 
+La Web Application utiliza una barra lateral de navegación persistente (sidebar) que organiza los módulos en dos bloques etiquetados: **MAIN** en la parte superior (Dashboard, Nutrition Log, Recommendations) y **TOOLS** debajo (Body Progress, Activity, Analytics). En el pie del sidebar se ubican el selector de idioma, el acceso a Profile & Settings y el botón de Sign Out. Esta estructura permite al usuario acceder a cualquier módulo en un solo clic desde cualquier pantalla. Funciones como Smart Scan y Pantry no son ítems propios del sidebar, sino pestañas dentro de Nutrition Log y Recommendations respectivamente, mientras que la gestión de suscripción y facturación vive bajo Profile & Settings. En viewports móviles el sidebar colapsa tras un botón de menú (hamburguesa) que despliega el panel de navegación como overlay. 
 
 <div align="center">
   <img src="../assets/img/information-architecture/webapp.png" alt="nav-system of webapp"/>
