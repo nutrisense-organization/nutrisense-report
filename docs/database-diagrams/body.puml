@@ -11,7 +11,7 @@ hide methods
 TABLE(body_metrics, "body_metrics") {
   PK(id) : INT AUTO_INCREMENT
   --
-  user_id : INT NOT NULL
+  FK(user_id) : INT NOT NULL  <<AK>>
   height_cm : DECIMAL(5,2) NOT NULL
   date_of_birth : LONGTEXT
   biological_sex : VARCHAR(25)

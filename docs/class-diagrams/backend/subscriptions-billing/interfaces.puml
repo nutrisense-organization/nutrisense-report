@@ -18,6 +18,7 @@ package "Nutrisense.Platform.Subscriptions" {
     class SubscriptionPlan
     class PaymentMethod
     class PaymentRecord
+    enum SubscriptionsError
   }
 
   package "Interfaces" {
@@ -124,6 +125,10 @@ package "Nutrisense.Platform.Subscriptions" {
       class PaymentRecordResourceAssembler {
         +{static} ToResource(r: PaymentRecord): PaymentRecordResource
       }
+      class SubscriptionsActionResultAssembler {
+        +{static} ToActionResult(failure: Result<TValue, SubscriptionsError>.Failure, localizer, instance: string?): IActionResult
+        -{static} StatusFor(error: SubscriptionsError): int
+      }
     }
 
     package "Acl" {
@@ -133,6 +138,10 @@ package "Nutrisense.Platform.Subscriptions" {
         +IsPremium(userId: int): Task<bool>
       }
     }
+  }
+
+  package "Resources" {
+    class SubscriptionsMessages
   }
 }
 
@@ -155,6 +164,12 @@ UserSubscriptionsController ..> UserSubscriptionResourceAssembler : uses
 PaymentMethodsController ..> PaymentMethodResourceAssembler : uses
 PaymentsController ..> PaymentRecordResourceAssembler : uses
 SubscriptionPlansController ..> SubscriptionPlanResourceAssembler : uses
+UserSubscriptionsController ..> SubscriptionsActionResultAssembler : uses
+PaymentMethodsController ..> SubscriptionsActionResultAssembler : uses
+SubscriptionsActionResultAssembler ..> SubscriptionsError : maps
+UserSubscriptionsController ..> SubscriptionsMessages : localizes with
+PaymentMethodsController ..> SubscriptionsMessages : localizes with
+SubscriptionsActionResultAssembler ..> SubscriptionsMessages : localizes with
 
 ' --- Assemblers map domain -> response resources ---
 UserSubscriptionResourceAssembler ..> UserSubscription : maps

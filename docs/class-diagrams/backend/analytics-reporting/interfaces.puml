@@ -12,7 +12,6 @@ package "NutriSense.AnalyticsReporting" {
       +GetProgressChart(userId: int, from: string, to: string): Task<IActionResult>
       +GetStreak(userId: int): Task<IActionResult>
       +RecordDashboardView(userId: int): Task<IActionResult>
-      +ExportReport(userId: int, from: string, to: string): Task<IActionResult>
     }
 
     package "Resources" {
@@ -59,6 +58,9 @@ package "NutriSense.AnalyticsReporting" {
       class StreakResourceAssembler <<static>> {
         +{static} ToResourceFromData(data: StreakData): StreakResource
       }
+      class AnalyticsReportingActionResultAssembler <<static>> {
+        +{static} ToActionResult(error: AnalyticsReportingError, localizer, instance: string?): ObjectResult
+      }
     }
   }
 
@@ -72,10 +74,10 @@ package "NutriSense.AnalyticsReporting" {
 
   package "Domain [stubs]" {
     class ViewDashboardCommand
-    class ExportReportPdfCommand
     class GetDashboardQuery
     class GetProgressChartQuery
     class GetStreakQuery
+    enum AnalyticsReportingError
   }
 }
 
@@ -85,7 +87,6 @@ AnalyticsController --> IAnalyticsQueryService : uses
 
 ' Controller -> Application messages (Domain commands & queries)
 AnalyticsController ..> ViewDashboardCommand : sends
-AnalyticsController ..> ExportReportPdfCommand : sends
 AnalyticsController ..> GetDashboardQuery : sends
 AnalyticsController ..> GetProgressChartQuery : sends
 AnalyticsController ..> GetStreakQuery : sends
@@ -94,6 +95,7 @@ AnalyticsController ..> GetStreakQuery : sends
 AnalyticsController ..> DashboardResourceAssembler : uses
 AnalyticsController ..> ProgressChartResourceAssembler : uses
 AnalyticsController ..> StreakResourceAssembler : uses
+AnalyticsController ..> AnalyticsReportingActionResultAssembler : uses
 
 ' Assemblers map read models -> resources
 DashboardResourceAssembler ..> DashboardData : consumes
@@ -102,6 +104,7 @@ ProgressChartResourceAssembler ..> ProgressChartData : consumes
 ProgressChartResourceAssembler ..> ProgressChartResource : builds
 StreakResourceAssembler ..> StreakData : consumes
 StreakResourceAssembler ..> StreakResource : builds
+AnalyticsReportingActionResultAssembler ..> AnalyticsReportingError : maps
 
 ' Resource composition
 ProgressChartResource *--> "0..*" ProgressSnapshotResource : contains

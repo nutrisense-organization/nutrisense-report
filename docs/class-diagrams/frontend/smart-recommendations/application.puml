@@ -45,6 +45,8 @@ package "smart-recommendations/application" {
     + activeFilters: Object
     + recommendationsLoaded: boolean
     + pantryLoaded: boolean
+    + generating: boolean
+    + locationPermissionGranted: boolean
     + macroProfile: MacroProfile|null
     + profileFilterActive: boolean
     + consumedCaloriesToday: number
@@ -77,7 +79,9 @@ package "smart-recommendations/application" {
     + fetchWeather(cityId, force?): void
     + searchCities(q, limit?): Promise
     + importCity(result): Promise
-    + detectLocation(userId, lat, lng): void
+    + detectLocation(userId, lat, lng): Promise
+    + fetchLocationPreference(userId): Promise
+    + setLocationPermission(userId, granted): Promise
     + fetchIngredientCatalog(): void
     + setFilters(filtersPatch): void
     + clearFilters(): void

@@ -54,6 +54,7 @@ package "NutriSense.SmartRecommendations.Domain" {
       +DisableTravelMode(): void
       +DetectLocation(cityId: int): void
       +SetHomeCity(cityId: int): void
+      +SetLocationPermission(granted: bool): void
     }
 
     ' Pantry is a partial class: Pantry.cs + PantryAudit.cs (IAuditableEntity).
@@ -143,7 +144,7 @@ package "NutriSense.SmartRecommendations.Domain" {
 
   package "Model.ValueObjects" {
     class Badge <<record>> {
-      +{static} Allowed: string[]
+      -{static} Allowed: string[]
       +Value: string
     }
     class GeoCoordinate <<record>> {
@@ -151,15 +152,15 @@ package "NutriSense.SmartRecommendations.Domain" {
       +Lng: decimal
     }
     class IngredientCategory <<record>> {
-      +{static} Allowed: string[]
+      -{static} Allowed: string[]
       +Value: string
     }
     class WeatherCondition <<record>> {
-      +{static} Allowed: string[]
+      -{static} Allowed: string[]
       +Value: string
     }
     class WeatherType <<record>> {
-      +{static} Allowed: string[]
+      -{static} Allowed: string[]
       +Value: string
     }
   }
@@ -178,6 +179,7 @@ package "NutriSense.SmartRecommendations.Domain" {
     class RegisterPantryItemsCommand <<record>>
     class RemovePantryItemCommand <<record>>
     class SetHomeCityCommand <<record>>
+    class SetLocationPermissionCommand <<record>>
     class SuggestRecipeCommand <<record>>
     class UnlockPremiumFeaturesCommand <<record>>
     class UpdatePantryItemCommand <<record>>
@@ -329,6 +331,7 @@ EnableTravelModeCommand ..> LocationPreference : mutates
 DisableTravelModeCommand ..> LocationPreference : mutates
 DetectLocationCommand ..> LocationPreference : mutates
 SetHomeCityCommand ..> LocationPreference : mutates
+SetLocationPermissionCommand ..> LocationPreference : mutates
 LockPremiumFeaturesCommand ..> LocationPreference : restricts
 UnlockPremiumFeaturesCommand ..> LocationPreference : enables
 RegisterPantryItemsCommand ..> Pantry : mutates

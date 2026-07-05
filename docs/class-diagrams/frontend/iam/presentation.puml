@@ -62,6 +62,8 @@ ProfileView *--> ProfileSecurityView : tab >
 
 LoginView o--> useIamStore : uses >
 RegisterView o--> useIamStore : uses >
+RecoverPasswordView o--> useIamStore : uses >
+ResetPasswordView o--> useIamStore : uses >
 OnboardingView o--> useIamStore : uses >
 ProfileView o--> useIamStore : uses >
 ProfilePersonalInfoView o--> useIamStore : uses >

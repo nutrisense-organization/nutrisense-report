@@ -28,8 +28,8 @@ package "activity-wearable/application" {
     + todayLogs: ActivityLog[]
     + todayCaloriesBurned: number
     + todayActiveMinutes: number
-    + googleFitConnection: WearableConnection|null
-    + isGoogleFitConnected: boolean
+    + healthConnection: WearableConnection|null
+    + isHealthConnected: boolean
     + allLogsSorted: ActivityLog[]
     + lastStrengthOrHiit: ActivityLog|null
     + shouldShowPostWorkoutBanner: boolean
@@ -37,9 +37,11 @@ package "activity-wearable/application" {
     + fetchActivityLogs(userId, from?, to?): void
     + logActivity(userId, activityData): void
     + removeActivity(logId): void
-    + fetchConnections(userId): void
-    + connectGoogleFit(userId, authData): void
-    + disconnectWearable(connectionId): void
+    + fetchConnections(userId): Promise<void>
+    + connectHealth(userId, authData): Promise<void>
+    + syncHealth(connectionId, userId): Promise<void>
+    + setAutoSync(connectionId, enabled): Promise<void>
+    + disconnectWearable(connectionId): Promise<void>
     + clearErrors(): void
   }
 }

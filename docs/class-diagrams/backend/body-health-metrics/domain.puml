@@ -197,6 +197,20 @@ package "Nutrisense.BodyHealthMetrics.Domain" {
     }
   }
 
+  package "Model.Errors" {
+    enum BodyHealthMetricsError {
+      BodyMetricsNotFound
+      BodyMetricsAlreadyExists
+      InvalidBodyMetricsData
+      InvalidWeightValue
+      InvalidMeasurementValues
+      InvalidGoalData
+      NoActiveGoal
+      TdeeNotCalculated
+      UnexpectedError
+    }
+  }
+
   package "Repositories" {
     interface IBodyMetricsRepository {
       +FindByUserIdAsync(userId: int): Task<BodyMetrics?>
@@ -238,14 +252,14 @@ UserGoal --> GoalType
 UserGoal --> WeeklyRate
 
 ' --- Aggregate consumes commands ---
+' Only these two commands are passed directly into BodyMetrics (constructor / SetHealthGoal).
+' UpdateWeightCommand and RegisterBodyMeasurementCommand are unpacked into primitives by
+' BodyMetricsCommandService (see application.puml) before calling LogWeight/LogMeasurement.
+' CalculateBmiCommand, CalculateBmrCommand, CalculateTdeeCommand and
+' CalculateDailyCaloricGoalCommand are handled entirely in the Application layer and never
+' reach the aggregate as command objects.
 BodyMetrics ..> RegisterBodyMetricsCommand
 BodyMetrics ..> SetHealthGoalCommand
-BodyMetrics ..> UpdateWeightCommand
-BodyMetrics ..> RegisterBodyMeasurementCommand
-BodyMetrics ..> CalculateBmiCommand
-BodyMetrics ..> CalculateBmrCommand
-BodyMetrics ..> CalculateTdeeCommand
-BodyMetrics ..> CalculateDailyCaloricGoalCommand
 
 ' --- Queries target the aggregate / its children ---
 GetBodyMetricsByUserIdQuery ..> BodyMetrics
@@ -259,7 +273,8 @@ BmrCalculated --|> DomainEventBase
 TdeeCalculated --|> DomainEventBase
 GoalDefinedInMetrics --|> DomainEventBase
 DailyCaloricGoalSet --|> DomainEventBase
-BodyMetrics ..> BodyMetricsRegistered : raises
+' NOTE: Events are constructed and published by the Application layer
+' (BodyMetricsCommandService via IMediator), not by the BodyMetrics aggregate itself.
 
 ' --- Repository & calculator contracts ---
 IBodyMetricsRepository --|> IBaseRepository

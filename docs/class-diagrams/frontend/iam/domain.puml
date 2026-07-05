@@ -58,11 +58,16 @@ package "iam/domain/model" {
     + userId: string
     + restriction: RestrictionValue
     --
-    + {static} RESTRICTION_VALUES: RestrictionValue[]
-    + {static} CONFLICT_TAGS: Record<string,string[]>
     + conflictsWith(foodTags): boolean
     + isNone(): boolean
   }
+
+  note right of DietaryRestriction
+    RESTRICTION_VALUES and CONFLICT_TAGS are
+    module-level exported constants (not static
+    class members) used internally for validation
+    and conflict lookup.
+  end note
 
   class Email <<value object>> {
     + value: string

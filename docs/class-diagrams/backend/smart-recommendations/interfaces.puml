@@ -23,6 +23,7 @@ package "NutriSense.SmartRecommendations.Interfaces" {
       +EnableTravelMode(userId: int, resource: EnableTravelModeResource): Task<IActionResult>
       +DisableTravelMode(userId: int): Task<IActionResult>
       +DetectLocation(userId: int, resource: DetectLocationResource): Task<IActionResult>
+      +SetLocationPermission(userId: int, resource: SetLocationPermissionResource): Task<IActionResult>
       +SetHomeCity(userId: int, resource: SetHomeCityResource): Task<IActionResult>
     }
     class PantryController {
@@ -31,11 +32,12 @@ package "NutriSense.SmartRecommendations.Interfaces" {
       +RemoveItem(userId: int, itemId: int): Task<IActionResult>
       +UpdateItem(userId: int, id: int, resource: UpdatePantryItemResource): Task<IActionResult>
     }
+    ' RecipeImportCommandService (Application) is invoked by CatalogImportHostedService (Shared.Infrastructure),
+    ' not by any controller in this bounded context — no Import endpoint exists here.
     class RecipesController {
       +GetByGoal(goal: string, maxPrepMinutes: int?): Task<IActionResult>
       +GetById(id: int): Task<IActionResult>
       +Suggest(userId: int): Task<IActionResult>
-      +Import(resource: ImportRecipesResource): Task<IActionResult>
     }
     class RecommendationsController {
       +GetActiveByUser(userId: int): Task<IActionResult>
@@ -50,7 +52,6 @@ package "NutriSense.SmartRecommendations.Interfaces" {
     class EnableTravelModeResource <<record>>
     class GenerateRecommendationResource <<record>>
     class ImportCityResource <<record>>
-    class ImportRecipesResource <<record>>
     class IngredientCatalogItemResource <<record>>
     class LocationPreferenceResource <<record>>
     class PantryItemInputResource <<record>>
@@ -61,6 +62,7 @@ package "NutriSense.SmartRecommendations.Interfaces" {
     class RecommendationCardResource <<record>>
     class RegisterPantryItemsResource <<record>>
     class SetHomeCityResource <<record>>
+    class SetLocationPermissionResource <<record>>
     class UpdatePantryItemResource <<record>>
     class WeatherResource <<record>>
   }
@@ -88,13 +90,15 @@ package "NutriSense.SmartRecommendations.Interfaces" {
     class WeatherAssembler <<static>> {
       +{static} ToResource(cityId: int, snapshot: WeatherSnapshot): WeatherResource
     }
+    class SmartRecommendationsActionResultAssembler <<static>> {
+      +{static} ToActionResult(error: SmartRecommendationsError, localizer, instance: string?): IActionResult
+    }
   }
 }
 
 package "SmartRecommendations.Application" <<external>> {
   interface IRecsEngineCommandService
   interface IRecsEngineQueryService
-  interface IRecipeImportCommandService
   class CitySearchResult
 }
 
@@ -108,7 +112,9 @@ package "SmartRecommendations.Domain" <<external>> {
   class WeatherSnapshot
   class ImportCityCommand
   class GenerateRecommendationCommand
+  class SetLocationPermissionCommand
   class SearchCitiesQuery
+  enum SmartRecommendationsError
 }
 
 package "Shared / ASP.NET" <<external>> {
@@ -134,7 +140,6 @@ PantryController --> IRecsEngineCommandService : uses
 PantryController --> IRecsEngineQueryService : uses
 RecipesController --> IRecsEngineCommandService : uses
 RecipesController --> IRecsEngineQueryService : uses
-RecipesController --> IRecipeImportCommandService : uses
 RecommendationsController --> IRecsEngineCommandService : uses
 RecommendationsController --> IRecsEngineQueryService : uses
 
@@ -154,18 +159,25 @@ CitiesController ..> SearchCitiesQuery : builds
 LocationPreferencesController ..> EnableTravelModeResource : reads
 LocationPreferencesController ..> DetectLocationResource : reads
 LocationPreferencesController ..> SetHomeCityResource : reads
+LocationPreferencesController ..> SetLocationPermissionResource : reads
+LocationPreferencesController ..> SetLocationPermissionCommand : builds
 PantryController ..> RegisterPantryItemsResource : reads
 PantryController ..> UpdatePantryItemResource : reads
-RecipesController ..> ImportRecipesResource : reads
 RecommendationsController ..> GenerateRecommendationResource : reads
 RecommendationsController ..> GenerateRecommendationCommand : builds
 
-' --- Controllers map Result outcomes ---
+' --- Controllers map Result/error outcomes via the shared assembler ---
 CitiesController ..> Result : maps
 LocationPreferencesController ..> Result : maps
 PantryController ..> Result : maps
 RecipesController ..> Result : maps
 RecommendationsController ..> Result : maps
+CitiesController ..> SmartRecommendationsActionResultAssembler : uses
+LocationPreferencesController ..> SmartRecommendationsActionResultAssembler : uses
+PantryController ..> SmartRecommendationsActionResultAssembler : uses
+RecipesController ..> SmartRecommendationsActionResultAssembler : uses
+RecommendationsController ..> SmartRecommendationsActionResultAssembler : uses
+SmartRecommendationsActionResultAssembler ..> SmartRecommendationsError : maps
 
 ' --- Entity → response resource assemblers ---
 CityAssembler ..> City : from
