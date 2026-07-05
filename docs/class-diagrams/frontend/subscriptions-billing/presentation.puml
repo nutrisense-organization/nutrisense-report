@@ -10,6 +10,7 @@ package "subscriptions-billing/application [stub]" {
 
 package "subscriptions-billing/presentation/routes" {
   class SubscriptionsBillingRoutes <<router>> {
+    + subscribeRoute: RouteRecordRaw
     + planSelectionRoute: RouteRecordRaw
     + checkoutRoute: RouteRecordRaw
     + paymentSuccessRoute: RouteRecordRaw
@@ -19,6 +20,7 @@ package "subscriptions-billing/presentation/routes" {
 }
 
 package "subscriptions-billing/presentation/views" {
+  class SubscribeView <<view>>
   class PlanSelectionView <<view>>
   class CheckoutView <<view>>
   class PaymentConfirmationView <<view>>
@@ -41,6 +43,7 @@ package "subscriptions-billing/presentation" {
   }
 }
 
+SubscriptionsBillingRoutes ..> SubscribeView : navigates to >
 SubscriptionsBillingRoutes ..> PlanSelectionView : navigates to >
 SubscriptionsBillingRoutes ..> CheckoutView : navigates to >
 SubscriptionsBillingRoutes ..> PaymentConfirmationView : navigates to >
@@ -51,7 +54,6 @@ SubscriptionsBillingRoutes ..> PaymentHistoryView : navigates to >
 ProfileBillingView ..> PlanCardComponent : contains >
 ProfileBillingView ..> UpdatePaymentMethodDialogComponent : contains >
 SubscriptionView ..> PlanCardComponent : contains >
-ProfileBillingView ..> FeatureGateComponent : gates with >
 
 PlanSelectionView o--> useSubscriptionsBillingStore : uses >
 CheckoutView o--> useSubscriptionsBillingStore : uses >

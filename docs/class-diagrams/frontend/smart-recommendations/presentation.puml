@@ -12,11 +12,28 @@ package "subscriptions-billing/presentation [stub]" {
   class FeatureGateComponent <<component>>
 }
 
+package "subscriptions-billing/application [stub]" {
+  class useSubscriptionsBillingStore <<store>>
+}
+
+package "iam/application [stub]" {
+  class useIamStore <<store>>
+}
+
+package "nutrition-tracking/application [stub]" {
+  class useNutritionTrackingStore <<store>>
+}
+
+package "body-health-metrics/application [stub]" {
+  class useBodyHealthMetricsStore <<store>>
+}
+
 package "smart-recommendations/presentation/routes" {
   class SmartRecommendationsRoutes <<router>> {
     + path: 'recommendations'
     + name: 'recommendations'
     + component: RecommendationsView
+    + meta: { requiresAuth: boolean, title: string }
   }
 }
 
@@ -78,6 +95,10 @@ RecommendationsView *--> RecipeDetailDialogComponent : opens >
 RecommendationsView *--> FeatureGateComponent : wraps >
 
 RecommendationsView o--> useSmartRecommendationsStore : uses >
+RecommendationsView o--> useIamStore : uses >
+RecommendationsView o--> useSubscriptionsBillingStore : uses >
+RecommendationsView o--> useNutritionTrackingStore : uses >
+RecommendationsView o--> useBodyHealthMetricsStore : uses >
 
 RecommendationCardComponent ..> RecommendationsView : log >
 RecipeCardComponent ..> RecommendationsView : detail >

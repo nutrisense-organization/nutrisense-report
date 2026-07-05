@@ -166,7 +166,5 @@ IngredientCatalogItem *--> IngredientCategory : category >
 PantryItem --> IngredientCatalogItem : references >
 Recipe *--> Macros : totalMacros >
 RecommendationCard *--> Badge : badge >
-MacroProfile ..> Recipe : scores >
-MacroProfile ..> RecommendationCard : scores >
 
 @enduml

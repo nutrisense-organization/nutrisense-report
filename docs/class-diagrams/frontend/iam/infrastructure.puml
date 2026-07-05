@@ -25,6 +25,8 @@ package "iam/infrastructure" {
     --
     + signIn(credentials): Promise
     + signUp(resource): Promise
+    + requestPasswordReset(email): Promise
+    + resetPassword(token, newPassword): Promise
     + getMe(userId): Promise
     + deleteAccount(id): Promise
     + updateUserProfile(id, profileFields): Promise

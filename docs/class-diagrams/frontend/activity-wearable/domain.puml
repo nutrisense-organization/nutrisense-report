@@ -30,6 +30,7 @@ package "activity-wearable/domain/model" {
     + status: WearableStatus
     + lastSyncedAt: string|null
     + authorizedAt: string
+    + autoSyncEnabled: boolean
     --
     + isConnected(): boolean
     + needsSync(thresholdMinutes?): boolean
@@ -53,6 +54,7 @@ package "activity-wearable/domain/model" {
   class WearableProvider <<value object>> {
     + value: WearableProviderValue
     --
+    + isGoogleHealth(): boolean
     + isGoogleFit(): boolean
     + isAppleHealth(): boolean
   }

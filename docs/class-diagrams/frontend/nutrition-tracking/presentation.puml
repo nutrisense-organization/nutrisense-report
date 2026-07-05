@@ -51,8 +51,11 @@ package "nutrition-tracking/presentation/views" {
   }
 }
 
-package "nutrition-tracking/presentation/components" {
+package "nutrition-tracking/presentation/components [unused]" {
 
+  ' NOTE: these components exist in source but are not imported/wired into any
+  ' view (NutritionLogView renders its meal list and add/search modals inline).
+  ' Kept here as dead-code artifacts, not as part of the active composition.
   class NutritionLogFormComponent <<component>> {
     + foods: Food[]
     + mealType: string
@@ -74,9 +77,6 @@ package "nutrition-tracking/presentation/components" {
 NutritionTrackingRoutes ..> NutritionLogView : navigates to >
 NutritionTrackingRoutes ..> ScanDishResultView : navigates to >
 NutritionTrackingRoutes ..> ScanMenuResultView : navigates to >
-
-NutritionLogView *--> NutritionLogFormComponent : contains >
-NutritionLogView *--> NutritionLogListComponent : contains >
 
 NutritionLogView o--> useNutritionTrackingStore : uses >
 ScanDishResultView o--> useNutritionTrackingStore : uses >

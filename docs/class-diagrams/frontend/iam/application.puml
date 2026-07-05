@@ -55,6 +55,8 @@ package "iam/application" {
     + signOut(): void
     + signUp(formData): Promise
     + deleteAccount(): Promise
+    + requestPasswordReset(email): Promise
+    + resetPassword(token, newPassword): Promise
     + clearErrors(): void
     -- private --
     - _persistAuth(uid, tok, sid): void

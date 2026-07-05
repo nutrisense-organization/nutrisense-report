@@ -106,9 +106,21 @@ package "subscriptions-billing/domain/model" {
     + isFree(): boolean
   }
 
-  class PlanFeature <<value object>> {
+  class PlanFeature <<constants>> {
     + {static} ALL_FEATURES: PlanFeatureValue[]
-    + value: PlanFeatureValue
+    + {static} NUTRITION_LOG_MANUAL: PlanFeatureValue
+    + {static} DASHBOARD: PlanFeatureValue
+    + {static} BMI_BMR_TDEE: PlanFeatureValue
+    + {static} HISTORY_30D: PlanFeatureValue
+    + {static} HISTORY_90D: PlanFeatureValue
+    + {static} HISTORY_UNLIMITED: PlanFeatureValue
+    + {static} SMART_SCAN_DISH: PlanFeatureValue
+    + {static} SMART_SCAN_MENU: PlanFeatureValue
+    + {static} TRAVEL_MODE: PlanFeatureValue
+    + {static} WEATHER_RECOMMENDATIONS: PlanFeatureValue
+    + {static} PANTRY_RECIPES: PlanFeatureValue
+    + {static} WEARABLE_SYNC: PlanFeatureValue
+    + {static} PDF_REPORTS: PlanFeatureValue
   }
 }
 
@@ -116,8 +128,6 @@ UserSubscription *--> SubscriptionStatus : status >
 UserSubscription *--> BillingPeriod : billingPeriod >
 UserSubscription --> SubscriptionPlan : subscribes to >
 UserSubscription --> PaymentMethod : paid with >
-SubscriptionPlan --> PlanTier : tier >
-SubscriptionPlan --> PlanFeature : features >
 PaymentRecord --> UserSubscription : billed for >
 
 @enduml
