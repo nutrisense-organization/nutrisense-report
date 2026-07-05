@@ -23,8 +23,6 @@ package "NutriSense.NutritionTracking.Interfaces" {
     class FoodsController {
       +SearchFood(query: string, language: string): Task<IActionResult>
       +GetById(id: int): Task<IActionResult>
-      +RegisterFood(resource: RegisterFoodResource): Task<IActionResult>
-      +ImportFoods(resource: ImportFoodsResource): Task<IActionResult>
     }
     class NutritionLogsController {
       +UpdateEntry(entryId: int, resource: UpdateNutritionLogResource): Task<IActionResult>
@@ -41,8 +39,6 @@ package "NutriSense.NutritionTracking.Interfaces" {
   }
 
   package "REST.Resources" {
-    class RegisterFoodResource <<record>>
-    class ImportFoodsResource <<record>>
     class FoodResource <<record>>
     class FoodSearchResultResource <<record>>
     class LogMealResource <<record>>
@@ -59,28 +55,18 @@ package "NutriSense.NutritionTracking.Interfaces" {
   }
 
   package "REST.Transform" {
-    class RegisterFoodCommandAssembler <<static>>
     class LogMealCommandAssembler <<static>>
     class UpdateNutritionLogEntryCommandAssembler <<static>>
     class ConfirmScanCommandAssembler <<static>>
     class SelectMenuOptionCommandAssembler <<static>>
     class FoodResourceAssembler <<static>>
     class NutritionLogResourceAssembler <<static>>
-    class RegisterFoodResultAssembler <<static>>
-    class LogMealResultAssembler <<static>>
-    class UpdateNutritionLogEntryResultAssembler <<static>>
-    class DeleteNutritionLogEntryResultAssembler <<static>>
-    class ConfirmScanResultAssembler <<static>>
-    class SelectMenuOptionResultAssembler <<static>>
-    class ScanPreviewResultAssembler <<static>>
-    class MenuOptionsPreviewAssembler <<static>>
+    class NutritionTrackingActionResultAssembler <<static>>
   }
 }
 
 package "NutritionTracking.Application" <<external>> {
-  interface IFoodCommandService
   interface IFoodQueryService
-  interface IFoodImportCommandService
   interface INutritionLogCommandService
   interface INutritionLogQueryService
   class ScanPreviewResult
@@ -91,58 +77,51 @@ package "NutritionTracking.Domain" <<external>> {
   class Food
   class NutritionLog
   class DailyMacroSummary
-  class RegisterFoodCommand
-  class ImportFoodsCommand
   class LogMealToDailyLogCommand
   class UpdateNutritionLogEntryCommand
   class ConfirmScanResultCommand
   class SelectMenuOptionCommand
   class ScanMealPhotoCommand
   class ScanMenuPhotoCommand
+  enum NutritionTrackingError
 }
 
 package "Shared / ASP.NET" <<external>> {
   class ControllerBase
   class "Result<TValue, TError>" as Result
-  interface "IStringLocalizer<SharedResource>" as IStringLocalizer
+  interface "IStringLocalizer<T>" as IStringLocalizerGeneric
 }
+
+package "NutritionTracking.Resources" {
+  class NutritionTrackingMessages
+}
+
+' Resolved generic: NutritionLogsController depends on IStringLocalizer<NutritionTrackingMessages>.
+interface "IStringLocalizer<NutritionTrackingMessages>" as IStringLocalizer
+IStringLocalizer ..|> IStringLocalizerGeneric
+IStringLocalizer ..> NutritionTrackingMessages : parameterized by
 
 ' --- Controllers ---
 FoodsController --|> ControllerBase
 NutritionLogsController --|> ControllerBase
-FoodsController --> IFoodCommandService : uses
 FoodsController --> IFoodQueryService : uses
-FoodsController --> IFoodImportCommandService : uses
-FoodsController --> IStringLocalizer : uses
 NutritionLogsController --> INutritionLogCommandService : uses
 NutritionLogsController --> INutritionLogQueryService : uses
 NutritionLogsController --> IStringLocalizer : uses
 
 ' --- Controllers ↔ assemblers / inline resources ---
-FoodsController ..> RegisterFoodCommandAssembler : uses
-FoodsController ..> RegisterFoodResultAssembler : uses
 FoodsController ..> FoodResourceAssembler : uses
-FoodsController ..> ImportFoodsResource : reads
-FoodsController ..> ImportFoodsCommand : builds
 NutritionLogsController ..> LogMealCommandAssembler : uses
-NutritionLogsController ..> LogMealResultAssembler : uses
 NutritionLogsController ..> UpdateNutritionLogEntryCommandAssembler : uses
-NutritionLogsController ..> UpdateNutritionLogEntryResultAssembler : uses
-NutritionLogsController ..> DeleteNutritionLogEntryResultAssembler : uses
 NutritionLogsController ..> ConfirmScanCommandAssembler : uses
-NutritionLogsController ..> ConfirmScanResultAssembler : uses
 NutritionLogsController ..> SelectMenuOptionCommandAssembler : uses
-NutritionLogsController ..> SelectMenuOptionResultAssembler : uses
-NutritionLogsController ..> ScanPreviewResultAssembler : uses
-NutritionLogsController ..> MenuOptionsPreviewAssembler : uses
+NutritionLogsController ..> NutritionTrackingActionResultAssembler : uses
 NutritionLogsController ..> NutritionLogResourceAssembler : uses
 NutritionLogsController ..> ScanPhotoResource : reads
 NutritionLogsController ..> ScanMealPhotoCommand : builds
 NutritionLogsController ..> ScanMenuPhotoCommand : builds
 
 ' --- Request resource → command assemblers ---
-RegisterFoodCommandAssembler ..> RegisterFoodResource : from
-RegisterFoodCommandAssembler ..> RegisterFoodCommand : to
 LogMealCommandAssembler ..> LogMealResource : from
 LogMealCommandAssembler ..> LogMealToDailyLogCommand : to
 UpdateNutritionLogEntryCommandAssembler ..> UpdateNutritionLogResource : from
@@ -161,22 +140,14 @@ NutritionLogResourceAssembler ..> NutritionLogResource : to
 NutritionLogResourceAssembler ..> DailyMacroSummary : from
 NutritionLogResourceAssembler ..> DailyMacroSummaryResource : to
 
-' --- Result → IActionResult assemblers ---
-RegisterFoodResultAssembler ..> Result : maps
-RegisterFoodResultAssembler ..> FoodResourceAssembler : uses
-LogMealResultAssembler ..> Result : maps
-LogMealResultAssembler ..> NutritionLogResourceAssembler : uses
-UpdateNutritionLogEntryResultAssembler ..> Result : maps
-UpdateNutritionLogEntryResultAssembler ..> NutritionLogResourceAssembler : uses
-DeleteNutritionLogEntryResultAssembler ..> Result : maps
-ConfirmScanResultAssembler ..> Result : maps
-ConfirmScanResultAssembler ..> NutritionLogResourceAssembler : uses
-SelectMenuOptionResultAssembler ..> Result : maps
-SelectMenuOptionResultAssembler ..> NutritionLogResourceAssembler : uses
-ScanPreviewResultAssembler ..> ScanPreviewResult : from
-ScanPreviewResultAssembler ..> ScanPreviewResource : to
-MenuOptionsPreviewAssembler ..> MenuOptionsPreview : from
-MenuOptionsPreviewAssembler ..> MenuOptionsPreviewResource : to
+' --- Result → IActionResult assembler (centralizes all NutritionTrackingError → problem-details mapping) ---
+NutritionTrackingActionResultAssembler ..> Result : maps
+NutritionTrackingActionResultAssembler ..> NutritionTrackingError : maps
+NutritionTrackingActionResultAssembler ..> NutritionLogResourceAssembler : uses
+NutritionTrackingActionResultAssembler ..> ScanPreviewResult : from
+NutritionTrackingActionResultAssembler ..> ScanPreviewResource : to
+NutritionTrackingActionResultAssembler ..> MenuOptionsPreview : from
+NutritionTrackingActionResultAssembler ..> MenuOptionsPreviewResource : to
 
 ' --- Preview resource composition ---
 ScanPreviewResource o--> "0..*" ScannedDishItemResource : contains

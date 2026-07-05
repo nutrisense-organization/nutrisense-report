@@ -16,6 +16,7 @@ package "ActivityWearable.Domain" {
       +FindByIdAsync(id: int, ct: CancellationToken): Task<T?>
       +Update(entity: T): void
       +Remove(entity: T): void
+      +ListAsync(ct: CancellationToken): Task<IEnumerable<T>>
     }
   }
 
@@ -44,11 +45,17 @@ package "ActivityWearable.Domain" {
       +Status: string
       +LastSyncedAt: DateTimeOffset?
       +AuthorizedAt: DateTimeOffset
+      +AutoSyncEnabled: bool
+      +AccessToken: string?
+      +RefreshToken: string?
+      +TokenExpiresAt: DateTimeOffset?
       +CreatedAt: DateTimeOffset?
       +UpdatedAt: DateTimeOffset?
       #WearableConnection()
       +WearableConnection(command: ConnectDeviceCommand, authorizedAt: DateTimeOffset)
+      +ApplyAuthorization(accessToken: string?, refreshToken: string?, expiresAt: DateTimeOffset?): void
       +ApplySync(syncedAt: DateTimeOffset): void
+      +SetAutoSync(enabled: bool): void
       +ApplyDisconnect(): void
     }
   }
@@ -104,6 +111,10 @@ package "ActivityWearable.Domain" {
     class DisconnectDeviceCommand {
       +WearableConnectionId: int
     }
+    class SetAutoSyncCommand {
+      +WearableConnectionId: int
+      +Enabled: bool
+    }
     class AdjustCaloricBalanceCommand {
       +UserId: int
       +Date: DateOnly
@@ -158,6 +169,20 @@ package "ActivityWearable.Domain" {
     }
   }
 
+  package "Model.Errors" {
+    enum ActivityWearableError {
+      AlreadyConnected
+      AuthorizationFailed
+      InvalidProvider
+      ActivityLogNotFound
+      ActivityLogNotOwner
+      WearableConnectionNotFound
+      InvalidActivity
+      SyncFailed
+      UnexpectedError
+    }
+  }
+
   package "Repositories" {
     interface IActivityLogRepository {
       +FindByUserAndDateAsync(userId: int, date: DateOnly, ct: CancellationToken): Task<IEnumerable<ActivityLog>>
@@ -175,13 +200,19 @@ package "ActivityWearable.Domain" {
       +CalculateDailyActiveCalories(logs: IEnumerable<ActivityLog>, date: DateOnly): decimal
       +CalculateBalance(tdee: decimal, activeCalories: decimal, consumedCalories: decimal): decimal
     }
+    interface IActiveCalorieEstimator {
+      +Estimate(activityType: string, durationMinutes: int, intensity: string, weightKg: decimal): decimal
+    }
     interface IWearableSyncProvider {
       +AuthorizeAsync(oauthCode: string, ct: CancellationToken): Task<WearableAuthorization>
-      +FetchActivitiesAsync(wearableConnectionId: int, from: DateOnly, to: DateOnly, ct: CancellationToken): Task<IEnumerable<ImportedActivity>>
+      +RefreshAsync(refreshToken: string, ct: CancellationToken): Task<WearableAuthorization>
+      +FetchActivitiesAsync(accessToken: string, from: DateOnly, to: DateOnly, ct: CancellationToken): Task<IEnumerable<ImportedActivity>>
     }
     class WearableAuthorization {
       +Success: bool
       +AccessToken: string?
+      +RefreshToken: string?
+      +ExpiresAt: DateTimeOffset?
       +FailureReason: string?
     }
     class ImportedActivity {
@@ -209,6 +240,7 @@ DeleteActivityLogCommand ..> ActivityLog : targets
 WearableConnection ..> ConnectDeviceCommand : created from
 SyncActivityDataCommand ..> WearableConnection : targets
 DisconnectDeviceCommand ..> WearableConnection : targets
+SetAutoSyncCommand ..> WearableConnection : targets
 AdjustCaloricBalanceCommand ..> ActivityLog : recomputes balance of
 CalculateActiveCaloriesCommand ..> ActivityLog : totals calories of
 
@@ -232,6 +264,7 @@ IWearableConnectionRepository ..> WearableConnection : manages
 
 ' --- Domain services ---
 ICaloricBalanceCalculator ..> ActivityLog : sums
+IActiveCalorieEstimator ..> ImportedActivity : estimates calories for
 IWearableSyncProvider ..> WearableAuthorization : returns
 IWearableSyncProvider ..> ImportedActivity : fetches
 

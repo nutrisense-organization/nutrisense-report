@@ -66,22 +66,22 @@ package "NutriSense.NutritionTracking.Domain" {
 
   package "Model.ValueObjects" {
     class FoodSource <<record>> {
-      +{static} Valid: HashSet<string>
+      -{static} Valid: HashSet<string>
       +Value: string
       +FoodSource(value: string)
     }
     class LogSource <<record>> {
-      +{static} Valid: HashSet<string>
+      -{static} Valid: HashSet<string>
       +Value: string
       +LogSource(value: string)
     }
     class MealType <<record>> {
-      +{static} Valid: HashSet<string>
+      -{static} Valid: HashSet<string>
       +Value: string
       +MealType(value: string)
     }
     class ServingUnit <<record>> {
-      +{static} Valid: HashSet<string>
+      -{static} Valid: HashSet<string>
       +Value: string
       +ServingUnit(value: string)
     }
@@ -120,6 +120,27 @@ package "NutriSense.NutritionTracking.Domain" {
     class ConsumptionUpdated <<record>>
     class MealPhotoAnalyzed <<record>>
     class MenuAnalyzed <<record>>
+  }
+
+  package "Model.Errors" {
+    enum NutritionTrackingError {
+      FoodNotFound
+      DetectedFoodNotFound
+      InvalidScanConfirmationData
+      InvalidMealType
+      InvalidMealQuantity
+      InvalidMenuSelectionData
+      DishScanFailed
+      MenuScanFailed
+      EntryNotFound
+      EntryDeleteForbidden
+      EntryUpdateForbidden
+      InvalidEntryQuantity
+      FoodDuplicateKey
+      InvalidFoodSource
+      UsdaUnavailable
+      UnexpectedError
+    }
   }
 
   package "Repositories" {

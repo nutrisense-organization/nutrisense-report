@@ -37,6 +37,8 @@ package "smart-recommendations/infrastructure" {
     + searchCities(q, limit?): Promise
     + importCity(candidate): Promise
     + detectLocation(userId, lat, lng): Promise
+    + getLocationPreference(userId): Promise
+    + setLocationPermission(userId, granted): Promise
     + enableTravelMode(userId, cityId): Promise
     + disableTravelMode(userId): Promise
     + getIngredientCatalog(): Promise

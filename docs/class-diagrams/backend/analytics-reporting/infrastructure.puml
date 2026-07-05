@@ -16,12 +16,6 @@ package "NutriSense.AnalyticsReporting" {
       }
     }
 
-    package "External.Pdf" {
-      class PdfReportGenerator {
-        +GenerateAsync(userId: int, range: DateRange, ct): Task<byte[]>
-      }
-    }
-
     package "Persistence.EFC.Repositories" {
       class UserAnalyticsRepository {
         +FindByUserIdAsync(userId: int, ct): Task<UserAnalytics?>
@@ -43,11 +37,9 @@ package "NutriSense.AnalyticsReporting" {
   package "Domain [stubs]" {
     class UserAnalytics
     class ProgressSnapshot
-    class DateRange
     interface IUserAnalyticsRepository
     interface IAdherenceCalculator
     interface IStreakCalculator
-    interface IReportPdfGenerator
   }
 
   package "Shared & EF Core [stubs]" {
@@ -60,8 +52,6 @@ package "NutriSense.AnalyticsReporting" {
 ' Domain service implementations (Infrastructure -> Domain)
 AdherenceCalculator ..|> IAdherenceCalculator
 StreakCalculator ..|> IStreakCalculator
-PdfReportGenerator ..|> IReportPdfGenerator
-PdfReportGenerator ..> DateRange : renders
 
 ' Repository implementation
 UserAnalyticsRepository ..|> IUserAnalyticsRepository

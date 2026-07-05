@@ -12,30 +12,51 @@ package "activity-wearable/application [stub]" {
   class useActivityWearableStore <<store>>
 }
 
+package "activity-wearable/infrastructure [stub]" {
+  class OAuthHealthHelper <<helper>> {
+    + redirectUri(): string
+    + isHealthOAuthConfigured(): boolean
+    + startHealthOAuth(): void
+    + consumeOAuthState(returnedState): boolean
+  }
+}
+
 package "activity-wearable/presentation/routes" {
-  class ActivityWearableRoutes <<router>>
+  class ActivityWearableRoutes <<router>> {
+    + activityWearableRoutes: RouteRecordRaw[]
+  }
 }
 
 package "activity-wearable/presentation/views" {
   class ActivityView <<view>>
   class ActivityHistoryView <<view>>
+  class OAuthHealthCallbackView <<view>>
 }
 
 package "activity-wearable/presentation/components" {
   class ActivityLogFormComponent <<component>>
   class ActivityLogListComponent <<component>>
+  class HealthSyncDialogComponent <<component>>
 }
 
 ActivityWearableRoutes ..> ActivityView : navigates to >
 ActivityWearableRoutes ..> ActivityHistoryView : navigates to >
 
+' OAuthHealthCallbackView is registered on the root app router (src/router.js),
+' not on ActivityWearableRoutes, since it is reached via Google's OAuth redirect.
+
 ActivityView ..> ActivityLogFormComponent : contains >
 ActivityView ..> ActivityLogListComponent : contains >
+ActivityView ..> HealthSyncDialogComponent : contains >
 ActivityHistoryView ..> ActivityLogListComponent : contains >
 
 ActivityView o--> useActivityWearableStore : uses >
 ActivityHistoryView o--> useActivityWearableStore : uses >
+HealthSyncDialogComponent o--> useActivityWearableStore : uses >
+OAuthHealthCallbackView o--> useActivityWearableStore : uses >
 
 ActivityLogFormComponent ..> ActivityType : estimates calories >
+HealthSyncDialogComponent ..> OAuthHealthHelper : uses >
+OAuthHealthCallbackView ..> OAuthHealthHelper : uses >
 
 @enduml

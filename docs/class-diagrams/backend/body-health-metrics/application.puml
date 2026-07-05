@@ -7,11 +7,11 @@ package "Nutrisense.BodyHealthMetrics.Application" {
 
   package "CommandServices" {
     interface IBodyMetricsCommandService {
-      +Handle(command: RegisterBodyMetricsCommand): Task<Result<BodyMetrics, RegisterBodyMetricsError>>
-      +Handle(command: UpdateWeightCommand): Task<Result<BodyMetrics, UpdateWeightError>>
-      +Handle(command: RegisterBodyMeasurementCommand): Task<Result<BodyMetrics, RegisterBodyMeasurementError>>
-      +Handle(command: SetHealthGoalCommand): Task<Result<BodyMetrics, SetHealthGoalError>>
-      +Handle(command: CalculateDailyCaloricGoalCommand): Task<Result<BodyMetrics, CalculateDailyCaloricGoalError>>
+      +Handle(command: RegisterBodyMetricsCommand): Task<Result<BodyMetrics, BodyHealthMetricsError>>
+      +Handle(command: UpdateWeightCommand): Task<Result<BodyMetrics, BodyHealthMetricsError>>
+      +Handle(command: RegisterBodyMeasurementCommand): Task<Result<BodyMetrics, BodyHealthMetricsError>>
+      +Handle(command: SetHealthGoalCommand): Task<Result<BodyMetrics, BodyHealthMetricsError>>
+      +Handle(command: CalculateDailyCaloricGoalCommand): Task<Result<BodyMetrics, BodyHealthMetricsError>>
     }
   }
 
@@ -29,11 +29,11 @@ package "Nutrisense.BodyHealthMetrics.Application" {
       -calculator: IBodyMetricsCalculator
       -logger: ILogger
       -mediator: IMediator
-      +Handle(command: RegisterBodyMetricsCommand): Task<Result<...>>
-      +Handle(command: UpdateWeightCommand): Task<Result<...>>
-      +Handle(command: RegisterBodyMeasurementCommand): Task<Result<...>>
-      +Handle(command: SetHealthGoalCommand): Task<Result<...>>
-      +Handle(command: CalculateDailyCaloricGoalCommand): Task<Result<...>>
+      +Handle(command: RegisterBodyMetricsCommand): Task<Result<BodyMetrics, BodyHealthMetricsError>>
+      +Handle(command: UpdateWeightCommand): Task<Result<BodyMetrics, BodyHealthMetricsError>>
+      +Handle(command: RegisterBodyMeasurementCommand): Task<Result<BodyMetrics, BodyHealthMetricsError>>
+      +Handle(command: SetHealthGoalCommand): Task<Result<BodyMetrics, BodyHealthMetricsError>>
+      +Handle(command: CalculateDailyCaloricGoalCommand): Task<Result<BodyMetrics, BodyHealthMetricsError>>
       -RunCalculationChain(bodyMetrics: BodyMetrics, command: RegisterBodyMetricsCommand): Task
       -TrySeedDefaultGoal(bodyMetrics, command, currentWeightKg): void
     }
@@ -65,35 +65,8 @@ package "Nutrisense.BodyHealthMetrics.Application" {
       -commandService: IBodyMetricsCommandService
       -queryService: IBodyMetricsQueryService
       +GetActiveGoalByUserId(userId: int, ct): Task<UserGoalSummaryItem?>
-    }
-  }
-
-  package "Errors" {
-    enum RegisterBodyMetricsError {
-      AlreadyExists
-      InvalidData
-      UnexpectedError
-    }
-    enum UpdateWeightError {
-      BodyMetricsNotFound
-      InvalidData
-      UnexpectedError
-    }
-    enum RegisterBodyMeasurementError {
-      BodyMetricsNotFound
-      InvalidData
-      UnexpectedError
-    }
-    enum SetHealthGoalError {
-      BodyMetricsNotFound
-      InvalidData
-      UnexpectedError
-    }
-    enum CalculateDailyCaloricGoalError {
-      BodyMetricsNotFound
-      NoActiveGoal
-      TdeeNotCalculated
-      UnexpectedError
+      +GetCurrentWeightKg(userId: int, ct): Task<decimal?>
+      +GetTdee(userId: int, ct): Task<decimal?>
     }
   }
 }
@@ -103,6 +76,17 @@ package "Domain [stubs]" {
   class WeightLog
   interface IBodyMetricsRepository
   interface IBodyMetricsCalculator
+  enum BodyHealthMetricsError
+
+  package "Model.Events" {
+    class BodyMetricsRegistered <<record>>
+    class WeightUpdated <<record>>
+    class BmiCalculated <<record>>
+    class BmrCalculated <<record>>
+    class TdeeCalculated <<record>>
+    class GoalDefinedInMetrics <<record>>
+    class DailyCaloricGoalSet <<record>>
+  }
 }
 
 package "Interfaces.Acl [stubs]" {
@@ -129,11 +113,14 @@ BodyMetricsCommandService --> IBodyMetricsCalculator
 BodyMetricsCommandService --> IUnitOfWork
 BodyMetricsCommandService --> IMediator
 BodyMetricsCommandService ..> BodyMetrics
-BodyMetricsCommandService ..> RegisterBodyMetricsError
-BodyMetricsCommandService ..> UpdateWeightError
-BodyMetricsCommandService ..> RegisterBodyMeasurementError
-BodyMetricsCommandService ..> SetHealthGoalError
-BodyMetricsCommandService ..> CalculateDailyCaloricGoalError
+BodyMetricsCommandService ..> BodyHealthMetricsError
+BodyMetricsCommandService ..> BodyMetricsRegistered : publishes
+BodyMetricsCommandService ..> WeightUpdated : publishes
+BodyMetricsCommandService ..> BmiCalculated : publishes
+BodyMetricsCommandService ..> BmrCalculated : publishes
+BodyMetricsCommandService ..> TdeeCalculated : publishes
+BodyMetricsCommandService ..> GoalDefinedInMetrics : publishes
+BodyMetricsCommandService ..> DailyCaloricGoalSet : publishes
 
 ' --- Query service ---
 BodyMetricsQueryService ..|> IBodyMetricsQueryService
@@ -143,6 +130,7 @@ BodyMetricsQueryService ..> WeightLog
 ' --- Contract dependencies ---
 IBodyMetricsCommandService ..> Result
 IBodyMetricsCommandService ..> BodyMetrics
+IBodyMetricsCommandService ..> BodyHealthMetricsError
 IBodyMetricsQueryService ..> BodyMetrics
 IBodyMetricsQueryService ..> WeightLog
 
@@ -158,5 +146,6 @@ BodyHealthMetricsContextFacade ..|> IBodyHealthMetricsContextFacade
 BodyHealthMetricsContextFacade --> IBodyMetricsCommandService
 BodyHealthMetricsContextFacade --> IBodyMetricsQueryService
 BodyHealthMetricsContextFacade ..> UserGoalSummaryItem
+BodyHealthMetricsContextFacade ..> BodyMetrics
 
 @enduml

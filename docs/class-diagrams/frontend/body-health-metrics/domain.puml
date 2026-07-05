@@ -109,7 +109,5 @@ UserGoal *--> WeeklyRate : weeklyRate >
 UserGoal *--> MacroTargets : macroTargets >
 WeightLog ..> DateUtils : uses >
 BodyMetricsService ..> BmiResult : creates >
-BodyMetricsService ..> WeightLog : evaluates >
-BodyMetricsService ..> BodyMeasurement : evaluates >
 
 @enduml

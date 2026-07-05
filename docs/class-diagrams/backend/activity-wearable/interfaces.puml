@@ -17,11 +17,13 @@ package "ActivityWearable.Interfaces" {
     class ActivityLog
     class WearableConnection
     class DailyActivitySummary
+    enum ActivityWearableError
     class LogManualActivityCommand
     class DeleteActivityLogCommand
     class ConnectDeviceCommand
     class SyncActivityDataCommand
     class DisconnectDeviceCommand
+    class SetAutoSyncCommand
     class GetActivityLogsByUserQuery
     class GetDailyActivitySummaryQuery
     class GetWearableConnectionsByUserIdQuery
@@ -37,7 +39,7 @@ package "ActivityWearable.Interfaces" {
     class ActivityLogsController {
       -commandService: IActivityLogCommandService
       -queryService: IActivityLogQueryService
-      -localizer: IStringLocalizer<SharedResource>
+      -localizer: IStringLocalizer<ActivityWearableMessages>
       +LogManualActivity(resource: LogManualActivityResource): Task<IActionResult>
       +GetByUser(userId: int, from: string?, to: string?): Task<IActionResult>
       +GetDailySummary(userId: int, date: string): Task<IActionResult>
@@ -46,10 +48,11 @@ package "ActivityWearable.Interfaces" {
     class WearableConnectionsController {
       -commandService: IWearableConnectionCommandService
       -queryService: IWearableConnectionQueryService
-      -localizer: IStringLocalizer<SharedResource>
+      -localizer: IStringLocalizer<ActivityWearableMessages>
       +ConnectDevice(resource: ConnectDeviceResource): Task<IActionResult>
       +GetByUser(userId: int): Task<IActionResult>
       +SyncActivityData(id: int): Task<IActionResult>
+      +SetAutoSync(id: int, resource: SetAutoSyncResource): Task<IActionResult>
       +DisconnectDevice(id: int): Task<IActionResult>
     }
   }
@@ -85,6 +88,9 @@ package "ActivityWearable.Interfaces" {
       +Provider: string
       +OAuthCode: string
     }
+    class SetAutoSyncResource {
+      +Enabled: bool
+    }
     class WearableConnectionResource {
       +Id: int
       +UserId: int
@@ -92,6 +98,7 @@ package "ActivityWearable.Interfaces" {
       +Status: string
       +LastSyncedAt: DateTimeOffset?
       +AuthorizedAt: DateTimeOffset
+      +AutoSyncEnabled: bool
     }
   }
 
@@ -105,20 +112,8 @@ package "ActivityWearable.Interfaces" {
       +{static} ToCommand(resource: ConnectDeviceResource): ConnectDeviceCommand
       +{static} ToResource(connection: WearableConnection): WearableConnectionResource
     }
-    class LogManualActivityResultAssembler {
-      +{static} ToActionResult(result: Result, localizer: IStringLocalizer): IActionResult
-    }
-    class DeleteActivityLogResultAssembler {
-      +{static} ToActionResult(result: Result, localizer: IStringLocalizer): IActionResult
-    }
-    class ConnectDeviceResultAssembler {
-      +{static} ToActionResult(result: Result, localizer: IStringLocalizer): IActionResult
-    }
-    class SyncActivityResultAssembler {
-      +{static} ToActionResult(result: Result, localizer: IStringLocalizer): IActionResult
-    }
-    class DisconnectDeviceResultAssembler {
-      +{static} ToActionResult(result: Result, localizer: IStringLocalizer): IActionResult
+    class ActivityWearableActionResultAssembler {
+      +{static} ToActionResult(result: Result<TValue, ActivityWearableError>, localizer: IStringLocalizer<ActivityWearableMessages>, onSuccess: Func<TValue, IActionResult>, instance: string?): IActionResult
     }
   }
 }
@@ -132,20 +127,19 @@ WearableConnectionsController --> IWearableConnectionQueryService : uses
 ' --- ActivityLogsController flow ---
 ActivityLogsController ..> LogManualActivityResource : receives
 ActivityLogsController ..> ActivityLogAssembler : uses
-ActivityLogsController ..> LogManualActivityResultAssembler : uses
-ActivityLogsController ..> DeleteActivityLogResultAssembler : uses
+ActivityLogsController ..> ActivityWearableActionResultAssembler : uses
 ActivityLogsController ..> GetActivityLogsByUserQuery : builds
 ActivityLogsController ..> GetDailyActivitySummaryQuery : builds
 ActivityLogsController ..> DeleteActivityLogCommand : builds
 
 ' --- WearableConnectionsController flow ---
 WearableConnectionsController ..> ConnectDeviceResource : receives
+WearableConnectionsController ..> SetAutoSyncResource : receives
 WearableConnectionsController ..> WearableConnectionAssembler : uses
-WearableConnectionsController ..> ConnectDeviceResultAssembler : uses
-WearableConnectionsController ..> SyncActivityResultAssembler : uses
-WearableConnectionsController ..> DisconnectDeviceResultAssembler : uses
+WearableConnectionsController ..> ActivityWearableActionResultAssembler : uses
 WearableConnectionsController ..> GetWearableConnectionsByUserIdQuery : builds
 WearableConnectionsController ..> SyncActivityDataCommand : builds
+WearableConnectionsController ..> SetAutoSyncCommand : builds
 WearableConnectionsController ..> DisconnectDeviceCommand : builds
 
 ' --- Assemblers map resources <-> domain ---
@@ -161,14 +155,8 @@ WearableConnectionAssembler ..> WearableConnectionResource
 WearableConnectionAssembler ..> ConnectDeviceCommand
 WearableConnectionAssembler ..> WearableConnection
 
-LogManualActivityResultAssembler ..> Result : maps
-LogManualActivityResultAssembler ..> ActivityLogAssembler : uses
-DeleteActivityLogResultAssembler ..> Result : maps
-ConnectDeviceResultAssembler ..> Result : maps
-ConnectDeviceResultAssembler ..> WearableConnectionAssembler : uses
-SyncActivityResultAssembler ..> Result : maps
-SyncActivityResultAssembler ..> WearableConnectionAssembler : uses
-DisconnectDeviceResultAssembler ..> Result : maps
+ActivityWearableActionResultAssembler ..> Result : maps
+ActivityWearableActionResultAssembler ..> ActivityWearableError : maps to HTTP status
 
 ' --- ACL contract implemented by the Application-layer facade ---
 IActivityWearableContextFacade ..> ActivityLog : exposes data of

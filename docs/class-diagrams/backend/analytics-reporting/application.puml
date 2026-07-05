@@ -9,9 +9,8 @@ package "NutriSense.AnalyticsReporting" {
 
     package "CommandServices" {
       interface IAnalyticsCommandService {
-        +Handle(command: GenerateProgressInsightsCommand, ct): Task<Result<bool, GenerateProgressInsightsError>>
-        +Handle(command: ViewDashboardCommand, ct): Task<Result<bool, ViewDashboardError>>
-        +Handle(command: ExportReportPdfCommand, ct): Task<Result<(byte[], string), ExportReportPdfError>>
+        +Handle(command: GenerateProgressInsightsCommand, ct): Task<Result<bool, AnalyticsReportingError>>
+        +Handle(command: ViewDashboardCommand, ct): Task<Result<bool, AnalyticsReportingError>>
       }
     }
 
@@ -23,28 +22,10 @@ package "NutriSense.AnalyticsReporting" {
       }
     }
 
-    package "Errors" {
-      enum GenerateProgressInsightsError {
-        UnexpectedError
-      }
-      enum ViewDashboardError {
-        UnexpectedError
-      }
-      enum ExportReportPdfError {
-        PremiumRequired
-        InvalidDateRange
-        UnexpectedError
-      }
-      enum UpdateUsageStreakError {
-        UnexpectedError
-      }
-    }
-
     package "Internal.CommandServices" {
       class AnalyticsCommandService {
-        +Handle(command: GenerateProgressInsightsCommand, ct): Task<Result<bool, GenerateProgressInsightsError>>
-        +Handle(command: ViewDashboardCommand, ct): Task<Result<bool, ViewDashboardError>>
-        +Handle(command: ExportReportPdfCommand, ct): Task<Result<(byte[], string), ExportReportPdfError>>
+        +Handle(command: GenerateProgressInsightsCommand, ct): Task<Result<bool, AnalyticsReportingError>>
+        +Handle(command: ViewDashboardCommand, ct): Task<Result<bool, AnalyticsReportingError>>
         -IsStreakDayMet(actual, goal, mealTypes): bool
       }
     }
@@ -107,20 +88,19 @@ package "NutriSense.AnalyticsReporting" {
   package "Domain [stubs]" {
     class UserAnalytics
     class ProgressSnapshot
-    class DateRange
     class GenerateProgressInsightsCommand
     class ViewDashboardCommand
-    class ExportReportPdfCommand
+    enum AnalyticsReportingError
     interface IUserAnalyticsRepository
     interface IAdherenceCalculator
-    interface IReportPdfGenerator
   }
 
   package "ACL & Shared [stubs]" {
     interface INutritionTrackingContextFacade
     interface IBodyHealthMetricsContextFacade
     interface IActivityWearableContextFacade
-    interface ISubscriptionTierLookup
+    interface IUnitOfWork
+    interface IMediator
     interface "IEventHandler<T>" as IEventHandler
   }
 }
@@ -132,20 +112,16 @@ AnalyticsQueryService ..|> IAnalyticsQueryService
 ' Command service collaborators (Application -> Domain)
 AnalyticsCommandService --> IUserAnalyticsRepository : uses
 AnalyticsCommandService --> IAdherenceCalculator : uses
-AnalyticsCommandService --> IReportPdfGenerator : uses
+AnalyticsCommandService --> IUnitOfWork : uses
+AnalyticsCommandService --> IMediator : uses
 AnalyticsCommandService ..> UserAnalytics : loads
 AnalyticsCommandService ..> ProgressSnapshot : creates
-AnalyticsCommandService ..> DateRange : builds
-AnalyticsCommandService ..> GenerateProgressInsightsError : returns
-AnalyticsCommandService ..> ViewDashboardError : returns
-AnalyticsCommandService ..> ExportReportPdfError : returns
-AnalyticsCommandService ..> UpdateUsageStreakError : returns
+AnalyticsCommandService ..> AnalyticsReportingError : returns
 
 ' Command service cross-context dependencies
 AnalyticsCommandService --> INutritionTrackingContextFacade : uses
 AnalyticsCommandService --> IBodyHealthMetricsContextFacade : uses
 AnalyticsCommandService --> IActivityWearableContextFacade : uses
-AnalyticsCommandService --> ISubscriptionTierLookup : uses
 
 ' Query service collaborators
 AnalyticsQueryService --> IUserAnalyticsRepository : uses
@@ -170,6 +146,5 @@ OnConsumptionUpdatedAnalyticsHandler ..> GenerateProgressInsightsCommand : sends
 OnTdeeCalculatedAnalyticsHandler ..> GenerateProgressInsightsCommand : sends
 
 AnalyticsCommandService ..> ViewDashboardCommand : handles
-AnalyticsCommandService ..> ExportReportPdfCommand : handles
 
 @enduml

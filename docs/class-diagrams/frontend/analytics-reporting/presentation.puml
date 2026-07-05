@@ -49,9 +49,10 @@ DashboardView o--> useAnalyticsReportingStore : uses >
 AnalyticsView o--> useAnalyticsReportingStore : uses >
 AnalyticsView ..> PdfExportService : exports via >
 
-DashboardView ..> KpiCardComponent : contains >
-DashboardView ..> MacroDonutChartComponent : contains >
-AnalyticsView ..> KpiCardComponent : contains >
-AnalyticsView ..> MacroDonutChartComponent : contains >
+' NOTE: KpiCardComponent and MacroDonutChartComponent are defined in this BC's
+' presentation layer but are NOT used by DashboardView or AnalyticsView — both
+' views render their KPI cards and donut charts with inline markup/Chart.js
+' instead. KpiCardComponent is actually consumed cross-context by
+' ActivityView (activity-wearable BC); MacroDonutChartComponent is currently unused anywhere.
 
 @enduml

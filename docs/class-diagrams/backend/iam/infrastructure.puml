@@ -14,6 +14,15 @@ package "NutriSense.IAM.Infrastructure" {
     }
   }
 
+  package "Mailing" {
+    ' Sends password reset emails over SMTP (MailKit); falls back to logging the
+    ' reset link when SMTP is not configured (e.g. local dev).
+    class SmtpEmailService {
+      +SendPasswordResetEmailAsync(toEmail: string, resetToken: string, ct): Task
+      -BuildResetUrl(resetToken: string): string
+    }
+  }
+
   package "Tokens.JWT" {
     class JwtTokenService {
       +Generate(user: User, sessionId: int): string
@@ -31,6 +40,9 @@ package "NutriSense.IAM.Infrastructure" {
     class DietaryRestrictionEntityTypeConfiguration {
       +Configure(builder: EntityTypeBuilder<DietaryRestriction>): void
     }
+    class PasswordResetTokenEntityTypeConfiguration {
+      +Configure(builder: EntityTypeBuilder<PasswordResetToken>): void
+    }
   }
 
   package "Persistence.EFC.Repositories" {
@@ -40,6 +52,10 @@ package "NutriSense.IAM.Infrastructure" {
       +ExistsByEmailAsync(email: Email, ct): Task<bool>
       -WithRelations(): IQueryable<User>
     }
+    class PasswordResetTokenRepository {
+      +FindByTokenAsync(token: string, ct): Task<PasswordResetToken?>
+      +DeleteByUserIdAsync(userId: int, ct): Task
+    }
   }
 }
 
@@ -47,10 +63,13 @@ package "IAM.Domain" <<external>> {
   class User
   class UserSession
   class DietaryRestriction
+  class PasswordResetToken
   class Email
   interface IUserRepository
+  interface IPasswordResetTokenRepository
   interface IHashingService
   interface ITokenService
+  interface IEmailService
 }
 
 package "Shared / EF Core" <<external>> {
@@ -58,6 +77,7 @@ package "Shared / EF Core" <<external>> {
   class "BaseRepository<T>" as BaseRepository
   interface "IEntityTypeConfiguration<T>" as IEntityTypeConfiguration
   interface IConfiguration
+  interface "ILogger<T>" as ILogger
 }
 
 ' --- Domain-service implementations (ports -> adapters) ---
@@ -65,14 +85,20 @@ BCryptHashingService ..|> IHashingService
 JwtTokenService ..|> ITokenService
 JwtTokenService --> IConfiguration : reads settings
 JwtTokenService ..> User : reads claims from
+SmtpEmailService ..|> IEmailService
+SmtpEmailService --> IConfiguration : reads settings
+SmtpEmailService --> ILogger : logs
+SmtpEmailService ..> PasswordResetToken : notifies recipient of
 
 ' --- EF Core entity configurations ---
 UserEntityTypeConfiguration ..|> IEntityTypeConfiguration
 UserSessionEntityTypeConfiguration ..|> IEntityTypeConfiguration
 DietaryRestrictionEntityTypeConfiguration ..|> IEntityTypeConfiguration
+PasswordResetTokenEntityTypeConfiguration ..|> IEntityTypeConfiguration
 UserEntityTypeConfiguration ..> User : maps
 UserSessionEntityTypeConfiguration ..> UserSession : maps
 DietaryRestrictionEntityTypeConfiguration ..> DietaryRestriction : maps
+PasswordResetTokenEntityTypeConfiguration ..> PasswordResetToken : maps
 
 ' --- Repository ---
 UserRepository --|> BaseRepository
@@ -80,5 +106,9 @@ UserRepository ..|> IUserRepository
 UserRepository --> AppDbContext : queries
 UserRepository ..> User : persists
 UserRepository ..> Email : looks up by
+PasswordResetTokenRepository --|> BaseRepository
+PasswordResetTokenRepository ..|> IPasswordResetTokenRepository
+PasswordResetTokenRepository --> AppDbContext : queries
+PasswordResetTokenRepository ..> PasswordResetToken : persists
 
 @enduml

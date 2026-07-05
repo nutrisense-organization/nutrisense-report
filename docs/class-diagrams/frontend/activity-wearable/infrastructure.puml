@@ -23,6 +23,8 @@ package "activity-wearable/infrastructure" {
     + deleteLog(id, userId): Promise
     + getConnectionsByUser(userId): Promise
     + createConnection(resource): Promise
+    + syncConnection(id): Promise
+    + setAutoSync(id, enabled): Promise
     + deleteConnection(id): Promise
   }
 
