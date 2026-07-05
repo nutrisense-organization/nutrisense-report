@@ -29,13 +29,13 @@ TABLE(ingredient_catalog_items, "ingredient_catalog_items") {
   category : VARCHAR(50) NOT NULL
   default_unit : VARCHAR(20) NOT NULL
   grams_per_unit : DECIMAL(10,3)
-  food_id : INT
+  FK(food_id) : INT
 }
 
 TABLE(location_preferences, "location_preferences") {
   PK(id) : INT AUTO_INCREMENT
   --
-  user_id : INT NOT NULL
+  FK(user_id) : INT NOT NULL
   FK(home_city_id) : INT
   FK(current_city_id) : INT
   location_permission_granted : TINYINT(1) NOT NULL
@@ -48,8 +48,8 @@ TABLE(location_preferences, "location_preferences") {
 TABLE(recommendation_cards, "recommendation_cards") {
   PK(id) : INT AUTO_INCREMENT
   --
-  user_id : INT NOT NULL
-  food_id : INT
+  FK(user_id) : INT NOT NULL
+  FK(food_id) : INT
   FK(city_id) : INT
   food_name_en : VARCHAR(200) NOT NULL
   food_name_es : VARCHAR(200) NOT NULL
@@ -70,7 +70,7 @@ TABLE(recommendation_cards, "recommendation_cards") {
 TABLE(pantries, "pantries") {
   PK(id) : INT AUTO_INCREMENT
   --
-  user_id : INT NOT NULL
+  FK(user_id) : INT NOT NULL
   created_at : DATETIME
   updated_at : DATETIME
 }
