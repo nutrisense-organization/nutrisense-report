@@ -81,7 +81,7 @@ Esta sección presenta el Video About-the-Team, donde el equipo de NutriSense co
 | Atributo | Contenido |
 |----------|-----------|
 | **Duración** | 9:41 |
-| **Microsoft Stream** | [Link de about the product](https://upcedupe-my.sharepoint.com/:v:/g/personal/u202417857_upc_edu_pe/IQC4vXzQ6x3VSoASXKgDM-pjAcjpvxzbcAB0YCmJpnws9SE?e=RyNWWi&nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJTdHJlYW1XZWJBcHAiLCJyZWZlcnJhbFZpZXciOiJTaGFyZURpYWxvZy1MaW5rIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXcifX0%3D)|
+| **Microsoft Stream** | [Link de about the team](https://upcedupe-my.sharepoint.com/:v:/g/personal/u202417857_upc_edu_pe/IQBqqDG26GkPT66PkG1tKYR3AfvOCdlHSHMDwlws_VRn7Qg?nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJPbmVEcml2ZUZvckJ1c2luZXNzIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXciLCJyZWZlcnJhbFZpZXciOiJNeUZpbGVzTGlua0NvcHkifX0&e=DqbJah)|
 
 ---
 
