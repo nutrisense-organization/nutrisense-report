@@ -39,6 +39,7 @@ package "Nutrisense.Platform.Subscriptions" {
         +PeriodEnd: DateTimeOffset
         +CancelAtPeriodEnd: bool
         +StripeSubscriptionId: string?
+        +StripeCustomerId: string?
         +LastPlanChangeAt: DateTimeOffset?
         +PaymentMethodId: int?
         -_paymentRecords: List<PaymentRecord>
@@ -46,6 +47,7 @@ package "Nutrisense.Platform.Subscriptions" {
         +CreatedAt: DateTimeOffset?
         +UpdatedAt: DateTimeOffset?
         +ApplyPayment(record: PaymentRecord): void
+        +ApplyStripeCustomer(stripeCustomerId: string): void
         +ApplyActivation(): void
         +ApplyCancel(cancelAtPeriodEnd: bool): void
         +ApplyRenewal(record: PaymentRecord, newPeriodEnd: DateTimeOffset): void
@@ -174,14 +176,41 @@ package "Nutrisense.Platform.Subscriptions" {
     }
 
     package "Model.Events" {
-      class PlanSelected <<record>>
-      class PaymentSuccessful <<record>>
-      class SubscriptionActivated <<record>>
-      class SubscriptionCancelled <<record>>
-      class SubscriptionRenewed <<record>>
-      class PlanChanged <<record>>
-      class BenefitsEnabled <<record>>
-      class BenefitsDisabled <<record>>
+      class PlanSelected <<record>> {
+        +UserSubscriptionId: int
+        +UserId: int
+        +PlanKey: string
+      }
+      class PaymentSuccessful <<record>> {
+        +UserSubscriptionId: int
+        +UserId: int
+        +Amount: decimal
+      }
+      class SubscriptionActivated <<record>> {
+        +UserSubscriptionId: int
+        +UserId: int
+      }
+      class SubscriptionCancelled <<record>> {
+        +UserSubscriptionId: int
+        +UserId: int
+      }
+      class SubscriptionRenewed <<record>> {
+        +UserSubscriptionId: int
+        +UserId: int
+      }
+      class PlanChanged <<record>> {
+        +UserSubscriptionId: int
+        +UserId: int
+        +OldPlanKey: string
+        +NewPlanKey: string
+      }
+      class BenefitsEnabled <<record>> {
+        +UserId: int
+        +PlanKey: string
+      }
+      class BenefitsDisabled <<record>> {
+        +UserId: int
+      }
     }
 
     package "Repositories" {
@@ -199,12 +228,27 @@ package "Nutrisense.Platform.Subscriptions" {
 
     package "Services" {
       interface IPaymentGateway {
+        +EnsureCustomerAsync(userId: int, existingCustomerId: string?, stripePaymentMethodId: string): Task<string?>
         +ChargeAsync(stripeCustomerId: string, stripePaymentMethodId: string, amount: Money): Task<PaymentResult>
       }
       class PaymentResult <<record>> {
         +Success: bool
         +StripePaymentIntentId: string?
         +FailureReason: string?
+      }
+    }
+
+    package "Model.Errors" {
+      enum SubscriptionsError {
+        SubscriptionNotFound
+        SubscriptionNotActive
+        PlanNotFound
+        SamePlan
+        PaymentFailed
+        InvalidCard
+        PaymentMethodNotFound
+        AlreadySubscribed
+        UnexpectedError
       }
     }
   }
@@ -264,5 +308,9 @@ IPaymentMethodRepository ..> PaymentMethod : aggregates
 ' --- Domain services ---
 IPaymentGateway ..> Money : charges
 IPaymentGateway ..> PaymentResult : returns
+
+' --- Domain error codes ---
+UserSubscription ..> SubscriptionsError : may fail with
+PaymentMethod ..> SubscriptionsError : may fail with
 
 @enduml

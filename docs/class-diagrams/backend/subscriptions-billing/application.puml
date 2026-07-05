@@ -13,6 +13,9 @@ package "Nutrisense.Platform.Subscriptions" {
       +IsSuccess: bool
       +IsFailure: bool
     }
+    interface IMediator {
+      +PublishAsync(event: object): Task
+    }
   }
 
   package "Domain [stubs]" {
@@ -24,6 +27,7 @@ package "Nutrisense.Platform.Subscriptions" {
     interface ISubscriptionPlanRepository
     interface IPaymentMethodRepository
     interface IPaymentGateway
+    enum SubscriptionsError
   }
 
   package "Interfaces.Acl [stub]" {
@@ -38,13 +42,13 @@ package "Nutrisense.Platform.Subscriptions" {
 
     package "CommandServices" {
       interface IUserSubscriptionCommandService {
-        +HandleSelectPlan(command: SelectSubscriptionPlanCommand): Task<Result<UserSubscription, SelectSubscriptionPlanError>>
-        +HandleCancel(command: CancelSubscriptionCommand): Task<Result<UserSubscription, CancelSubscriptionError>>
-        +HandleRenew(command: RenewSubscriptionCommand): Task<Result<UserSubscription, RenewSubscriptionError>>
-        +HandleChangePlan(command: ChangeSubscriptionPlanCommand): Task<Result<UserSubscription, ChangeSubscriptionPlanError>>
+        +HandleSelectPlan(command: SelectSubscriptionPlanCommand): Task<Result<UserSubscription, SubscriptionsError>>
+        +HandleCancel(command: CancelSubscriptionCommand): Task<Result<UserSubscription, SubscriptionsError>>
+        +HandleRenew(command: RenewSubscriptionCommand): Task<Result<UserSubscription, SubscriptionsError>>
+        +HandleChangePlan(command: ChangeSubscriptionPlanCommand): Task<Result<UserSubscription, SubscriptionsError>>
       }
       interface IPaymentMethodCommandService {
-        +Handle(command: RegisterPaymentMethodCommand): Task<Result<PaymentMethod, RegisterPaymentMethodError>>
+        +Handle(command: RegisterPaymentMethodCommand): Task<Result<PaymentMethod, SubscriptionsError>>
         +RemoveAsync(id: int): Task<bool>
       }
     }
@@ -63,46 +67,16 @@ package "Nutrisense.Platform.Subscriptions" {
       }
     }
 
-    package "Errors" {
-      enum SelectSubscriptionPlanError {
-        PlanNotFound
-        PaymentMethodNotFound
-        PaymentFailed
-        AlreadySubscribed
-        UnexpectedError
-      }
-      enum CancelSubscriptionError {
-        NotFound
-        NotActive
-        UnexpectedError
-      }
-      enum RenewSubscriptionError {
-        NotFound
-        PaymentFailed
-        UnexpectedError
-      }
-      enum ChangeSubscriptionPlanError {
-        SubscriptionNotFound
-        PlanNotFound
-        SamePlan
-        PaymentFailed
-        UnexpectedError
-      }
-      enum RegisterPaymentMethodError {
-        InvalidCard
-        UnexpectedError
-      }
-    }
-
     package "Internal.CommandServices" {
       class UserSubscriptionCommandService {
-        +HandleSelectPlan(command): Task<Result>
-        +HandleCancel(command): Task<Result>
-        +HandleRenew(command): Task<Result>
-        +HandleChangePlan(command): Task<Result>
+        +HandleSelectPlan(command: SelectSubscriptionPlanCommand): Task<Result<UserSubscription, SubscriptionsError>>
+        +HandleCancel(command: CancelSubscriptionCommand): Task<Result<UserSubscription, SubscriptionsError>>
+        +HandleRenew(command: RenewSubscriptionCommand): Task<Result<UserSubscription, SubscriptionsError>>
+        +HandleChangePlan(command: ChangeSubscriptionPlanCommand): Task<Result<UserSubscription, SubscriptionsError>>
+        -ResolveCustomerIdAsync(subscription: UserSubscription, stripePaymentMethodId: string): Task<string?>
       }
       class PaymentMethodCommandService {
-        +Handle(command): Task<Result>
+        +Handle(command: RegisterPaymentMethodCommand): Task<Result<PaymentMethod, SubscriptionsError>>
         +RemoveAsync(id: int): Task<bool>
       }
     }
@@ -115,7 +89,8 @@ package "Nutrisense.Platform.Subscriptions" {
 
     package "Acl" {
       class SubscriptionsContextFacade {
-        -DefaultPlanKey: string
+        -{static} DefaultPlanKey: string
+        -{static} ProOrAboveTiers: HashSet<string>
         +GetPlanKey(userId: int): Task<string>
         +IsProOrAbove(userId: int): Task<bool>
         +IsPremium(userId: int): Task<bool>
@@ -138,6 +113,7 @@ UserSubscriptionCommandService ..> ISubscriptionPlanRepository : uses
 UserSubscriptionCommandService ..> IPaymentMethodRepository : uses
 UserSubscriptionCommandService ..> IPaymentGateway : charges via
 UserSubscriptionCommandService ..> IUnitOfWork : commits
+UserSubscriptionCommandService ..> IMediator : publishes events via
 UserSubscriptionCommandService ..> UserSubscription : orchestrates
 UserSubscriptionCommandService ..> PaymentRecord : creates
 
@@ -153,11 +129,8 @@ PaymentMethodQueryService ..> IPaymentMethodRepository : reads
 ' --- Result / error usage ---
 UserSubscriptionCommandService ..> Result : returns
 PaymentMethodCommandService ..> Result : returns
-UserSubscriptionCommandService ..> SelectSubscriptionPlanError : signals
-UserSubscriptionCommandService ..> CancelSubscriptionError : signals
-UserSubscriptionCommandService ..> RenewSubscriptionError : signals
-UserSubscriptionCommandService ..> ChangeSubscriptionPlanError : signals
-PaymentMethodCommandService ..> RegisterPaymentMethodError : signals
+UserSubscriptionCommandService ..> SubscriptionsError : signals
+PaymentMethodCommandService ..> SubscriptionsError : signals
 
 ' --- ACL facade ---
 SubscriptionsContextFacade ..> IUserSubscriptionCommandService : delegates

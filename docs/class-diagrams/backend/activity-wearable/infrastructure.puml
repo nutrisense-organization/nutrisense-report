@@ -11,6 +11,7 @@ package "ActivityWearable.Infrastructure" {
     interface IActivityLogRepository
     interface IWearableConnectionRepository
     interface ICaloricBalanceCalculator
+    interface IActiveCalorieEstimator
     interface IWearableSyncProvider
     class WearableAuthorization
     class ImportedActivity
@@ -27,12 +28,31 @@ package "ActivityWearable.Infrastructure" {
       +CalculateDailyActiveCalories(logs: IEnumerable<ActivityLog>, date: DateOnly): decimal
       +CalculateBalance(tdee: decimal, activeCalories: decimal, consumedCalories: decimal): decimal
     }
+    class MetActiveCalorieEstimator {
+      -{static} MetByActivity: IReadOnlyDictionary<string, (double, double, double)>
+      -{static} DefaultMet: (double, double, double)
+      +Estimate(activityType: string, durationMinutes: int, intensity: string, weightKg: decimal): decimal
+    }
   }
 
-  package "External.GoogleFit" {
-    class GoogleFitSyncProvider {
+  package "External.GoogleHealth" {
+    class GoogleHealthSyncProvider {
+      -{static} DefaultTokenEndpoint: string
+      -{static} DefaultBaseUrl: string
+      -{static} DefaultDataType: string
+      -{static} FallbackActivityType: string
+      -httpClient: HttpClient
+      -configuration: IConfiguration
+      -logger: ILogger<GoogleHealthSyncProvider>
+      +GoogleHealthSyncProvider(httpClient: HttpClient, configuration: IConfiguration, logger: ILogger<GoogleHealthSyncProvider>)
       +AuthorizeAsync(oauthCode: string, ct: CancellationToken): Task<WearableAuthorization>
-      +FetchActivitiesAsync(wearableConnectionId: int, from: DateOnly, to: DateOnly, ct: CancellationToken): Task<IEnumerable<ImportedActivity>>
+      +RefreshAsync(refreshToken: string, ct: CancellationToken): Task<WearableAuthorization>
+      +FetchActivitiesAsync(accessToken: string, from: DateOnly, to: DateOnly, ct: CancellationToken): Task<IEnumerable<ImportedActivity>>
+      -ExchangeAsync(form: Dictionary<string, string>, ct: CancellationToken): Task<WearableAuthorization>
+      -ReadClientCredentials(): (string?, string?)
+      -{static} Failure(reason: string): WearableAuthorization
+      -{static} ParseExercises(stream: Stream): IEnumerable<ImportedActivity>
+      -{static} MapExerciseType(type: string?): string
     }
   }
 
@@ -42,11 +62,13 @@ package "ActivityWearable.Infrastructure" {
       +FindByUserAndDateAsync(userId: int, date: DateOnly, ct: CancellationToken): Task<IEnumerable<ActivityLog>>
       +FindByUserAsync(userId: int, from: DateOnly?, to: DateOnly?, ct: CancellationToken): Task<IEnumerable<ActivityLog>>
       +GetDailyCaloriesBurnedAsync(userId: int, date: DateOnly, ct: CancellationToken): Task<decimal>
+      -FindByIdAsync(id: int, ct: CancellationToken): Task<ActivityLog?>
     }
     class WearableConnectionRepository {
       +WearableConnectionRepository(context: AppDbContext)
       +FindByUserIdAsync(userId: int, ct: CancellationToken): Task<IEnumerable<WearableConnection>>
       +FindByUserAndProviderAsync(userId: int, provider: string, ct: CancellationToken): Task<WearableConnection?>
+      -FindByIdAsync(id: int, ct: CancellationToken): Task<WearableConnection?>
     }
   }
 
@@ -63,9 +85,10 @@ package "ActivityWearable.Infrastructure" {
 ' --- Domain service implementations ---
 CaloricBalanceCalculator ..|> ICaloricBalanceCalculator
 CaloricBalanceCalculator ..> ActivityLog : sums
-GoogleFitSyncProvider ..|> IWearableSyncProvider
-GoogleFitSyncProvider ..> WearableAuthorization : returns
-GoogleFitSyncProvider ..> ImportedActivity : returns
+MetActiveCalorieEstimator ..|> IActiveCalorieEstimator
+GoogleHealthSyncProvider ..|> IWearableSyncProvider
+GoogleHealthSyncProvider ..> WearableAuthorization : returns
+GoogleHealthSyncProvider ..> ImportedActivity : returns
 
 ' --- Repository implementations ---
 ActivityLogRepository ..|> IActivityLogRepository

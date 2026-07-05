@@ -46,21 +46,11 @@ package "NutriSense.AnalyticsReporting" {
       class AdherenceScore <<value object>> {
         +Value: decimal
       }
-
-      class DateRange <<value object>> {
-        +From: DateOnly
-        +To: DateOnly
-      }
     }
 
     package "Model.Commands" {
       class CalculateProgressCommand <<record>> {
         +UserId: int
-      }
-      class ExportReportPdfCommand <<record>> {
-        +UserId: int
-        +From: DateOnly
-        +To: DateOnly
       }
       class GenerateProgressInsightsCommand <<record>> {
         +UserId: int
@@ -100,10 +90,6 @@ package "NutriSense.AnalyticsReporting" {
         +UserId: int
         +AdherenceScore: decimal
       }
-      class ReportExported <<domain event>> {
-        +UserId: int
-        +FileName: string
-      }
       class UsageStreakUpdated <<domain event>> {
         +UserId: int
         +CurrentStreak: int
@@ -129,11 +115,14 @@ package "NutriSense.AnalyticsReporting" {
       interface IAdherenceCalculator {
         +Calculate(actual: DailyMacroSummaryItem?, goal: UserGoalSummaryItem?): decimal
       }
-      interface IReportPdfGenerator {
-        +GenerateAsync(userId: int, range: DateRange, ct): Task<byte[]>
-      }
       interface IStreakCalculator {
         +Calculate(lastLogDate: DateOnly?, currentStreak: int, longestStreak: int, today: DateOnly): (int, int)
+      }
+    }
+
+    package "Model.Errors" {
+      enum AnalyticsReportingError {
+        UnexpectedError
       }
     }
   }
@@ -152,7 +141,6 @@ UserAnalytics *--> "0..*" ProgressSnapshot : owns
 UserAnalytics ..|> IAuditableEntity
 DashboardViewed --|> DomainEventBase
 ProgressCalculated --|> DomainEventBase
-ReportExported --|> DomainEventBase
 UsageStreakUpdated --|> DomainEventBase
 UserDataAggregated --|> DomainEventBase
 VisualizationGenerated --|> DomainEventBase
@@ -162,20 +150,11 @@ IUserAnalyticsRepository --|> IBaseRepository
 IUserAnalyticsRepository ..> UserAnalytics : manages
 IUserAnalyticsRepository ..> ProgressSnapshot : reads
 
-' Domain services
-IAdherenceCalculator ..> AdherenceScore : produces
-IReportPdfGenerator ..> DateRange : covers
-IStreakCalculator ..> UserAnalytics : computes for
-
-' Commands raise events
-CalculateProgressCommand ..> ProgressCalculated : triggers
+' Commands raise events (only the commands actually handled by AnalyticsCommandService do)
 GenerateProgressInsightsCommand ..> ProgressCalculated : triggers
 GenerateProgressInsightsCommand ..> UserDataAggregated : triggers
 GenerateProgressInsightsCommand ..> VisualizationGenerated : triggers
-GenerateVisualizationCommand ..> VisualizationGenerated : triggers
-UpdateUsageStreakCommand ..> UsageStreakUpdated : triggers
 ViewDashboardCommand ..> DashboardViewed : triggers
-ExportReportPdfCommand ..> ReportExported : triggers
 
 ' Queries read the aggregate
 GetDashboardQuery ..> UserAnalytics : reads

@@ -34,6 +34,21 @@ package "NutriSense.IAM.Domain" {
       +AddSession(deviceLabel: string?): UserSession
       +EndSession(sessionId: int): void
     }
+
+    ' Single-use password reset token, valid for one hour, invalidated once used.
+    class PasswordResetToken {
+      +Id: int
+      +Token: string
+      +UserId: int
+      +ExpiresAt: DateTimeOffset
+      +Used: bool
+      #PasswordResetToken()
+      -PasswordResetToken(userId: int, token: string, expiresAt: DateTimeOffset)
+      +{static} Create(userId: int): PasswordResetToken
+      +IsExpired(): bool
+      +IsValid(): bool
+      +MarkAsUsed(): void
+    }
   }
 
   package "Model.Entities" {
@@ -61,7 +76,7 @@ package "NutriSense.IAM.Domain" {
     class UserId <<record>> {
       +Value: int
       +UserId(value: int)
-      +{static} FromRaw(value: int): UserId
+      ~{static} FromRaw(value: int): UserId
     }
     class Email <<record>> {
       +Value: string
@@ -86,22 +101,22 @@ package "NutriSense.IAM.Domain" {
       +Height(centimeters: decimal)
     }
     class BiologicalSex <<record>> {
-      +{static} Allowed: HashSet<string>
+      -{static} Allowed: HashSet<string>
       +Value: string
       +BiologicalSex(value: string)
     }
     class ActivityLevel <<record>> {
-      +{static} Allowed: HashSet<string>
+      -{static} Allowed: HashSet<string>
       +Value: string
       +ActivityLevel(value: string)
     }
     class GoalIntent <<record>> {
-      +{static} Allowed: HashSet<string>
+      -{static} Allowed: HashSet<string>
       +Value: string
       +GoalIntent(value: string)
     }
     class PreferredLanguage <<record>> {
-      +{static} Allowed: HashSet<string>
+      -{static} Allowed: HashSet<string>
       +Value: string
       +PreferredLanguage(value: string)
     }
@@ -119,6 +134,8 @@ package "NutriSense.IAM.Domain" {
     class SetHealthGoalCommand <<record>>
     class SetDietaryRestrictionsCommand <<record>>
     class DeleteUserCommand <<record>>
+    class RequestPasswordResetCommand <<record>>
+    class ResetPasswordCommand <<record>>
   }
 
   package "Model.Queries" {
@@ -138,10 +155,30 @@ package "NutriSense.IAM.Domain" {
     class RestrictionsConfigured <<record>>
   }
 
+  package "Model.Errors" {
+    enum IamError {
+      UserNotFound
+      SessionNotFound
+      InvalidCredentials
+      EmailAlreadyTaken
+      WeakPassword
+      InvalidEmail
+      InvalidResetToken
+      ResetTokenExpired
+      InvalidGoal
+      InvalidProfileData
+      UnexpectedError
+    }
+  }
+
   package "Repositories" {
     interface IUserRepository {
       +FindByEmailAsync(email: Email, ct): Task<User?>
       +ExistsByEmailAsync(email: Email, ct): Task<bool>
+    }
+    interface IPasswordResetTokenRepository {
+      +FindByTokenAsync(token: string, ct): Task<PasswordResetToken?>
+      +DeleteByUserIdAsync(userId: int, ct): Task
     }
   }
 
@@ -153,6 +190,9 @@ package "NutriSense.IAM.Domain" {
     interface ITokenService {
       +Generate(user: User, sessionId: int): string
       +ValidateAndGetUserId(token: string): int?
+    }
+    interface IEmailService {
+      +SendPasswordResetEmailAsync(toEmail: string, resetToken: string, ct): Task
     }
   }
 }
@@ -187,10 +227,13 @@ DietaryRestriction *--> UserId
 IUserRepository --|> IBaseRepository
 IUserRepository ..> User : manages
 IUserRepository ..> Email : looks up by
+IPasswordResetTokenRepository --|> IBaseRepository
+IPasswordResetTokenRepository ..> PasswordResetToken : manages
 
 ' --- Domain services ---
 IHashingService ..> Password : hashes
 ITokenService ..> User : issues token for
+IEmailService ..> PasswordResetToken : notifies recipient of
 
 ' --- Commands build / mutate the aggregate ---
 User ..> RegisterUserCommand : built from
@@ -200,6 +243,9 @@ User ..> SetDietaryRestrictionsCommand : applies
 LoginUserCommand ..> User : authenticates
 LogoutUserCommand ..> UserSession : ends
 DeleteUserCommand ..> User : removes
+RequestPasswordResetCommand ..> PasswordResetToken : issues
+ResetPasswordCommand ..> PasswordResetToken : consumes
+ResetPasswordCommand ..> User : changes password of
 
 ' --- Queries target their read models ---
 GetUserByIdQuery ..> User : queries

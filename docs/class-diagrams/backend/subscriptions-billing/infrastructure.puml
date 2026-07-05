@@ -38,7 +38,10 @@ package "Nutrisense.Platform.Subscriptions" {
 
     package "External.Stripe" {
       class StripePaymentGateway {
+        -SecretKey: string?
+        +EnsureCustomerAsync(userId: int, existingCustomerId: string?, stripePaymentMethodId: string): Task<string?>
         +ChargeAsync(stripeCustomerId: string, stripePaymentMethodId: string, amount: Money): Task<PaymentResult>
+        -{static} ToMinorUnits(amount: decimal): long
       }
     }
 
@@ -80,6 +83,7 @@ package "Nutrisense.Platform.Subscriptions" {
 
     package "CrossContext" {
       class CrossContextSubscriptionTierLookup {
+        -{static} ProOrAbove: HashSet<string>
         +GetPlanKeyAsync(userId: int): Task<string>
         +IsProOrAboveAsync(userId: int): Task<bool>
         +IsPremiumAsync(userId: int): Task<bool>

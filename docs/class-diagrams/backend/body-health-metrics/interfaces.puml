@@ -9,6 +9,7 @@ package "Nutrisense.BodyHealthMetrics.Interfaces" {
     class BodyMetricsController {
       -commandService: IBodyMetricsCommandService
       -queryService: IBodyMetricsQueryService
+      -localizer: IStringLocalizer<BodyHealthMetricsMessages>
       +Register(resource: RegisterBodyMetricsResource): Task<IActionResult>
       +GetByUserId(userId: int): Task<IActionResult>
       +UpdateWeight(userId: int, resource: UpdateWeightResource): Task<IActionResult>
@@ -47,12 +48,20 @@ package "Nutrisense.BodyHealthMetrics.Interfaces" {
     class BodyMetricsResource <<record>> {
       +UserId: int
       +HeightCm: decimal
+      +DateOfBirth: string?
+      +BiologicalSex: string?
+      +ActivityLevel: string?
       +CurrentWeightKg: decimal?
       +BmiValue: decimal?
       +BmiCategory: string?
       +Bmr: decimal?
       +Tdee: decimal?
       +ActiveGoal: string?
+      +ActiveGoalStartWeightKg: decimal?
+      +ActiveGoalTargetWeightKg: decimal?
+      +ActiveGoalWeeklyRateKg: decimal?
+      +ActiveGoalSetAt: DateTimeOffset?
+      +ActiveGoalCaloricAdjustment: decimal?
       +DailyCalories: int?
       +ProteinG: decimal?
       +CarbsG: decimal?
@@ -85,7 +94,7 @@ package "Nutrisense.BodyHealthMetrics.Interfaces" {
       +{static} ToResource(log: WeightLog): WeightLogResource
     }
     class RegisterBodyMetricsCommandAssembler {
-      +{static} ToCommand(resource: RegisterBodyMetricsResource): RegisterBodyMetricsCommand
+      +{static} ToCommand(resource: RegisterBodyMetricsResource, dateOfBirth: DateOnly): RegisterBodyMetricsCommand
     }
     class RegisterBodyMeasurementCommandAssembler {
       +{static} ToCommand(userId: int, resource: RegisterBodyMeasurementResource): RegisterBodyMeasurementCommand
@@ -96,11 +105,17 @@ package "Nutrisense.BodyHealthMetrics.Interfaces" {
     class UpdateWeightCommandAssembler {
       +{static} ToCommand(userId: int, resource: UpdateWeightResource): UpdateWeightCommand
     }
+    class BodyHealthMetricsActionResultAssembler {
+      +{static} ToActionResult(error: BodyHealthMetricsError, localizer: IStringLocalizer<BodyHealthMetricsMessages>, instance: string?): IActionResult
+      -{static} StatusFor(error: BodyHealthMetricsError): int
+    }
   }
 
   package "Acl" {
     interface IBodyHealthMetricsContextFacade {
       +GetActiveGoalByUserId(userId: int, ct): Task<UserGoalSummaryItem?>
+      +GetCurrentWeightKg(userId: int, ct): Task<decimal?>
+      +GetTdee(userId: int, ct): Task<decimal?>
     }
     class UserGoalSummaryItem <<record>> {
       +GoalType: string
@@ -124,11 +139,21 @@ package "Domain [stubs]" {
   class RegisterBodyMeasurementCommand
   class SetHealthGoalCommand
   class UpdateWeightCommand
+  enum BodyHealthMetricsError
+}
+
+package "Resources [stubs]" {
+  class BodyHealthMetricsMessages
+}
+
+package "Shared [stubs]" {
+  interface "IStringLocalizer<T>" as IStringLocalizer
 }
 
 ' --- Controller wiring ---
 BodyMetricsController --> IBodyMetricsCommandService
 BodyMetricsController --> IBodyMetricsQueryService
+BodyMetricsController --> IStringLocalizer
 BodyMetricsController ..> RegisterBodyMetricsResource
 BodyMetricsController ..> UpdateWeightResource
 BodyMetricsController ..> RegisterBodyMeasurementResource
@@ -141,6 +166,12 @@ BodyMetricsController ..> SetHealthGoalCommandAssembler
 BodyMetricsController ..> UpdateWeightCommandAssembler
 BodyMetricsController ..> BodyMetricsResourceAssembler
 BodyMetricsController ..> WeightLogResourceAssembler
+BodyMetricsController ..> BodyHealthMetricsActionResultAssembler
+
+' --- Error-to-response mapping ---
+BodyHealthMetricsActionResultAssembler ..> BodyHealthMetricsError
+BodyHealthMetricsActionResultAssembler ..> BodyHealthMetricsMessages
+BodyHealthMetricsActionResultAssembler --> IStringLocalizer
 
 ' --- Assemblers map resources <-> domain ---
 BodyMetricsResourceAssembler ..> BodyMetrics
@@ -158,5 +189,8 @@ UpdateWeightCommandAssembler ..> UpdateWeightCommand
 
 ' --- ACL contract ---
 IBodyHealthMetricsContextFacade ..> UserGoalSummaryItem
+
+' --- Localization marker ---
+IStringLocalizer ..> BodyHealthMetricsMessages : generic parameter
 
 @enduml

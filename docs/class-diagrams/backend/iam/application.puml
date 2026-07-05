@@ -9,13 +9,15 @@ package "NutriSense.IAM.Application" {
 
   package "CommandServices" {
     interface IUserCommandService {
-      +Handle(command: RegisterUserCommand): Task<Result<User, RegisterUserError>>
-      +Handle(command: LoginUserCommand): Task<Result<LoginResult, LoginUserError>>
-      +Handle(command: LogoutUserCommand): Task<Result<bool, LogoutUserError>>
-      +Handle(command: UpdateProfileCommand): Task<Result<User, UpdateProfileError>>
-      +Handle(command: SetHealthGoalCommand): Task<Result<User, SetHealthGoalError>>
-      +Handle(command: SetDietaryRestrictionsCommand): Task<Result<User, SetDietaryRestrictionsError>>
-      +Handle(command: DeleteUserCommand): Task<Result<bool, DeleteUserError>>
+      +Handle(command: RegisterUserCommand): Task<Result<User, IamError>>
+      +Handle(command: LoginUserCommand): Task<Result<LoginResult, IamError>>
+      +Handle(command: LogoutUserCommand): Task<Result<bool, IamError>>
+      +Handle(command: UpdateProfileCommand): Task<Result<User, IamError>>
+      +Handle(command: SetHealthGoalCommand): Task<Result<User, IamError>>
+      +Handle(command: SetDietaryRestrictionsCommand): Task<Result<User, IamError>>
+      +Handle(command: DeleteUserCommand): Task<Result<bool, IamError>>
+      +Handle(command: RequestPasswordResetCommand): Task<Result<bool, IamError>>
+      +Handle(command: ResetPasswordCommand): Task<Result<bool, IamError>>
     }
   }
 
@@ -28,16 +30,6 @@ package "NutriSense.IAM.Application" {
     }
   }
 
-  package "Errors" {
-    enum RegisterUserError
-    enum LoginUserError
-    enum LogoutUserError
-    enum UpdateProfileError
-    enum SetHealthGoalError
-    enum SetDietaryRestrictionsError
-    enum DeleteUserError
-  }
-
   package "Internal" {
     class LoginResult <<record>> {
       +UserId: UserId
@@ -47,13 +39,15 @@ package "NutriSense.IAM.Application" {
 
     package "Internal.CommandServices" {
       class UserCommandService {
-        +Handle(command: RegisterUserCommand): Task<Result<User, RegisterUserError>>
-        +Handle(command: LoginUserCommand): Task<Result<LoginResult, LoginUserError>>
-        +Handle(command: LogoutUserCommand): Task<Result<bool, LogoutUserError>>
-        +Handle(command: UpdateProfileCommand): Task<Result<User, UpdateProfileError>>
-        +Handle(command: SetHealthGoalCommand): Task<Result<User, SetHealthGoalError>>
-        +Handle(command: SetDietaryRestrictionsCommand): Task<Result<User, SetDietaryRestrictionsError>>
-        +Handle(command: DeleteUserCommand): Task<Result<bool, DeleteUserError>>
+        +Handle(command: RegisterUserCommand): Task<Result<User, IamError>>
+        +Handle(command: LoginUserCommand): Task<Result<LoginResult, IamError>>
+        +Handle(command: LogoutUserCommand): Task<Result<bool, IamError>>
+        +Handle(command: UpdateProfileCommand): Task<Result<User, IamError>>
+        +Handle(command: SetHealthGoalCommand): Task<Result<User, IamError>>
+        +Handle(command: SetDietaryRestrictionsCommand): Task<Result<User, IamError>>
+        +Handle(command: DeleteUserCommand): Task<Result<bool, IamError>>
+        +Handle(command: RequestPasswordResetCommand): Task<Result<bool, IamError>>
+        +Handle(command: ResetPasswordCommand): Task<Result<bool, IamError>>
       }
     }
 
@@ -78,6 +72,7 @@ package "IAM.Domain" <<external>> {
   class User
   class UserSession
   class DietaryRestriction
+  class PasswordResetToken
   class Email
   class Password
   class RegisterUserCommand
@@ -87,6 +82,8 @@ package "IAM.Domain" <<external>> {
   class SetHealthGoalCommand
   class SetDietaryRestrictionsCommand
   class DeleteUserCommand
+  class RequestPasswordResetCommand
+  class ResetPasswordCommand
   class GetUserByIdQuery
   class GetUserByEmailQuery
   class GetAllSessionsByUserIdQuery
@@ -98,9 +95,12 @@ package "IAM.Domain" <<external>> {
   class ProfileUpdated
   class GoalDefined
   class RestrictionsConfigured
+  enum IamError
   interface IUserRepository
+  interface IPasswordResetTokenRepository
   interface IHashingService
   interface ITokenService
+  interface IEmailService
 }
 
 package "IAM.Interfaces.Acl" <<external>> {
@@ -121,6 +121,8 @@ IamContextFacade ..|> IIamContextFacade
 
 ' --- UserCommandService dependencies ---
 UserCommandService --> IUserRepository : uses
+UserCommandService --> IPasswordResetTokenRepository : uses
+UserCommandService --> IEmailService : uses
 UserCommandService --> IUnitOfWork : uses
 UserCommandService --> IHashingService : uses
 UserCommandService --> ITokenService : uses
@@ -128,6 +130,7 @@ UserCommandService --> IMediator : publishes via
 UserCommandService --> ILogger : logs
 UserCommandService ..> User : manages
 UserCommandService ..> LoginResult : produces
+UserCommandService ..> PasswordResetToken : creates
 UserCommandService ..> Email : validates
 UserCommandService ..> Password : validates
 
@@ -146,6 +149,7 @@ UserQueryService ..> User : returns
 UserQueryService ..> UserSession : returns
 UserQueryService ..> DietaryRestriction : returns
 UserQueryService ..> Email : validates
+UserQueryService ..> GetDietaryRestrictionsByUserIdQuery : handles
 
 ' --- ACL facade orchestration ---
 IamContextFacade --> IUserQueryService : uses
@@ -158,6 +162,8 @@ UserCommandService ..> UpdateProfileCommand : handles
 UserCommandService ..> SetHealthGoalCommand : handles
 UserCommandService ..> SetDietaryRestrictionsCommand : handles
 UserCommandService ..> DeleteUserCommand : handles
+UserCommandService ..> RequestPasswordResetCommand : handles
+UserCommandService ..> ResetPasswordCommand : handles
 UserQueryService ..> GetUserByIdQuery : handles
 UserQueryService ..> GetUserByEmailQuery : handles
 UserQueryService ..> GetAllSessionsByUserIdQuery : handles
@@ -165,15 +171,9 @@ UserQueryService ..> GetAllSessionsByUserIdQuery : handles
 ' --- LoginResult composition ---
 LoginResult ..> User : identifies
 
-' --- Result wrapper & error enums surfaced by the command service ---
+' --- Result wrapper & error enum surfaced by the command service ---
 IUserCommandService ..> Result
 IUserQueryService ..> User : returns
-IUserCommandService ..> RegisterUserError
-IUserCommandService ..> LoginUserError
-IUserCommandService ..> LogoutUserError
-IUserCommandService ..> UpdateProfileError
-IUserCommandService ..> SetHealthGoalError
-IUserCommandService ..> SetDietaryRestrictionsError
-IUserCommandService ..> DeleteUserError
+IUserCommandService ..> IamError
 
 @enduml

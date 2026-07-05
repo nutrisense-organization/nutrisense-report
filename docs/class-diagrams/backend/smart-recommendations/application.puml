@@ -12,21 +12,22 @@ package "NutriSense.SmartRecommendations.Application" {
       +Handle(command: DeriveIngredientsFromFoodsCommand, ct): Task<int>
     }
     interface IRecipeImportCommandService {
-      +Handle(command: ImportRecipeSuggestionsCommand, ct): Task<Result<int, RecipeImportError>>
+      +Handle(command: ImportRecipeSuggestionsCommand, ct): Task<Result<int, SmartRecommendationsError>>
     }
     interface IRecsEngineCommandService {
-      +Handle(command: GenerateRecommendationCommand, ct): Task<Result<RecommendationCard, GenerateRecommendationError>>
-      +Handle(command: EnableTravelModeCommand, ct): Task<Result<LocationPreference, EnableTravelModeError>>
-      +Handle(command: DisableTravelModeCommand, ct): Task<Result<LocationPreference, DisableTravelModeError>>
-      +Handle(command: RegisterPantryItemsCommand, ct): Task<Result<Pantry, RegisterPantryItemsError>>
-      +Handle(command: RemovePantryItemCommand, ct): Task<Result<Pantry, RemovePantryItemError>>
-      +Handle(command: UpdatePantryItemCommand, ct): Task<Result<Pantry, UpdatePantryItemError>>
-      +Handle(command: SuggestRecipeCommand, ct): Task<Result<Recipe, SuggestRecipeError>>
-      +Handle(command: DetectLocationCommand, ct): Task<Result<LocationPreference, DetectLocationError>>
+      +Handle(command: GenerateRecommendationCommand, ct): Task<Result<RecommendationCard, SmartRecommendationsError>>
+      +Handle(command: EnableTravelModeCommand, ct): Task<Result<LocationPreference, SmartRecommendationsError>>
+      +Handle(command: DisableTravelModeCommand, ct): Task<Result<LocationPreference, SmartRecommendationsError>>
+      +Handle(command: RegisterPantryItemsCommand, ct): Task<Result<Pantry, SmartRecommendationsError>>
+      +Handle(command: RemovePantryItemCommand, ct): Task<Result<Pantry, SmartRecommendationsError>>
+      +Handle(command: UpdatePantryItemCommand, ct): Task<Result<Pantry, SmartRecommendationsError>>
+      +Handle(command: SuggestRecipeCommand, ct): Task<Result<Recipe, SmartRecommendationsError>>
+      +Handle(command: DetectLocationCommand, ct): Task<Result<LocationPreference, SmartRecommendationsError>>
       +Handle(command: UnlockPremiumFeaturesCommand, ct): Task
       +Handle(command: LockPremiumFeaturesCommand, ct): Task
-      +Handle(command: SetHomeCityCommand, ct): Task<Result<LocationPreference, SetHomeCityError>>
-      +Handle(command: ImportCityCommand, ct): Task<Result<City, ImportCityError>>
+      +Handle(command: SetHomeCityCommand, ct): Task<Result<LocationPreference, SmartRecommendationsError>>
+      +Handle(command: SetLocationPermissionCommand, ct): Task<LocationPreference>
+      +Handle(command: ImportCityCommand, ct): Task<Result<City, SmartRecommendationsError>>
     }
   }
 
@@ -46,20 +47,6 @@ package "NutriSense.SmartRecommendations.Application" {
     }
   }
 
-  package "Errors" {
-    enum DetectLocationError
-    enum DisableTravelModeError
-    enum EnableTravelModeError
-    enum GenerateRecommendationError
-    enum ImportCityError
-    enum RecipeImportError
-    enum RegisterPantryItemsError
-    enum RemovePantryItemError
-    enum SetHomeCityError
-    enum SuggestRecipeError
-    enum UpdatePantryItemError
-  }
-
   package "Internal" {
     class CitySearchResult <<record>>
 
@@ -69,7 +56,7 @@ package "NutriSense.SmartRecommendations.Application" {
         +Handle(command: DeriveIngredientsFromFoodsCommand, ct): Task<int>
       }
       class RecipeImportCommandService {
-        +Handle(command: ImportRecipeSuggestionsCommand, ct): Task<Result<int, RecipeImportError>>
+        +Handle(command: ImportRecipeSuggestionsCommand, ct): Task<Result<int, SmartRecommendationsError>>
       }
       class RecsEngineCommandService {
         +Handle(...): Task<Result<...>>
@@ -118,6 +105,8 @@ package "SmartRecommendations.Domain" <<external>> {
   class GenerateRecommendationCommand
   class LockPremiumFeaturesCommand
   class UnlockPremiumFeaturesCommand
+  class SetLocationPermissionCommand
+  enum SmartRecommendationsError
 }
 
 package "Other BC ACL facades" <<external>> {
@@ -158,7 +147,7 @@ RecipeImportCommandService --> IRecipeRepository : uses
 RecipeImportCommandService --> IRecipeGenerationService : uses
 RecipeImportCommandService --> IUnitOfWork : uses
 RecipeImportCommandService ..> Recipe : creates
-RecipeImportCommandService ..> RecipeImportError : returns
+RecipeImportCommandService ..> SmartRecommendationsError : returns
 
 ' --- RecsEngineCommandService (orchestrator) ---
 RecsEngineCommandService --> IRecommendationCardRepository : uses
@@ -210,19 +199,12 @@ OnBenefitsEnabledHandler ..> UnlockPremiumFeaturesCommand : sends
 OnBenefitsDisabledHandler ..> LockPremiumFeaturesCommand : sends
 OnTdeeCalculatedHandler ..> GenerateRecommendationCommand : sends
 
-' --- Result wrapper & error enums across command services ---
+' --- Result wrapper & shared error enum across command services ---
 IRecsEngineCommandService ..> Result
 IRecipeImportCommandService ..> Result
-IRecsEngineCommandService ..> GenerateRecommendationError
-IRecsEngineCommandService ..> EnableTravelModeError
-IRecsEngineCommandService ..> DisableTravelModeError
-IRecsEngineCommandService ..> RegisterPantryItemsError
-IRecsEngineCommandService ..> RemovePantryItemError
-IRecsEngineCommandService ..> UpdatePantryItemError
-IRecsEngineCommandService ..> SuggestRecipeError
-IRecsEngineCommandService ..> DetectLocationError
-IRecsEngineCommandService ..> SetHomeCityError
-IRecsEngineCommandService ..> ImportCityError
+IRecsEngineCommandService ..> SmartRecommendationsError
+IRecipeImportCommandService ..> SmartRecommendationsError
+IRecsEngineCommandService ..> SetLocationPermissionCommand : handles
 
 ' --- Query service contract returns ---
 IRecsEngineQueryService ..> CitySearchResult : returns
