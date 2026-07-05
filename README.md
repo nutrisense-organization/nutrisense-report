@@ -82,12 +82,20 @@ Julio, 2026
 | 2.4.0 | 06/20/2026 | Angel Villarreal | About-the-product, Sprint 3 Web Services |
 | 2.5.0 | 06/20/2026 | Olenka Del Aguila | About-the-team, Validation Interviews |
 | 3.0.0 | 06/20/2026 | Angel Villarreal | AV2 Report |
+| 3.1.0 | 07/05/2026 | Angela Espinoza | Actualización de los insights |
+| 3.2.0 | 07/05/2026 | Rose Vergaray | Actualización de student outcome, requirements elicitation y conclusiones |
+| 3.3.0 | 07/05/2026 | Joel Mora | Screenshots de despliegue, variables de entorno e insight del Sprint 4 |
+| 3.4.0 | 07/05/2026 | Angel Villarreal | Product Implementation con evidencia del Sprint 4 (cap. 5) |
+| 3.5.0 | 07/05/2026 | Olenka Del Aguila | Refinamiento de la especificación de requerimientos y el product design (cap. 3–4)  |
+| 4.0.0 | 07/05/2026 | Angel Villarreal | TB2 Report |
 
 <div style="page-break-after: always"></div>
 
 ## PROJECT REPORT COLLABORATION INSIGHTS
 
 Repositorio del informe del proyecto en GitHub: [nutrisense-report](https://github.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-report)
+
+Repositorio de Lading Page en GitHub: [nutrisense-website](https://github.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-website)
 
 Repositorio del WebApp del proyecto en GitHub: [nutrisense-webapp](https://github.com/upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-webapp)
 
