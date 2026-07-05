@@ -688,7 +688,7 @@ Diseño Inclusivo
 | **Priorizar el contenido (P6)** | En Dashboard, las tres tarjetas superiores (Calories Consumed, Calories Remaining, Net Balance) presentan los datos más relevantes para el seguimiento diario del usuario en la parte más visible de la pantalla, antes que cualquier otro contenido. Los valores numéricos en tamaño grande priorizan el dato sobre su contexto. |
 | **Proporciona experiencias comparables (P1)** | El panel de búsqueda de alimentos en Daily Log incluye un campo de texto con placeholder descriptivo ("E.g.: rice, chicken breast, yogurt...") que orienta al usuario sobre el tipo de entrada esperada, ofreciendo una experiencia de búsqueda accesible tanto para usuarios que conocen los nombres exactos como para quienes buscan por categoría general. |
 | **Deja al usuario mandar (P4)** | En Body Progress, el usuario puede editar su meta de peso y actualizar su altura en cualquier momento desde el panel lateral. En Analytics, el botón "Export to PDF" da al usuario control sobre sus propios datos, permitiéndole exportarlos cuando lo considere necesario. |
-| **Agrega valor (P7)** | El bloque "Active Streak" en Dashboard muestra el número de días consecutivos con registro completo, agregando valor motivacional más allá del simple registro de datos. La integración con Google Fit que descuenta calorías activas del balance diario ("Active (Google Fit): -300 kcal") agrega valor contextual que una app de nutrición estándar no ofrece. |
+| **Agrega valor (P7)** | El bloque "Active Streak" en Dashboard muestra el número de días consecutivos con registro completo, agregando valor motivacional más allá del simple registro de datos. La integración con Google Health que descuenta calorías activas del balance diario ("Active (Google Health): -300 kcal") agrega valor contextual que una app de nutrición estándar no ofrece. |
 
 **Recommendations, SmartScan, Suscription & Pantry**
 
@@ -836,9 +836,9 @@ Diseño Inclusivo
 | **Task Flow** |
 |---|
 | 1. The health seeker accesses the Wearable section. |
-| 2. The health seeker selects the *"Connect to Google Fit"* option. |
-| 3. The connection with Google Fit is completed successfully. |
-| 4. The health seeker views the complete dashboard with data synced from Google Fit. |
+| 2. The health seeker selects the *"Connect to Google Health"* option. |
+| 3. The connection with Google Health is completed successfully. |
+| 4. The health seeker views the complete dashboard with data synced from Google Health. |
 
 | <center>**Wireflow** |
 |---|
@@ -913,7 +913,7 @@ Diseño Inclusivo
 
 | Principio | Justificación |
 |---|---|
-| **Agrega valor (P7)** | El gráfico donut en Dashboard agrega valor visual respecto a la presentación de barras del wireframe, permitiendo al usuario ver la proporción relativa de cada macronutriente dentro del total consumido y no solo los valores absolutos. La etiqueta "-300 Google Fit" en el Dashboard comunica que la actividad física real del usuario ya está descontada del balance calórico, un nivel de personalización que agrega valor diferencial. |
+| **Agrega valor (P7)** | El gráfico donut en Dashboard agrega valor visual respecto a la presentación de barras del wireframe, permitiendo al usuario ver la proporción relativa de cada macronutriente dentro del total consumido y no solo los valores absolutos. La etiqueta "-300 Google Health" en el Dashboard comunica que la actividad física real del usuario ya está descontada del balance calórico, un nivel de personalización que agrega valor diferencial. |
 | **Priorizar el contenido (P6)** | En Analytics, las cuatro tarjetas de métricas superiores (calorías, proteínas, racha, peso) presentan el dato más relevante en tamaño grande con una etiqueta de estado debajo, priorizando la información de desempeño antes de mostrar los gráficos detallados. El usuario puede entender su situación semanal leyendo solo la fila superior. |
 | **Proporciona experiencias comparables (P1)** | El sistema de color semántico (verde para positivo, rosado para alerta) se aplica de forma consistente en Daily Log, Dashboard y Analytics, garantizando que un usuario que aprende el significado de los colores en una sección pueda interpretarlos correctamente en cualquier otra vista de la aplicación. |
 | **Deja al usuario mandar (P4)** | En Body Progress, el enlace "Edit goal →" permite al usuario modificar su meta de peso en cualquier momento sin necesidad de contactar soporte ni navegar a configuración. En Analytics, el botón "Export to PDF" y los filtros de rango temporal dan al usuario control completo sobre cómo y cuándo accede a sus propios datos históricos. |
@@ -1168,9 +1168,9 @@ Diseño Inclusivo
 |---|---|
 | **Happy Path** | 1. The health seeker accesses the Wearable section. |
 | | 2. The health seeker has a Premium Plan. |
-| | 3. The health seeker views the options: *"Connect to Google Fit"* and *"Manual log activity"*. |
-| | 4. The connection with Google Fit is successful. |
-| | 5. The health seeker views the complete dashboard with data synced from Google Fit. |
+| | 3. The health seeker views the options: *"Connect to Google Health"* and *"Manual log activity"*. |
+| | 4. The connection with Google Health is successful. |
+| | 5. The health seeker views the complete dashboard with data synced from Google Health. |
 
 | | |
 |---|---|
@@ -1182,8 +1182,8 @@ Diseño Inclusivo
 |---|---|
 | **Unhappy Path 2** | 1. The health seeker accesses the Wearable section. |
 | | 2. The health seeker has a Premium Plan. |
-| | 3. The connection with Google Fit does not complete successfully. |
-| | 4. The health seeker views the sync error *"Google Fit sync error"* with the last available sync data. |
+| | 3. The connection with Google Health does not complete successfully. |
+| | 4. The health seeker views the sync error *"Google Health sync error"* with the last available sync data. |
 | | 5. The health seeker selects the *"Manual log activity"* option. |
 | | 6. The health seeker enters an invalid value when logging the activity. |
 | | 7. The health seeker views the incorrect value warning message. |
@@ -1580,7 +1580,7 @@ Esta sección presenta los diagramas de clases UML que detallan la implementaci�
 
 Para el **frontend** (Vue 3 + PrimeVue) se aplica la estructura de carpetas DDD: `domain/model`, `application` (stores de Pinia con refs y computed reactivos), `infrastructure` (clientes HTTP basados en Axios) y `presentation` (componentes y vistas Vue). Los modelos de dominio se implementan como entidades y records en JavaScript plano. La clase base `BaseApi` configura una instancia Axios que convierte automáticamente los cuerpos de petición de camelCase a PascalCase y las respuestas de PascalCase a camelCase, alineándose con la convención de nombres del backend ASP.NET Core. El token JWT se persiste en `localStorage` y se adjunta como encabezado `Authorization: Bearer` en cada petición autenticada. La comunicación entre Bounded Contexts dentro del frontend se coordina a través de un event bus compartido en `shared/infrastructure`, permitiendo que stores de distintos contextos reaccionen a eventos sin acoplarse directamente.
 
-Para el **backend** (ASP.NET Core + C#) se aplica la arquitectura en capas DDD: `Interfaces` (controllers REST con rutas en kebab-case), `Application` (command services y query services), `Domain` (aggregates, entities, value objects, domain events, interfaces de repositorios y servicios de dominio) e `Infrastructure` (implementaciones de repositorios con Entity Framework Core sobre MySQL, calculadoras y clientes de APIs externas). Las interfaces de repositorio pertenecen al `Domain`; las implementaciones concretas, a `Infrastructure`. La comunicación entre Bounded Contexts se realiza mediante **Context Facades** (patrón ACL): cada BC expone una interfaz de fachada (`IIamContextFacade`, `IBodyHealthMetricsContextFacade`, `ISubscriptionsContextFacade`, `INutritionTrackingContextFacade`, `IActivityWearableContextFacade`) que encapsula sus datos públicos sin exponer el modelo interno. Los eventos de dominio se despachan mediante **Cortex.Mediator**. Las respuestas de error siguen el estándar **RFC 7807 ProblemDetails**. Las integraciones externas implementadas incluyen: **Google Gemini** (análisis visual de platos y menús), **DeepSeek** (estimación nutricional, enriquecimiento de alimentos y generación de recetas), **USDA FoodData Center** (catálogo base de alimentos, importado en background por `CatalogImportHostedService`), **Stripe** (procesamiento de pagos), **Google Fit** (sincronización de actividad física) y **OpenWeatherMap** (clima y geocodificación para recomendaciones contextuales). El cálculo de TDEE/BMI se implementa con la ecuación de **Mifflin-St Jeor** en `MifflinStJeorBodyMetricsCalculator`.
+Para el **backend** (ASP.NET Core + C#) se aplica la arquitectura en capas DDD: `Interfaces` (controllers REST con rutas en kebab-case), `Application` (command services y query services), `Domain` (aggregates, entities, value objects, domain events, interfaces de repositorios y servicios de dominio) e `Infrastructure` (implementaciones de repositorios con Entity Framework Core sobre MySQL, calculadoras y clientes de APIs externas). Las interfaces de repositorio pertenecen al `Domain`; las implementaciones concretas, a `Infrastructure`. La comunicación entre Bounded Contexts se realiza mediante **Context Facades** (patrón ACL): cada BC expone una interfaz de fachada (`IIamContextFacade`, `IBodyHealthMetricsContextFacade`, `ISubscriptionsContextFacade`, `INutritionTrackingContextFacade`, `IActivityWearableContextFacade`) que encapsula sus datos públicos sin exponer el modelo interno. Los eventos de dominio se despachan mediante **Cortex.Mediator**. Las respuestas de error siguen el estándar **RFC 7807 ProblemDetails**. Las integraciones externas implementadas incluyen: **Google Gemini** (análisis visual de platos y menús), **DeepSeek** (estimación nutricional, enriquecimiento de alimentos y generación de recetas), **USDA FoodData Center** (catálogo base de alimentos, importado en background por `CatalogImportHostedService`), **Stripe** (procesamiento de pagos), **Google Health** (sincronización de actividad física) y **OpenWeatherMap** (clima y geocodificación para recomendaciones contextuales). El cálculo de TDEE/BMI se implementa con la ecuación de **Mifflin-St Jeor** en `MifflinStJeorBodyMetricsCalculator`.
 
 ### 4.7.1. Class Diagrams
 

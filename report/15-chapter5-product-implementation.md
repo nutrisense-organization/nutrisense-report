@@ -1107,7 +1107,7 @@ Durante el Sprint 2, todos los miembros del equipo participaron activamente en l
   </tr>
   <tr>
     <td colspan="2">Sprint 3 Goal</td>
-    <td colspan="2">Nuestro enfoque está en entregar el backend de NutriSense completamente operativo, con los 74 endpoints REST versionados bajo <code>api/v1/</code>, distribuidos en los 7 bounded contexts (IAM, BodyHealthMetrics, NutritionTracking, ActivityWearable, SmartRecommendations, Subscriptions y AnalyticsReporting), documentados con OpenAPI/Swagger e integrados con los servicios externos (Gemini, DeepSeek, USDA, OpenWeatherMap, Stripe, Google Fit). Creemos que entrega la capa de negocio y persistencia que da soporte real a ambos segmentos objetivo, al calcular automáticamente sus metas calóricas y de macros, propagar eventos de dominio entre contextos y desbloquear funciones premium según el plan de suscripción activo. Esto se confirmará cuando el equipo de frontend pueda consumir todos los endpoints sin errores, el flujo completo de onboarding dispare la saga de cálculo IMC → BMR → TDEE → meta diaria, el escaneo de plato con Gemini persista entradas en el log nutricional, y la activación de una suscripción vía Stripe habilite las funciones premium en SmartRecommendations.</td>
+    <td colspan="2">Nuestro enfoque está en dejar completamente operativo el motor interno de NutriSense que da soporte a todas las funciones de la aplicación, conectado con los servicios externos que la potencian: inteligencia artificial para reconocer alimentos en fotos, bases de datos nutricionales, información del clima, pagos y sincronización con dispositivos de actividad física. Creemos que esto entrega el soporte real que necesitan ambos segmentos objetivo, al calcular automáticamente sus metas de calorías y macronutrientes, y al desbloquear las funciones premium según su plan de suscripción. Esto se confirmará cuando la aplicación web pueda usar todas sus funciones sin errores, el registro inicial del usuario calcule correctamente su meta diaria de calorías, tomar una foto de un plato de comida registre automáticamente esa comida en su historial nutricional, y activar una suscripción mediante pago habilite las recomendaciones premium.</td>
   </tr>
   <tr>
     <td colspan="2">Sprint 3 Velocity</td>
@@ -2122,7 +2122,7 @@ Durante el Sprint 3, todos los miembros del equipo participaron activamente en l
   </tr>
   <tr>
     <td colspan="2">Sprint 4 Goal</td>
-    <td colspan="2">Nuestro enfoque está en estandarizar y robustecer el backend de NutriSense mediante un manejo de errores uniforme en los 7 bounded contexts: consolidar los errores de dominio, retornar respuestas <code>ProblemDetails</code> (RFC 7807) con mensajes localizados (ES/EN) y unificar el ensamblado de resultados en la capa REST. Creemos que esto mejora la calidad, la mantenibilidad y la experiencia de integración de la plataforma, entregando además valor funcional al usuario final al completar el flujo de recuperación de contraseña (IAM), habilitar los pagos reales mediante la pasarela Stripe (Subscriptions), incorporar la sincronización automática con Google Health y la estimación de calorías activas (ActivityWearable) y añadir recomendaciones sensibles a la ubicación del usuario (SmartRecommendations). Esto se confirmará cuando todos los endpoints devuelvan errores en formato <code>ProblemDetails</code> localizado, el usuario pueda restablecer su contraseña por correo, una suscripción se pague realmente vía Stripe y las recomendaciones y la sincronización de actividad respondan al contexto de ubicación y a la preferencia de auto-sync.</td>
+    <td colspan="2">Nuestro enfoque está en hacer que NutriSense sea más confiable y fácil de mantener, mostrando mensajes de error claros y consistentes en toda la aplicación, tanto en español como en inglés. Creemos que esto mejora la calidad y la experiencia general de la plataforma, y que además entrega valor directo al usuario final al habilitar la recuperación de contraseña por correo, los pagos reales de suscripción mediante Stripe, la sincronización automática con Google Health junto con la estimación de calorías quemadas por actividad física, y recomendaciones que toman en cuenta la ubicación del usuario. Esto se confirmará cuando la aplicación muestre siempre mensajes de error claros en el idioma del usuario, el usuario pueda restablecer su contraseña desde su correo, una suscripción se pague realmente a través de Stripe, y las recomendaciones y la sincronización de actividad respondan correctamente a la ubicación y a la preferencia de sincronización automática del usuario.</td>
   </tr>
   <tr>
     <td colspan="2">Sprint 4 Velocity</td>
@@ -2171,124 +2171,162 @@ El Sprint 4 tiene como objetivo principal estandarizar y robustecer el manejo de
 A continuación se presenta el board del sprint en Trello y la tabla de work-items correspondiente.
 
 ![Board Sprint 4](../assets/img/sprint4/sprintbacklog.png)
-URL del Board (Trello): [Enlace Trello](https://trello.com/b/QxmJTyBW/sprint-backlog-4)
+URL del Board (Trello): [Enlace Trello](https://trello.com/b/p9UkrZPd/sprint-backlog-4)
 
 | US ID | US Title | Task ID | Task Title | Description | Est. (h) | Assigned To | Status |
 |-------|----------|---------|------------|-------------|----------|-------------|--------|
-| TS26 | API: Cross-Cutting ProblemDetails & Error-Handling Foundation | T141 | Implement shared ProblemDetails factory (RFC 7807) | Implement a shared factory that maps consolidated domain errors to `ProblemDetails` responses following RFC 7807. | 4 | Espinoza Cruz, Angela Milagros | Done |
-| TS26 | API: Cross-Cutting ProblemDetails & Error-Handling Foundation | T142 | Add controller base extensions for standardized responses | Add base controller extensions that expose helpers to return `ProblemDetails` and localized messages uniformly across contexts. | 3 | Espinoza Cruz, Angela Milagros | Done |
-| TS26 | API: Cross-Cutting ProblemDetails & Error-Handling Foundation | T143 | Sync EF model snapshot and background seeding host | Sync the EF model snapshot and align the background seeding host with the consolidated model changes. | 2 | Espinoza Cruz, Angela Milagros | Done |
-| TS26 | API: Cross-Cutting ProblemDetails & Error-Handling Foundation | T144 | Wire new services into startup | Register the ProblemDetails factory, SMTP email service, Stripe gateway and Google Health provider into the application startup pipeline. | 3 | Espinoza Cruz, Angela Milagros | Done |
-| TS26 | API: Cross-Cutting ProblemDetails & Error-Handling Foundation | T145 | Update deployment configuration | Update the deployment configuration and environment variables for the new external integrations. | 2 | Espinoza Cruz, Angela Milagros | Done |
-| TS26 | API: Cross-Cutting ProblemDetails & Error-Handling Foundation | T146 | Bump platform version and verify integration | Bump the platform version and validate that all contexts return standardized `ProblemDetails` responses end-to-end. | 1 | Espinoza Cruz, Angela Milagros | Done |
-| TS27 | API: Password Recovery Flow & IAM Error Standardization | T147 | Define PasswordResetToken aggregate and consolidated IamDomainError | Define the `PasswordResetToken` aggregate and consolidate the per-command IAM errors into a single `IamDomainError`. | 4 | Villarreal Bazan, Angel Martin | Done |
-| TS27 | API: Password Recovery Flow & IAM Error Standardization | T148 | Define reset contracts and add request/reset password commands | Define the password reset repository and email service contracts and add the request-password and reset-password commands. | 3 | Villarreal Bazan, Angel Martin | Done |
-| TS27 | API: Password Recovery Flow & IAM Error Standardization | T149 | Implement password reset token persistence and EF migration | Implement persistence for the password reset token and add the EF migration for the password reset tokens table. | 4 | Villarreal Bazan, Angel Martin | Done |
-| TS27 | API: Password Recovery Flow & IAM Error Standardization | T150 | Implement SMTP email service and wire the reset flow | Implement the SMTP email service (MailKit) and wire the password reset flow into the user command service and aggregate. | 5 | Villarreal Bazan, Angel Martin | Done |
-| TS27 | API: Password Recovery Flow & IAM Error Standardization | T151 | Add forgot/reset REST resources and unified action result assembler | Add the forgot/reset password REST resources and replace the per-command result assemblers with a single action result assembler. | 4 | Villarreal Bazan, Angel Martin | Done |
-| TS27 | API: Password Recovery Flow & IAM Error Standardization | T152 | Return ProblemDetails and add localized IAM messages | Return `ProblemDetails` with authenticated-user checks from the REST layer and add localized (ES/EN) messages for password reset. | 3 | Villarreal Bazan, Angel Martin | Done |
-| TS28 | API: BodyHealthMetrics Error Standardization | T153 | Define consolidated BodyHealthMetricsDomainError | Consolidate the per-command errors of the context into a single domain error. | 2 | Espinoza Cruz, Angela Milagros | Done |
-| TS28 | API: BodyHealthMetrics Error Standardization | T154 | Implement action result assembler for the consolidated error | Implement a single action result assembler mapping the consolidated domain error to REST responses. | 3 | Espinoza Cruz, Angela Milagros | Done |
-| TS28 | API: BodyHealthMetrics Error Standardization | T155 | Remove per-command application errors | Remove the per-command application errors superseded by the consolidated domain error. | 2 | Espinoza Cruz, Angela Milagros | Done |
-| TS28 | API: BodyHealthMetrics Error Standardization | T156 | Return ProblemDetails from the REST layer | Refactor the REST layer to return `ProblemDetails` responses for all body-metrics endpoints. | 3 | Espinoza Cruz, Angela Milagros | Done |
-| TS28 | API: BodyHealthMetrics Error Standardization | T157 | Add localized messages (ES/EN) | Add localized (ES/EN) `.resx` messages for the consolidated body-metrics errors. | 2 | Espinoza Cruz, Angela Milagros | Done |
-| TS29 | API: NutritionTracking Error Standardization | T158 | Define consolidated NutritionTrackingDomainError and assembler | Consolidate the per-command errors into a single domain error and add the corresponding action result assembler. | 3 | Espinoza Cruz, Angela Milagros | Done |
-| TS29 | API: NutritionTracking Error Standardization | T159 | Remove per-command application errors | Remove the per-command application errors superseded by the consolidated domain error. | 2 | Espinoza Cruz, Angela Milagros | Done |
-| TS29 | API: NutritionTracking Error Standardization | T160 | Replace per-command result assemblers with a single one | Replace the per-command result assemblers with a single unified action result assembler. | 3 | Espinoza Cruz, Angela Milagros | Done |
-| TS29 | API: NutritionTracking Error Standardization | T161 | Return ProblemDetails from the REST layer | Refactor the REST layer to return `ProblemDetails` responses for all nutrition-tracking endpoints. | 3 | Espinoza Cruz, Angela Milagros | Done |
-| TS29 | API: NutritionTracking Error Standardization | T162 | Add localized messages (ES/EN) | Add localized (ES/EN) `.resx` messages for the consolidated nutrition-tracking errors. | 2 | Espinoza Cruz, Angela Milagros | Done |
-| TS30 | API: Google Health Auto-Sync & ActivityWearable Error Standardization | T163 | Add consolidated ActivityWearableDomainError and remove per-command errors | Consolidate the per-command errors into a single domain error and remove the superseded application errors. | 3 | Del Aguila Del Aguila, Olenka Priscilla | Done |
-| TS30 | API: Google Health Auto-Sync & ActivityWearable Error Standardization | T164 | Add active calorie estimator and Google Health provider | Add the MET-based active calorie estimator contract and integrate the Google Health sync provider. | 5 | Del Aguila Del Aguila, Olenka Priscilla | Done |
-| TS30 | API: Google Health Auto-Sync & ActivityWearable Error Standardization | T165 | Add set auto-sync command and persist preference with EF migration | Add the set auto-sync command, persist the auto-sync preference on the wearable connection and add the EF migration for health sync settings. | 4 | Del Aguila Del Aguila, Olenka Priscilla | Done |
-| TS30 | API: Google Health Auto-Sync & ActivityWearable Error Standardization | T166 | Wire auto-sync and health estimation and add REST resource | Wire auto-sync and health estimation into the command service and add the set auto-sync REST resource. | 4 | Del Aguila Del Aguila, Olenka Priscilla | Done |
-| TS30 | API: Google Health Auto-Sync & ActivityWearable Error Standardization | T167 | Replace per-command result assemblers with a unified assembler | Replace the per-command result assemblers with a single action result assembler. | 3 | Del Aguila Del Aguila, Olenka Priscilla | Done |
-| TS30 | API: Google Health Auto-Sync & ActivityWearable Error Standardization | T168 | Return ProblemDetails and add localized messages (ES/EN) | Return `ProblemDetails` from the REST layer and add localized messages for health sync and consolidated errors. | 3 | Del Aguila Del Aguila, Olenka Priscilla | Done |
-| TS31 | API: Location-Aware Recommendations & SmartRecommendations Error Standardization | T169 | Add consolidated SmartRecommendationsDomainError and remove per-command errors | Consolidate the per-command errors into a single domain error and remove the superseded application errors. | 3 | Vergraray Calderon, Rose Almendra | Done |
-| TS31 | API: Location-Aware Recommendations & SmartRecommendations Error Standardization | T170 | Add set location permission command | Add the set location permission command to the context application layer. | 3 | Vergraray Calderon, Rose Almendra | Done |
-| TS31 | API: Location-Aware Recommendations & SmartRecommendations Error Standardization | T171 | Wire location permission into recipe improvement | Wire the location permission into the recipe improvement/recommendation flow. | 4 | Vergraray Calderon, Rose Almendra | Done |
-| TS31 | API: Location-Aware Recommendations & SmartRecommendations Error Standardization | T172 | Add set location permission REST resource | Add the set location permission REST resource and endpoint. | 3 | Vergraray Calderon, Rose Almendra | Done |
-| TS31 | API: Location-Aware Recommendations & SmartRecommendations Error Standardization | T173 | Add action result assembler and return ProblemDetails | Add the action result assembler for the consolidated error and return `ProblemDetails` from the REST layer. | 3 | Vergraray Calderon, Rose Almendra | Done |
-| TS31 | API: Location-Aware Recommendations & SmartRecommendations Error Standardization | T174 | Add localized messages (ES/EN) for location permission | Add localized (ES/EN) messages for location permission and the consolidated errors. | 2 | Vergraray Calderon, Rose Almendra | Done |
-| TS32 | API: Stripe Payment Gateway Integration & Subscriptions Error Standardization | T175 | Add consolidated SubscriptionsDomainError and remove per-command errors | Consolidate the per-command errors into a single domain error and remove the superseded application errors. | 3 | Mora Rivera, Joel Fernando | Done |
-| TS32 | API: Stripe Payment Gateway Integration & Subscriptions Error Standardization | T176 | Store Stripe customer id with EF migration | Store the Stripe customer id on user subscriptions and add the EF migration for the new column. | 3 | Mora Rivera, Joel Fernando | Done |
-| TS32 | API: Stripe Payment Gateway Integration & Subscriptions Error Standardization | T177 | Integrate Stripe payment gateway | Integrate the Stripe payment gateway and reference the Stripe SDK package. | 5 | Mora Rivera, Joel Fernando | Done |
-| TS32 | API: Stripe Payment Gateway Integration & Subscriptions Error Standardization | T178 | Wire Stripe billing into command services | Wire the Stripe billing into the subscription command services for real payment processing. | 4 | Mora Rivera, Joel Fernando | Done |
-| TS32 | API: Stripe Payment Gateway Integration & Subscriptions Error Standardization | T179 | Add action result assembler and return ProblemDetails | Add the action result assembler for the consolidated error and return `ProblemDetails` from the REST layer. | 3 | Mora Rivera, Joel Fernando | Done |
-| TS32 | API: Stripe Payment Gateway Integration & Subscriptions Error Standardization | T180 | Add localized subscriptions messages (ES/EN) | Add the localized (ES/EN) subscriptions message resources. | 2 | Mora Rivera, Joel Fernando | Done |
-| TS33 | API: AnalyticsReporting Error Standardization | T181 | Define consolidated AnalyticsReportingDomainError and assembler | Consolidate the per-command errors into a single domain error and add the corresponding action result assembler. | 3 | Espinoza Cruz, Angela Milagros | Done |
-| TS33 | API: AnalyticsReporting Error Standardization | T182 | Remove per-command application errors | Remove the per-command application errors superseded by the consolidated domain error. | 2 | Espinoza Cruz, Angela Milagros | Done |
-| TS33 | API: AnalyticsReporting Error Standardization | T183 | Return ProblemDetails from the REST layer | Refactor the REST layer to return `ProblemDetails` responses for all analytics endpoints. | 3 | Espinoza Cruz, Angela Milagros | Done |
-| TS33 | API: AnalyticsReporting Error Standardization | T184 | Add localized messages (ES/EN) | Add localized (ES/EN) `.resx` messages for the consolidated analytics errors. | 2 | Espinoza Cruz, Angela Milagros | Done |
-| TS33 | API: AnalyticsReporting Error Standardization | T185 | Verify standardized error responses | Validate that all analytics-reporting endpoints return standardized localized `ProblemDetails` responses. | 2 | Espinoza Cruz, Angela Milagros | Done |
+| TS26 | API: Cross-Cutting ProblemDetails & Error-Handling Foundation | T1 | Implement shared ProblemDetails factory (RFC 7807) | Implement a shared factory that maps consolidated domain errors to `ProblemDetails` responses following RFC 7807. | 4 | Espinoza Cruz, Angela Milagros | Done |
+| TS26 | API: Cross-Cutting ProblemDetails & Error-Handling Foundation | T2 | Add controller base extensions for standardized responses | Add base controller extensions that expose helpers to return `ProblemDetails` and localized messages uniformly across contexts. | 3 | Espinoza Cruz, Angela Milagros | Done |
+| TS26 | API: Cross-Cutting ProblemDetails & Error-Handling Foundation | T3 | Sync EF model snapshot and background seeding host | Sync the EF model snapshot and align the background seeding host with the consolidated model changes. | 2 | Espinoza Cruz, Angela Milagros | Done |
+| TS26 | API: Cross-Cutting ProblemDetails & Error-Handling Foundation | T4 | Wire new services into startup | Register the ProblemDetails factory, SMTP email service, Stripe gateway and Google Health provider into the application startup pipeline. | 3 | Espinoza Cruz, Angela Milagros | Done |
+| TS26 | API: Cross-Cutting ProblemDetails & Error-Handling Foundation | T5 | Update deployment configuration | Update the deployment configuration and environment variables for the new external integrations. | 2 | Espinoza Cruz, Angela Milagros | Done |
+| TS26 | API: Cross-Cutting ProblemDetails & Error-Handling Foundation | T6 | Bump platform version and verify integration | Bump the platform version and validate that all contexts return standardized `ProblemDetails` responses end-to-end. | 1 | Espinoza Cruz, Angela Milagros | Done |
+| TS27 | API: Password Recovery Flow & IAM Error Standardization | T7 | Define PasswordResetToken aggregate and consolidated IamDomainError | Define the `PasswordResetToken` aggregate and consolidate the per-command IAM errors into a single `IamDomainError`. | 4 | Villarreal Bazan, Angel Martin | Done |
+| TS27 | API: Password Recovery Flow & IAM Error Standardization | T8 | Define reset contracts and add request/reset password commands | Define the password reset repository and email service contracts and add the request-password and reset-password commands. | 3 | Villarreal Bazan, Angel Martin | Done |
+| TS27 | API: Password Recovery Flow & IAM Error Standardization | T9 | Implement password reset token persistence and EF migration | Implement persistence for the password reset token and add the EF migration for the password reset tokens table. | 4 | Villarreal Bazan, Angel Martin | Done |
+| TS27 | API: Password Recovery Flow & IAM Error Standardization | T10 | Implement SMTP email service and wire the reset flow | Implement the SMTP email service (MailKit) and wire the password reset flow into the user command service and aggregate. | 5 | Villarreal Bazan, Angel Martin | Done |
+| TS27 | API: Password Recovery Flow & IAM Error Standardization | T11 | Add forgot/reset REST resources and unified action result assembler | Add the forgot/reset password REST resources and replace the per-command result assemblers with a single action result assembler. | 4 | Villarreal Bazan, Angel Martin | Done |
+| TS27 | API: Password Recovery Flow & IAM Error Standardization | T12 | Return ProblemDetails and add localized IAM messages | Return `ProblemDetails` with authenticated-user checks from the REST layer and add localized (ES/EN) messages for password reset. | 3 | Villarreal Bazan, Angel Martin | Done |
+| TS28 | API: BodyHealthMetrics Error Standardization | T13 | Define consolidated BodyHealthMetricsDomainError | Consolidate the per-command errors of the context into a single domain error. | 2 | Espinoza Cruz, Angela Milagros | Done |
+| TS28 | API: BodyHealthMetrics Error Standardization | T14 | Implement action result assembler for the consolidated error | Implement a single action result assembler mapping the consolidated domain error to REST responses. | 3 | Espinoza Cruz, Angela Milagros | Done |
+| TS28 | API: BodyHealthMetrics Error Standardization | T15 | Remove per-command application errors | Remove the per-command application errors superseded by the consolidated domain error. | 2 | Espinoza Cruz, Angela Milagros | Done |
+| TS28 | API: BodyHealthMetrics Error Standardization | T16 | Return ProblemDetails from the REST layer | Refactor the REST layer to return `ProblemDetails` responses for all body-metrics endpoints. | 3 | Espinoza Cruz, Angela Milagros | Done |
+| TS28 | API: BodyHealthMetrics Error Standardization | T17 | Add localized messages (ES/EN) | Add localized (ES/EN) `.resx` messages for the consolidated body-metrics errors. | 2 | Espinoza Cruz, Angela Milagros | Done |
+| TS29 | API: NutritionTracking Error Standardization | T18 | Define consolidated NutritionTrackingDomainError and assembler | Consolidate the per-command errors into a single domain error and add the corresponding action result assembler. | 3 | Espinoza Cruz, Angela Milagros | Done |
+| TS29 | API: NutritionTracking Error Standardization | T19 | Remove per-command application errors | Remove the per-command application errors superseded by the consolidated domain error. | 2 | Espinoza Cruz, Angela Milagros | Done |
+| TS29 | API: NutritionTracking Error Standardization | T20 | Replace per-command result assemblers with a single one | Replace the per-command result assemblers with a single unified action result assembler. | 3 | Espinoza Cruz, Angela Milagros | Done |
+| TS29 | API: NutritionTracking Error Standardization | T21 | Return ProblemDetails from the REST layer | Refactor the REST layer to return `ProblemDetails` responses for all nutrition-tracking endpoints. | 3 | Espinoza Cruz, Angela Milagros | Done |
+| TS29 | API: NutritionTracking Error Standardization | T22 | Add localized messages (ES/EN) | Add localized (ES/EN) `.resx` messages for the consolidated nutrition-tracking errors. | 2 | Espinoza Cruz, Angela Milagros | Done |
+| TS30 | API: Google Health Auto-Sync & ActivityWearable Error Standardization | T23 | Add consolidated ActivityWearableDomainError and remove per-command errors | Consolidate the per-command errors into a single domain error and remove the superseded application errors. | 3 | Del Aguila Del Aguila, Olenka Priscilla | Done |
+| TS30 | API: Google Health Auto-Sync & ActivityWearable Error Standardization | T24 | Add active calorie estimator and Google Health provider | Add the MET-based active calorie estimator contract and integrate the Google Health sync provider. | 5 | Del Aguila Del Aguila, Olenka Priscilla | Done |
+| TS30 | API: Google Health Auto-Sync & ActivityWearable Error Standardization | T25 | Add set auto-sync command and persist preference with EF migration | Add the set auto-sync command, persist the auto-sync preference on the wearable connection and add the EF migration for health sync settings. | 4 | Del Aguila Del Aguila, Olenka Priscilla | Done |
+| TS30 | API: Google Health Auto-Sync & ActivityWearable Error Standardization | T26 | Wire auto-sync and health estimation and add REST resource | Wire auto-sync and health estimation into the command service and add the set auto-sync REST resource. | 4 | Del Aguila Del Aguila, Olenka Priscilla | Done |
+| TS30 | API: Google Health Auto-Sync & ActivityWearable Error Standardization | T27 | Replace per-command result assemblers with a unified assembler | Replace the per-command result assemblers with a single action result assembler. | 3 | Del Aguila Del Aguila, Olenka Priscilla | Done |
+| TS30 | API: Google Health Auto-Sync & ActivityWearable Error Standardization | T28 | Return ProblemDetails and add localized messages (ES/EN) | Return `ProblemDetails` from the REST layer and add localized messages for health sync and consolidated errors. | 3 | Del Aguila Del Aguila, Olenka Priscilla | Done |
+| TS31 | API: Location-Aware Recommendations & SmartRecommendations Error Standardization | T29 | Add consolidated SmartRecommendationsDomainError and remove per-command errors | Consolidate the per-command errors into a single domain error and remove the superseded application errors. | 3 | Vergraray Calderon, Rose Almendra | Done |
+| TS31 | API: Location-Aware Recommendations & SmartRecommendations Error Standardization | T30 | Add set location permission command | Add the set location permission command to the context application layer. | 3 | Vergraray Calderon, Rose Almendra | Done |
+| TS31 | API: Location-Aware Recommendations & SmartRecommendations Error Standardization | T31 | Wire location permission into recipe improvement | Wire the location permission into the recipe improvement/recommendation flow. | 4 | Vergraray Calderon, Rose Almendra | Done |
+| TS31 | API: Location-Aware Recommendations & SmartRecommendations Error Standardization | T32 | Add set location permission REST resource | Add the set location permission REST resource and endpoint. | 3 | Vergraray Calderon, Rose Almendra | Done |
+| TS31 | API: Location-Aware Recommendations & SmartRecommendations Error Standardization | T33 | Add action result assembler and return ProblemDetails | Add the action result assembler for the consolidated error and return `ProblemDetails` from the REST layer. | 3 | Vergraray Calderon, Rose Almendra | Done |
+| TS31 | API: Location-Aware Recommendations & SmartRecommendations Error Standardization | T34 | Add localized messages (ES/EN) for location permission | Add localized (ES/EN) messages for location permission and the consolidated errors. | 2 | Vergraray Calderon, Rose Almendra | Done |
+| TS32 | API: Stripe Payment Gateway Integration & Subscriptions Error Standardization | T35 | Add consolidated SubscriptionsDomainError and remove per-command errors | Consolidate the per-command errors into a single domain error and remove the superseded application errors. | 3 | Mora Rivera, Joel Fernando | Done |
+| TS32 | API: Stripe Payment Gateway Integration & Subscriptions Error Standardization | T36 | Store Stripe customer id with EF migration | Store the Stripe customer id on user subscriptions and add the EF migration for the new column. | 3 | Mora Rivera, Joel Fernando | Done |
+| TS32 | API: Stripe Payment Gateway Integration & Subscriptions Error Standardization | T37 | Integrate Stripe payment gateway | Integrate the Stripe payment gateway and reference the Stripe SDK package. | 5 | Mora Rivera, Joel Fernando | Done |
+| TS32 | API: Stripe Payment Gateway Integration & Subscriptions Error Standardization | T38 | Wire Stripe billing into command services | Wire the Stripe billing into the subscription command services for real payment processing. | 4 | Mora Rivera, Joel Fernando | Done |
+| TS32 | API: Stripe Payment Gateway Integration & Subscriptions Error Standardization | T39 | Add action result assembler and return ProblemDetails | Add the action result assembler for the consolidated error and return `ProblemDetails` from the REST layer. | 3 | Mora Rivera, Joel Fernando | Done |
+| TS32 | API: Stripe Payment Gateway Integration & Subscriptions Error Standardization | T40 | Add localized subscriptions messages (ES/EN) | Add the localized (ES/EN) subscriptions message resources. | 2 | Mora Rivera, Joel Fernando | Done |
+| TS33 | API: AnalyticsReporting Error Standardization | T41 | Define consolidated AnalyticsReportingDomainError and assembler | Consolidate the per-command errors into a single domain error and add the corresponding action result assembler. | 3 | Espinoza Cruz, Angela Milagros | Done |
+| TS33 | API: AnalyticsReporting Error Standardization | T42 | Remove per-command application errors | Remove the per-command application errors superseded by the consolidated domain error. | 2 | Espinoza Cruz, Angela Milagros | Done |
+| TS33 | API: AnalyticsReporting Error Standardization | T43 | Return ProblemDetails from the REST layer | Refactor the REST layer to return `ProblemDetails` responses for all analytics endpoints. | 3 | Espinoza Cruz, Angela Milagros | Done |
+| TS33 | API: AnalyticsReporting Error Standardization | T44 | Add localized messages (ES/EN) | Add localized (ES/EN) `.resx` messages for the consolidated analytics errors. | 2 | Espinoza Cruz, Angela Milagros | Done |
+| TS33 | API: AnalyticsReporting Error Standardization | T45 | Verify standardized error responses | Validate that all analytics-reporting endpoints return standardized localized `ProblemDetails` responses. | 2 | Espinoza Cruz, Angela Milagros | Done |
 
 #### 5.2.4.4. Development Evidence for Sprint Review
 
-Durante el Sprint 4, el equipo concentró la implementación en el Web Service (`nutrisense-platform`), estandarizando de forma transversal el manejo de errores de los siete bounded contexts y completando las integraciones externas pendientes. El trabajo se organizó en ramas `feature/*` por bounded context, liberadas de forma incremental hacia `develop` y `main` con versionado semántico (de `v1.2.0` hasta el release final `v2.0.0`). En cada contexto se aplicó el mismo patrón: consolidación de los errores de dominio, eliminación de los errores de aplicación por comando, reemplazo de los *result assemblers* por comando con un único *action result assembler*, retorno de respuestas `ProblemDetails` (RFC 7807) y localización de mensajes (ES/EN) mediante recursos `.resx`. Sobre esa base transversal se añadió valor funcional: el flujo de recuperación de contraseña con servicio SMTP (IAM), la integración real de pagos con Stripe (Subscriptions & Billing), la sincronización automática con Google Health y el estimador de calorías activas (ActivityWearable) y el permiso de ubicación para recomendaciones (SmartRecommendations). La Landing Page (`nutrisense-website`) y la Web Application (`nutrisense-webapp`) no recibieron cambios de implementación en esta iteración.
+Durante el Sprint 4, el equipo concentró la implementación en el Web Service (`nutrisense-platform`), estandarizando de forma transversal el manejo de errores de los siete bounded contexts y completando las integraciones externas pendientes, y en la Web Application (`nutrisense-webapp`), donde se consumieron esas nuevas capacidades desde la interfaz. El backend se liberó de forma incremental hacia `develop` y `main` con versionado semántico (de `v1.2.0` hasta el release final `v2.0.0`). En cada bounded context se aplicó el mismo patrón: consolidación de los errores de dominio, eliminación de los errores de aplicación por comando, reemplazo de los *result assemblers* por comando con un único *action result assembler*, retorno de respuestas `ProblemDetails` (RFC 7807) y localización de mensajes (ES/EN) mediante recursos `.resx`. Sobre esa base transversal se añadió valor funcional: el flujo de recuperación de contraseña con servicio SMTP (IAM), la integración real de pagos con Stripe (Subscriptions & Billing), la sincronización automática con Google Health y el estimador de calorías activas (ActivityWearable) y el permiso de ubicación para recomendaciones (SmartRecommendations). Tras el release `v2.0.0`, la integración con Google Health en producción expuso incidencias de OAuth (alcance de permisos, URI de redirección y tipo de dato sincronizado) que se corrigieron mediante tres hotfixes sucesivos (`v1.6.1`, `v1.6.2` y `v1.6.3`). En paralelo, la Web Application (`nutrisense-webapp`) incorporó el flujo de recuperación de contraseña, la conexión OAuth con Google Health y la detección automática de ciudad de origen para las recomendaciones sensibles a la ubicación, liberados como `v2.2.0` con un hotfix `v2.2.1` para la configuración de producción. La Landing Page (`nutrisense-website`) no recibió cambios de implementación en esta iteración.
 
-A continuación se presenta, para el repositorio del backend, la relación de commits asociados a la implementación del sprint.
+A continuación se presenta la relación de commits asociados a la implementación del sprint.
 
 | Repository | Branch | Commit Id | Commit Message | Commit Message Body | Committed on |
 |---|---|---|---|---|---|
-| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/error-handling-foundation | `6926222` | feat(shared): add problem details factory and controller base extensions | — | 24/06/2026 |
-| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/iam-password-reset | `aeadfc4` | feat(iam): add password reset token aggregate and consolidated domain error | — | 24/06/2026 |
-| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/iam-password-reset | `93cc3e8` | refactor(iam): remove per-command application errors superseded by IamDomainError | — | 24/06/2026 |
-| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/iam-password-reset | `44e41c3` | feat(iam): define password reset repository and email service contracts | — | 24/06/2026 |
-| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/iam-password-reset | `4ca845b` | feat(iam): add request and reset password commands | — | 24/06/2026 |
-| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/iam-password-reset | `6de79e4` | feat(iam): implement password reset token persistence | — | 25/06/2026 |
-| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/iam-password-reset | `2de684e` | feat(iam): add EF migration for password reset tokens table | — | 25/06/2026 |
-| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/iam-password-reset | `c078a36` | feat(iam): implement SMTP email service and reference MailKit package | — | 25/06/2026 |
-| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/iam-password-reset | `b3c8953` | feat(iam): wire password reset flow into user command service and aggregate | — | 25/06/2026 |
-| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/iam-password-reset | `bea8c13` | feat(iam): add forgot/reset password REST resources | — | 25/06/2026 |
-| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/iam-password-reset | `b9d8542` | refactor(iam): replace per-command result assemblers with a single action result assembler | — | 26/06/2026 |
-| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/iam-password-reset | `9abe7e5` | refactor(iam): return ProblemDetails and authenticated-user checks from the REST layer | — | 26/06/2026 |
-| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/iam-password-reset | `4e438ed` | feat(iam): add localized messages for password reset and consolidated errors | — | 26/06/2026 |
-| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/iam-password-reset | `aaa2f4b` | chore: bump version to 1.2.0 | — | 26/06/2026 |
-| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/body-health-metrics-problem-details | `c7d10ad` | feat(body-health-metrics): add consolidated domain error and action result assembler | — | 25/06/2026 |
-| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/body-health-metrics-problem-details | `b11dd5d` | refactor(body-health-metrics): remove per-command application errors superseded by the domain error | — | 25/06/2026 |
-| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/body-health-metrics-problem-details | `5568741` | refactor(body-health-metrics): return ProblemDetails and localized messages | — | 25/06/2026 |
-| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/nutrition-tracking-problem-details | `dd69c63` | feat(nutrition-tracking): add consolidated domain error and action result assembler | — | 26/06/2026 |
-| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/nutrition-tracking-problem-details | `c629041` | refactor(nutrition-tracking): remove per-command application errors superseded by the domain error | — | 26/06/2026 |
-| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/nutrition-tracking-problem-details | `bdb68f4` | refactor(nutrition-tracking): replace per-command result assemblers with a single action result assembler | — | 26/06/2026 |
-| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/nutrition-tracking-problem-details | `07dcea9` | refactor(nutrition-tracking): return ProblemDetails and localized messages | — | 26/06/2026 |
-| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/activity-wearable-health-sync | `f98e2f8` | feat(activity-wearable): add consolidated domain error | — | 25/06/2026 |
-| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/activity-wearable-health-sync | `16bc587` | refactor(activity-wearable): remove per-command application errors superseded by the domain error | — | 25/06/2026 |
-| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/activity-wearable-health-sync | `e4d07e4` | feat(activity-wearable): add active calorie estimator contract and MET-based implementation | — | 26/06/2026 |
-| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/activity-wearable-health-sync | `81b9d93` | feat(activity-wearable): add set auto-sync command and wire it into the command service | — | 26/06/2026 |
-| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/activity-wearable-health-sync | `25a2337` | feat(activity-wearable): integrate Google Health sync provider and reference SDK | — | 26/06/2026 |
-| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/activity-wearable-health-sync | `9029e2b` | feat(activity-wearable): persist auto-sync preference on wearable connection | — | 27/06/2026 |
-| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/activity-wearable-health-sync | `73518d4` | feat(activity-wearable): add EF migration for health sync settings | — | 27/06/2026 |
-| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/activity-wearable-health-sync | `6421d2f` | feat(activity-wearable): wire auto-sync and health estimation into command service | — | 27/06/2026 |
-| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/activity-wearable-health-sync | `480c42d` | feat(activity-wearable): add set auto-sync REST resource | — | 27/06/2026 |
-| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/activity-wearable-health-sync | `87366a9` | refactor(activity-wearable): replace per-command result assemblers with a unified action result assembler | — | 27/06/2026 |
-| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/activity-wearable-health-sync | `c2b7c73` | refactor(activity-wearable): return ProblemDetails from the REST layer | — | 27/06/2026 |
-| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/activity-wearable-health-sync | `eedd504` | feat(activity-wearable): add localized messages for health sync and consolidated errors | — | 27/06/2026 |
-| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/activity-wearable-health-sync | `87d3608` | chore: bump version to 1.3.0 | — | 27/06/2026 |
-| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/subscriptions-stripe | `46c9c53` | feat(subscriptions): add consolidated domain error | — | 26/06/2026 |
-| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/subscriptions-stripe | `5bb4c4c` | refactor(subscriptions): remove per-command application errors superseded by the domain error | — | 26/06/2026 |
-| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/subscriptions-stripe | `4d5bb8e` | feat(subscriptions): store Stripe customer id on user subscriptions | — | 26/06/2026 |
-| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/subscriptions-stripe | `f493d3e` | feat(subscriptions): add EF migration for stripe customer id | — | 27/06/2026 |
-| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/subscriptions-stripe | `c0bb958` | feat(subscriptions): integrate Stripe payment gateway and reference Stripe SDK | — | 27/06/2026 |
-| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/subscriptions-stripe | `0857b0a` | feat(subscriptions): wire Stripe billing into command services | — | 27/06/2026 |
-| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/subscriptions-stripe | `2c09198` | feat(subscriptions): add localized subscriptions messages resources | — | 27/06/2026 |
-| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/subscriptions-stripe | `7e256cd` | refactor(subscriptions): add action result assembler for the consolidated error | — | 27/06/2026 |
-| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/subscriptions-stripe | `2e8c481` | refactor(subscriptions): return ProblemDetails and localized messages from the REST layer | — | 27/06/2026 |
-| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/subscriptions-stripe | `551ad4f` | chore: bump version to 1.4.0 | — | 27/06/2026 |
-| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/smart-recommendations-location | `855e21c` | feat(smart-recommendations): add consolidated domain error | — | 26/06/2026 |
-| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/smart-recommendations-location | `b6a40e2` | refactor(smart-recommendations): remove per-command application errors superseded by the domain error | — | 26/06/2026 |
-| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/smart-recommendations-location | `95c28a8` | feat(smart-recommendations): add set location permission command and handler | — | 27/06/2026 |
-| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/smart-recommendations-location | `4b01762` | feat(smart-recommendations): wire location permission into recipe improvement | — | 27/06/2026 |
-| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/smart-recommendations-location | `343ae40` | feat(smart-recommendations): add set location permission REST resource | — | 27/06/2026 |
-| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/smart-recommendations-location | `cb8eeb9` | refactor(smart-recommendations): add action result assembler for the consolidated error | — | 28/06/2026 |
-| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/smart-recommendations-location | `dd5dfa7` | refactor(smart-recommendations): return ProblemDetails from the REST layer | — | 28/06/2026 |
-| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/smart-recommendations-location | `085b72d` | feat(smart-recommendations): add localized messages for location permission | — | 28/06/2026 |
-| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/smart-recommendations-location | `99ad6f1` | chore: bump version to 1.5.0 | — | 28/06/2026 |
-| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/analytics-reporting-problem-details | `7dc5b03` | feat(analytics-reporting): add consolidated domain error and action result assembler | — | 27/06/2026 |
-| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/analytics-reporting-problem-details | `2a8de48` | refactor(analytics-reporting): remove per-command application errors superseded by the domain error | — | 27/06/2026 |
-| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/analytics-reporting-problem-details | `567d31d` | refactor(analytics-reporting): return ProblemDetails and localized messages | — | 27/06/2026 |
-| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/error-handling-foundation | `6bdc178` | chore(shared): sync EF model snapshot and background seeding host with consolidated model | — | 29/06/2026 |
-| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | feature/error-handling-foundation | `0e4f6b1` | chore: wire new services into startup and update deployment configuration | — | 29/06/2026 |
-| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | develop | `178232c` | chore: bump version to 1.6.0 | — | 29/06/2026 |
-| upc-pre-202610-1asi0730-12053-nutrisens/nutrisense-platform | main | `a257254` | chore: bump version to 2.0.0 | — | 30/06/2026 |
+| nutrisense-platform | main | `75f3f3c` | Merge pull request #38 from upc-pre-202610-1asi0730-12053-nutrisens/develop | Release/2.0.0 | 2026-07-03 |
+| nutrisense-platform | main | `cbc049f` | Merge pull request #37 from upc-pre-202610-1asi0730-12053-nutrisens/release/2.0.0 | Release/2.0.0 | 2026-07-03 |
+| nutrisense-platform | main | `a257254` | chore: bump version to 2.0.0 | — | 2026-07-03 |
+| nutrisense-platform | main | `e22e4c5` | chore: update README | — | 2026-07-03 |
+| nutrisense-platform | main | `2452370` | Merge pull request #36 from upc-pre-202610-1asi0730-12053-nutrisens/hotfix/1.6.3-google-health-data-type | Hotfix/1.6.3 google health data type | 2026-07-01 |
+| nutrisense-platform | main | `6bc7671` | Merge pull request #35 from upc-pre-202610-1asi0730-12053-nutrisens/hotfix/1.6.3-google-health-data-type | Hotfix/1.6.3 google health data type | 2026-07-01 |
+| nutrisense-platform | main | `23b9aa2` | chore: bump version to 1.6.3 | — | 2026-07-01 |
+| nutrisense-platform | main | `4dc9007` | chore: update appsettings.Production.json | — | 2026-07-01 |
+| nutrisense-platform | main | `dbf575e` | Merge pull request #34 from upc-pre-202610-1asi0730-12053-nutrisens/hotfix/1.6.2-oauth-redirect-uri-mismatch | Hotfix/1.6.2 oauth redirect uri mismatch | 2026-07-01 |
+| nutrisense-platform | main | `8184898` | Merge pull request #33 from upc-pre-202610-1asi0730-12053-nutrisens/hotfix/1.6.2-oauth-redirect-uri-mismatch | Hotfix/1.6.2 oauth redirect uri mismatch | 2026-07-01 |
+| nutrisense-platform | main | `46f4eb7` | chore: bump version to 1.6.2 | — | 2026-07-01 |
+| nutrisense-platform | main | `c3420b8` | chore: update appsettings.Production.json | — | 2026-07-01 |
+| nutrisense-platform | main | `f97ccf7` | Merge pull request #31 from upc-pre-202610-1asi0730-12053-nutrisens/hotfix/1.6.1-google-health-oauth-scope | Hotfix/1.6.1 google health oauth scope | 2026-07-01 |
+| nutrisense-platform | main | `f09c9af` | Merge pull request #32 from upc-pre-202610-1asi0730-12053-nutrisens/hotfix/1.6.1-google-health-oauth-scope | Hotfix/1.6.1 google health oauth scope | 2026-07-01 |
+| nutrisense-platform | main | `6285410` | chore: bump version to 1.6.1 | — | 2026-07-01 |
+| nutrisense-platform | main | `f764518` | chore: update appsettings.Production.json | — | 2026-07-01 |
+| nutrisense-platform | main | `09ee243` | Merge pull request #30 from upc-pre-202610-1asi0730-12053-nutrisens/develop | release/1.6.0 | 2026-07-01 |
+| nutrisense-platform | main | `e17abef` | Merge pull request #29 from upc-pre-202610-1asi0730-12053-nutrisens/feature/error-handling-standardization | Feature/error handling standardization | 2026-07-01 |
+| nutrisense-platform | main | `178232c` | chore: bump version to 1.6.0 | — | 2026-07-01 |
+| nutrisense-platform | main | `0e4f6b1` | chore: wire new services into startup and update deployment configuration | — | 2026-07-01 |
+| nutrisense-platform | main | `6bdc178` | chore(shared): sync EF model snapshot and background seeding host with pending migrations | — | 2026-07-01 |
+| nutrisense-platform | main | `07dcea9` | refactor(nutrition-tracking): return ProblemDetails and localized messages from the REST layer | — | 2026-07-01 |
+| nutrisense-platform | main | `bdb68f4` | refactor(nutrition-tracking): replace per-command result assemblers with a single action result assembler | — | 2026-07-01 |
+| nutrisense-platform | main | `c629041` | refactor(nutrition-tracking): remove per-command application errors superseded by NutritionTrackingError | — | 2026-07-01 |
+| nutrisense-platform | main | `dd69c63` | feat(nutrition-tracking): add consolidated domain error and action result assembler | — | 2026-07-01 |
+| nutrisense-platform | main | `5568741` | refactor(body-health-metrics): return ProblemDetails and localized messages from the REST layer | — | 2026-07-01 |
+| nutrisense-platform | main | `b11dd5d` | refactor(body-health-metrics): remove per-command application errors superseded by BodyHealthMetricsError | — | 2026-07-01 |
+| nutrisense-platform | main | `c7d10ad` | feat(body-health-metrics): add consolidated domain error and action result assembler | — | 2026-07-01 |
+| nutrisense-platform | main | `567d31d` | refactor(analytics-reporting): return ProblemDetails and localized messages from the REST layer | — | 2026-07-01 |
+| nutrisense-platform | main | `2a8de48` | refactor(analytics-reporting): remove per-command application errors and PDF export slice superseded by AnalyticsReportingError | — | 2026-07-01 |
+| nutrisense-platform | main | `7dc5b03` | feat(analytics-reporting): add consolidated domain error and action result assembler | — | 2026-07-01 |
+| nutrisense-platform | main | `6926222` | feat(shared): add problem details factory and controller base extensions | — | 2026-07-01 |
+| nutrisense-platform | main | `ebe282b` | Merge pull request #28 from upc-pre-202610-1asi0730-12053-nutrisens/develop | release/1.5.0 | 2026-07-01 |
+| nutrisense-platform | main | `d53f121` | Merge pull request #27 from upc-pre-202610-1asi0730-12053-nutrisens/feature/smart-recommendations-location-permission | Feature/smart recommendations location permission | 2026-07-01 |
+| nutrisense-platform | main | `99ad6f1` | chore: bump version to 1.5.0 | — | 2026-07-01 |
+| nutrisense-platform | main | `085b72d` | feat(smart-recommendations): add localized messages for location permission and consolidated errors | — | 2026-07-01 |
+| nutrisense-platform | main | `dd5dfa7` | refactor(smart-recommendations): return ProblemDetails from the REST layer | — | 2026-07-01 |
+| nutrisense-platform | main | `cb8eeb9` | refactor(smart-recommendations): add action result assembler for the consolidated domain error | — | 2026-07-01 |
+| nutrisense-platform | main | `343ae40` | feat(smart-recommendations): add set location permission REST resource | — | 2026-07-01 |
+| nutrisense-platform | main | `4b01762` | feat(smart-recommendations): wire location permission into recipe import and recs engine services | — | 2026-07-01 |
+| nutrisense-platform | main | `95c28a8` | feat(smart-recommendations): add set location permission command and location preference flag | — | 2026-07-01 |
+| nutrisense-platform | main | `b6a40e2` | refactor(smart-recommendations): remove per-command application errors superseded by SmartRecommendationsError | — | 2026-07-01 |
+| nutrisense-platform | main | `855e21c` | feat(smart-recommendations): add consolidated domain error | — | 2026-07-01 |
+| nutrisense-platform | main | `a101cb3` | Merge pull request #26 from upc-pre-202610-1asi0730-12053-nutrisens/develop | release/1.4.0 | 2026-07-01 |
+| nutrisense-platform | main | `4dbd44d` | Merge pull request #25 from upc-pre-202610-1asi0730-12053-nutrisens/feature/subscriptions-stripe-billing | Feature/subscriptions stripe billing | 2026-07-01 |
+| nutrisense-platform | main | `551ad4f` | chore: bump version to 1.4.0 | — | 2026-07-01 |
+| nutrisense-platform | main | `2e8c481` | refactor(subscriptions): return ProblemDetails and localized messages from the REST layer | — | 2026-07-01 |
+| nutrisense-platform | main | `7e256cd` | refactor(subscriptions): add action result assembler for the consolidated domain error | — | 2026-07-01 |
+| nutrisense-platform | main | `2c09198` | feat(subscriptions): add localized subscriptions messages resources | — | 2026-07-01 |
+| nutrisense-platform | main | `0857b0a` | feat(subscriptions): wire Stripe billing into command services | — | 2026-07-01 |
+| nutrisense-platform | main | `c0bb958` | feat(subscriptions): integrate Stripe payment gateway and reference Stripe.net package | — | 2026-07-01 |
+| nutrisense-platform | main | `f493d3e` | feat(subscriptions): add EF migration for stripe customer id | — | 2026-07-01 |
+| nutrisense-platform | main | `4d5bb8e` | feat(subscriptions): store Stripe customer id on user subscriptions | — | 2026-07-01 |
+| nutrisense-platform | main | `5bb4c4c` | refactor(subscriptions): remove per-command application errors superseded by SubscriptionsError | — | 2026-07-01 |
+| nutrisense-platform | main | `46c9c53` | feat(subscriptions): add consolidated domain error | — | 2026-07-01 |
+| nutrisense-platform | main | `c363f22` | Merge pull request #24 from upc-pre-202610-1asi0730-12053-nutrisens/develop | release/1.3.0 | 2026-07-01 |
+| nutrisense-platform | main | `1287533` | Merge pull request #23 from upc-pre-202610-1asi0730-12053-nutrisens/feature/activity-wearable-health-sync | Feature/activity wearable health sync | 2026-07-01 |
+| nutrisense-platform | main | `87d3608` | chore: bump version to 1.3.0 | — | 2026-07-01 |
+| nutrisense-platform | main | `eedd504` | feat(activity-wearable): add localized messages for health sync and consolidated errors | — | 2026-07-01 |
+| nutrisense-platform | main | `c2b7c73` | refactor(activity-wearable): return ProblemDetails from the REST layer | — | 2026-07-01 |
+| nutrisense-platform | main | `87366a9` | refactor(activity-wearable): replace per-command result assemblers with a single action result assembler | — | 2026-07-01 |
+| nutrisense-platform | main | `480c42d` | feat(activity-wearable): add set auto-sync REST resource | — | 2026-07-01 |
+| nutrisense-platform | main | `6421d2f` | feat(activity-wearable): wire auto-sync and health estimation into command services | — | 2026-07-01 |
+| nutrisense-platform | main | `73518d4` | feat(activity-wearable): add EF migration for health sync settings | — | 2026-07-01 |
+| nutrisense-platform | main | `9029e2b` | feat(activity-wearable): persist auto-sync preference on wearable connections | — | 2026-07-01 |
+| nutrisense-platform | main | `25a2337` | feat(activity-wearable): integrate Google Health sync provider and retire Google Fit | — | 2026-07-01 |
+| nutrisense-platform | main | `81b9d93` | feat(activity-wearable): add set auto-sync command and wire it into the wearable connection model | — | 2026-07-01 |
+| nutrisense-platform | main | `e4d07e4` | feat(activity-wearable): add active calorie estimator contract and MET-based implementation | — | 2026-07-01 |
+| nutrisense-platform | main | `16bc587` | refactor(activity-wearable): remove per-command application errors superseded by ActivityWearableError | — | 2026-07-01 |
+| nutrisense-platform | main | `f98e2f8` | feat(activity-wearable): add consolidated domain error | — | 2026-07-01 |
+| nutrisense-platform | main | `1663cb5` | Merge pull request #22 from upc-pre-202610-1asi0730-12053-nutrisens/develop | release/1.2.0 | 2026-07-01 |
+| nutrisense-platform | main | `efd8f7b` | Merge pull request #21 from upc-pre-202610-1asi0730-12053-nutrisens/feature/iam-password-reset | Feature/iam password reset | 2026-07-01 |
+| nutrisense-platform | main | `aaa2f4b` | chore: bump version to 1.2.0 | — | 2026-07-01 |
+| nutrisense-platform | main | `4e438ed` | feat(iam): add localized messages for password reset and consolidated errors | — | 2026-07-01 |
+| nutrisense-platform | main | `9abe7e5` | refactor(iam): return ProblemDetails and authenticated-user checks from the REST layer | — | 2026-07-01 |
+| nutrisense-platform | main | `b9d8542` | refactor(iam): replace per-command result assemblers with a single action result assembler | — | 2026-07-01 |
+| nutrisense-platform | main | `bea8c13` | feat(iam): add forgot/reset password REST resources | — | 2026-07-01 |
+| nutrisense-platform | main | `b3c8953` | feat(iam): wire password reset flow into user command service and aggregate | — | 2026-07-01 |
+| nutrisense-platform | main | `c078a36` | feat(iam): implement SMTP email service and reference MailKit package | — | 2026-07-01 |
+| nutrisense-platform | main | `2de684e` | feat(iam): add EF migration for password reset tokens table | — | 2026-07-01 |
+| nutrisense-platform | main | `6de79e4` | feat(iam): implement password reset token persistence | — | 2026-07-01 |
+| nutrisense-platform | main | `4ca845b` | feat(iam): add request and reset password commands | — | 2026-07-01 |
+| nutrisense-platform | main | `44e41c3` | feat(iam): define password reset repository and email service contracts | — | 2026-07-01 |
+| nutrisense-platform | main | `93cc3e8` | refactor(iam): remove per-command application errors superseded by IamError | — | 2026-07-01 |
+| nutrisense-platform | main | `aeadfc4` | feat(iam): add password reset token aggregate and consolidated domain error | — | 2026-07-01 |
+| nutrisense-webapp | main | `0ccd04a` | Merge pull request #28 from upc-pre-202610-1asi0730-12053-nutrisens/hotfix/2.2.1-google-health-oauth-scope | chore: update .env.production | 2026-07-01 |
+| nutrisense-webapp | main | `6c2e189` | chore: update .env.production | — | 2026-07-01 |
+| nutrisense-webapp | main | `ba26b3a` | Merge pull request #27 from upc-pre-202610-1asi0730-12053-nutrisens/develop | release/2.2.0 | 2026-07-01 |
+| nutrisense-webapp | main | `28b3006` | Merge pull request #26 from upc-pre-202610-1asi0730-12053-nutrisens/feature/wearable-health-sync | Feature/wearable health sync | 2026-07-01 |
+| nutrisense-webapp | main | `f2ebb67` | chore(activity-wearable): configure Google Health OAuth environment vars | Adds the client ID, redirect URI, and scope needed by the Health sync flow to the production environment config. | 2026-07-01 |
+| nutrisense-webapp | main | `4a5555c` | feat(smart-recommendations): auto-detect home city and track location preference | Onboarding now geolocates the user's home city on step 3 with a manual-search fallback, and the store hydrates persisted location preferences (home/current city, travel mode, permission intent) and exposes a generating flag so the UI can prompt for location before recommendations exist. | 2026-07-01 |
+| nutrisense-webapp | main | `9adefd0` | feat(iam): add password recovery flow and stricter password policy | Adds request/reset endpoints for forgotten passwords, exempts them from the auth interceptor as public paths, and raises the signup password requirement to 8+ chars with a letter and a digit to match the backend's Password value object. | 2026-07-01 |
+| nutrisense-webapp | main | `c63d69c` | feat(activity-wearable): add Google Health OAuth sync | Lets users connect a Google Health account to auto-import activity and calories burned, with connect/sync/disconnect flows, an OAuth callback route, and i18n strings for the new dialog. | 2026-07-01 |
+| nutrisense-webapp | main | `763357c` | Merge pull request #25 from upc-pre-202610-1asi0730-12053-nutrisens/develop | release/2.1.0 | 2026-06-28 |
+| nutrisense-webapp | main | `e952068` | Merge pull request #24 from upc-pre-202610-1asi0730-12053-nutrisens/feature/post-register-plan-selection | Feature/post register plan selection | 2026-06-28 |
+| nutrisense-webapp | main | `24cbec3` | feat(router): gate subscription before onboarding and resolve /subscribe | Reorder the authenticated flow so subscription comes first and onboarding second:  - Register the `subscribe` route and resolve its deep-link in the global guard   (register / checkout / plan-selection / dashboard) preserving the chosen plan. - Apply the subscription gate before the onboarding gate; drop 'onboarding'   from the subscription-exempt routes so an unsubscribed user is sent to   plan-selection first. - Factor the repeated subscription-loading into a single helper. | 2026-06-28 |
+| nutrisense-webapp | main | `d7f19d7` | feat(iam): auto-login on sign-up and route to plans after registering | Prioritise plan selection right after registration and remove the extra re-login step:  - `signUp` now chains a sign-in so the user is left authenticated, then   fetches the current user. - Register/login forward a valid `plan` query param across the auth pages and   send the user to checkout (carried-over plan) or plan-selection afterwards. - Onboarding now finishes into the dashboard, since it runs after payment. | 2026-06-28 |
+| nutrisense-webapp | main | `678d506` | feat(subscriptions-billing): add /subscribe deep-link and plan carry-over | Introduce the public `/subscribe?plan=<key>` entry point so the website can deep-link visitors straight into the subscription flow:  - Add `subscribeRoute` and a lightweight subscribe view (routing hop with a   spinner while the guard resolves the destination). - Add `isValidPlanTier` to sanitise the incoming `plan` query param before it   reaches checkout. - After paying, continue to onboarding when it is still incomplete (onboarding   now runs post-payment), otherwise to the dashboard. | 2026-06-28 |
 
 #### 5.2.4.5. Execution Evidence for Sprint Review
 
@@ -2299,8 +2337,6 @@ A continuación se presentan screenshots de las principales evidencias de ejecuc
 **Swagger UI — Respuestas `ProblemDetails` localizadas**
 
 La documentación OpenAPI/Swagger desplegada en producción muestra los endpoints devolviendo respuestas de error en formato `ProblemDetails` (RFC 7807) con `application/problem+json`, y los mensajes de negocio traducidos según la cultura solicitada (`en`, `es`).
-
-![Swagger UI — ProblemDetails](../assets/img/sprint4/1problemdetails.png)
 
 **Recuperación de contraseña por correo (IAM)**
 
@@ -2316,7 +2352,7 @@ La activación de una suscripción realiza un cargo real a través de la pasarel
 
 El video de demostración del Sprint 4 ilustra el flujo completo: solicitud y restablecimiento de contraseña por correo, activación de una suscripción con pago real vía Stripe, activación de la sincronización automática con Google Health y el recálculo del balance calórico, la generación de recomendaciones sensibles al permiso de ubicación, y la verificación de que todos los endpoints devuelven errores `ProblemDetails` localizados. Toda la navegación ocurre sobre el frontend en producción consumiendo los endpoints reales del backend desplegado.
 
-**URL del video de demostración del Sprint 4:** [URL del Sprint4](#)
+**URL del video de demostración del Sprint 4:** [URL del Sprint4](https://upcedupe-my.sharepoint.com/:v:/g/personal/u202417857_upc_edu_pe/IQB0nY_h_SwjSIJaM92alBUkATgLUJzVmb27TWiRLLgRdIE?nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJPbmVEcml2ZUZvckJ1c2luZXNzIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXciLCJyZWZlcnJhbFZpZXciOiJNeUZpbGVzTGlua0NvcHkifX0&e=pP5Z0u)
 
 #### 5.2.4.6. Services Documentation Evidence for Sprint Review
 
@@ -2358,11 +2394,11 @@ El resto de los 74 endpoints documentados en el Sprint 3 se mantiene sin cambios
 
 #### 5.2.4.7. Software Deployment Evidence for Sprint Review
 
-Durante el Sprint 4 no se crearon nuevos productos ni infraestructura; el despliegue consistió en la **actualización del Web Service** (`nutrisense-platform`) ya desplegado en el Sprint 3, promoviendo a producción el release `v2.0.0` con la estandarización de errores y las nuevas integraciones externas. La Landing Page y la Web Application se mantuvieron sin cambios de despliegue. A continuación se describen los pasos realizados.
+Durante el Sprint 4 no se crearon nuevos productos ni infraestructura; el despliegue consistió en la **actualización del Web Service** (`nutrisense-platform`) y de la **Web Application** (`nutrisense-webapp`), ambos ya desplegados desde sprints anteriores, promoviendo a producción el release `v2.0.0` del backend (con la estandarización de errores, las nuevas integraciones externas y tres hotfixes de OAuth con Google Health) y el release `v2.2.0` del frontend (con la recuperación de contraseña, la conexión OAuth con Google Health y la detección automática de ubicación), junto con un hotfix `v2.2.1` sobre la configuración de producción del frontend. La Landing Page se mantuvo sin cambios de despliegue. A continuación se describen los pasos realizados.
 
-##### Merge a main y creación del tag de release `v2.0.0`
+##### Merge a main y creación de los tags de release `v2.0.0` y `v2.2.0`
 
-Una vez integradas todas las ramas `feature/*` del sprint hacia `develop` (release intermedio `v1.6.0`), se realizó el merge de `develop` a `main` mediante un Pull Request en GitHub, etiquetando el commit resultante como `v2.0.0`. Este merge disparó automáticamente el redespliegue continuo en Coolify desde la rama `main`.
+Una vez integradas todas las ramas `feature/*` del sprint hacia `develop` (release intermedio `v1.6.0` en el backend), se realizó el merge de `develop` a `main` mediante Pull Requests en GitHub (PR #37/#38 en `nutrisense-platform`, commits `cbc049f` y `75f3f3c`), etiquetando el commit resultante como `v2.0.0`. En producción, la integración con Google Health expuso incidencias de OAuth que se resolvieron con los hotfixes `v1.6.1`, `v1.6.2` y `v1.6.3`, cada uno mergeado directamente a `main`. De forma análoga, en `nutrisense-webapp` el merge de `develop` a `main` (PR #27, commit `ba26b3a`) publicó el release `v2.2.0`, seguido del hotfix `v2.2.1` (commit `0ccd04a`) para la configuración de variables de entorno de producción. Cada merge a `main` disparó automáticamente el redespliegue continuo en Coolify del servicio correspondiente.
 
 ##### Aplicación de migraciones EF
 
@@ -2372,15 +2408,16 @@ El release incorporó nuevas migraciones EF Core (tabla de *password reset token
 
 El nuevo release requirió registrar variables de entorno adicionales en el panel de Coolify, bajo la sección **Environment Variables**, sin exponerlas en el código fuente:
 
-- **SMTP / MailKit:** host, puerto, usuario, contraseña y remitente para el envío de correos de recuperación de contraseña.
-- **Stripe:** clave secreta de API y clave pública para el procesamiento real de pagos.
-- **Google Health:** credenciales del proveedor de sincronización de actividad.
+- **SMTP / MailKit** (backend): host, puerto, usuario, contraseña y remitente para el envío de correos de recuperación de contraseña.
+- **Stripe** (backend): clave secreta de API y clave pública para el procesamiento real de pagos.
+- **Google Health** (backend): credenciales del proveedor de sincronización de actividad.
+- **Google Health OAuth** (frontend, `nutrisense-webapp`): *client ID*, *redirect URI* y *scope* consumidos por el flujo de conexión OAuth, ajustados en el hotfix `v2.2.1` tras detectarse un desajuste en producción.
 
 ![Variables de entorno actualizadas en Coolify](../assets/img/sprint4/4env.png)
 
-##### Redespliegue del backend en Coolify
+##### Redespliegue del backend y del frontend en Coolify
 
-Coolify reconstruyó la imagen .NET 10 a partir del `Dockerfile` del repositorio sobre la rama `main` y levantó el contenedor actualizado bajo el dominio `sense-api.nutriproject.xyz`, con la documentación Swagger UI reflejando el contrato de error estandarizado y los nuevos endpoints.
+Coolify reconstruyó la imagen .NET 10 a partir del `Dockerfile` del repositorio `nutrisense-platform` sobre la rama `main` y levantó el contenedor actualizado bajo el dominio `sense-api.nutriproject.xyz`, con la documentación Swagger UI reflejando el contrato de error estandarizado y los nuevos endpoints. De forma análoga, reconstruyó la imagen del `nutrisense-webapp` sobre `main` y actualizó el contenedor publicado en `app-sense.nutriproject.xyz`, incorporando el flujo de recuperación de contraseña, la conexión OAuth con Google Health y la detección automática de ubicación.
 
 ![Backend redesplegado en Coolify](../assets/img/sprint4/5deploy.png)
 
@@ -3186,10 +3223,10 @@ Un elemento diferenciador es el motor de recomendaciones inteligente, que sugier
 
 El video incluye dos testimonios de usuarios reales que participaron en las entrevistas de validación, proporcionando credibilidad y validación del impacto real del producto:
 
-> "Llevé dos meses intentando bajar de peso sin resultados claros, pero desde que uso NutriSense puedo ver qué como y cómo evoluciono semana a semana. En dos meses bajé 4 kilos y por primera vez siento que tengo control."
+> "Bajar de peso siempre había sido para mí una mezcla de cuadernos con calorías anotadas a mano y dietas que sacaba de internet, sin saber realmente si iba por buen camino. Con NutriSense puedo ver qué como y cómo voy evolucionando semana a semana, con datos reales y no solo con la báscula. Ya bajé un par de kilos, pero lo que más valoro es que por primera vez siento que tengo control sobre mis hábitos en lugar de estar improvisando."
 >
-> **Brando S., usuario NutriSense, segmento pérdida de peso**
+> **Tatiana M., usuario NutriSense, segmento pérdida de peso**
 
-> "Vi NutriSense en redes y no creí que algo así pudiera funcionar para mí, pero el onboarding fue tan sencillo que en 10 minutos ya tenía mi plan. Lo que más me sorprendió fueron las recomendaciones: realmente considera lo que tengo en casa."
+> "Sinceramente no creí que una app pudiera adaptarse a mi rutina de ganancia muscular sin que tuviera que pasar horas configurando todo a mano. El onboarding fue sencillo y rápido, y en poco tiempo ya tenía mi plan de calorías y macros listo. Lo que más me sorprendió fueron las recomendaciones del día a día: la app considera lo que tengo en casa antes de sugerirme qué cocinar, así que he dejado de comprar cosas que terminaba desperdiciando. Se siente hecha a mi medida y no como una plantilla genérica."
 >
-> **David R., usuario NutriSense, segmento ganancia muscular**
+> **Daphne F., usuario NutriSense, segmento ganancia muscular**

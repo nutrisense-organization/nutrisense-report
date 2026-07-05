@@ -84,7 +84,7 @@ Cronometer es una plataforma SaaS orientada a usuarios con interés en la salud 
     </tr>
     <tr>
       <td>Precios y costos</td>
-      <td>Tres planes de suscripción mensual sin modelo freemium: Basic ($7.99 — registro manual y dashboard), Pro ($14.99/mes — Smart Scan, clima, viaje, wearable, despensa), Premium ($ 19.90/mes — análisis de menú, PDF, historial ilimitado).</td>
+      <td>Tres planes de suscripción mensual sin modelo freemium: Basic ($7.99/mes — registro manual, dashboard e IMC/TMB/GET), Pro ($14.99/mes — historial 90 días, Smart Scan de platos, Modo Viaje, recomendaciones por clima, despensa y recetas), Premium ($19.99/mes — sincronización wearable, Smart Scan de menú, historial ilimitado y reportes PDF).</td>
       <td>Modelo freemium con plan gratuito limitado y plan premium de aproximadamente S/ 25–30/mes (varía por región). Las funciones avanzadas de planes y seguimiento detallado requieren suscripción paga.</td>
       <td>Modelo freemium con plan gratuito funcional y plan Premium de aproximadamente USD 19.99/mes o USD 79.99/año. El plan gratuito incluye el registro básico y la base de datos completa.</td>
       <td>Modelo freemium con plan gratuito completo en funciones básicas y plan Gold de USD 9.99/mes o USD 49.99/año. El plan gratuito ya incluye el tracking de micronutrientes, lo que reduce la fricción de conversión.</td>
@@ -106,7 +106,7 @@ Cronometer es una plataforma SaaS orientada a usuarios con interés en la salud 
     </tr>
     <tr>
       <td>Debilidades</td>
-      <td>Marca nueva sin reconocimiento en el mercado. Dependencia de APIs de terceros para funciones core (Google Cloud Vision, OpenWeatherMap). Base de datos de alimentos inicial limitada comparada con competidores establecidos. Sin aplicación móvil nativa en el alcance inicial.</td>
+      <td>Marca nueva sin reconocimiento en el mercado. Dependencia de APIs de terceros para funciones core (Google Gemini, OpenWeatherMap, Stripe). Base de datos de alimentos inicial limitada comparada con competidores establecidos. Sin aplicación móvil nativa en el alcance inicial.</td>
       <td>Sin recomendaciones contextuales basadas en clima o ubicación. Sin análisis de fotos de platos o menús. Funcionalidades de wearable limitadas. Cobertura reducida fuera de Latinoamérica.</td>
       <td>Interfaz percibida como sobrecargada por muchos usuarios. Historial de problemas de privacidad y seguridad de datos (brecha de seguridad en 2018). Plan gratuito con publicidad intrusiva. Precio del plan premium elevado para el mercado latinoamericano.</td>
       <td>Curva de aprendizaje alta para usuarios sin conocimientos nutricionales avanzados. Interfaz menos intuitiva para el usuario casual. Sin recomendaciones contextuales ni análisis de imágenes. Comunidad significativamente más pequeña que MyFitnessPal.</td>
@@ -529,7 +529,7 @@ En conjunto, estos hallazgos orientan el desarrollo de nuestra plataforma hacia 
 
 En esta sección se desarrolla el modelado del dominio del sistema mediante la técnica de Big Picture Event Storming, con el propósito de construir una visión integral del negocio de nuestra plataforma bajo los principios de Domain Driven Design. Este proceso permitió identificar los eventos de dominio más relevantes, estableciendo su secuencia temporal y las relaciones de causalidad que definen el comportamiento del sistema a nivel global.
 
-El análisis desarrollado facilitó, además, la identificación de los actores que interactúan con el dominio, así como de los comandos que materializan las intenciones de cambio de estado. Asimismo, se reconocieron los sistemas externos involucrados en la ejecución de los procesos de negocio, tales como Google Vision API, Google Health API y Stripe, y se identificaron los pain points presentes a lo largo del flujo, los cuales evidencian fricciones críticas con impacto directo en la experiencia del usuario y en los resultados del negocio. En conjunto, estos hallazgos reflejan una arquitectura orientada a eventos, caracterizada por un alto grado de desacoplamiento y el uso de consistencia eventual entre los distintos componentes del sistema.
+El análisis desarrollado facilitó, además, la identificación de los actores que interactúan con el dominio, así como de los comandos que materializan las intenciones de cambio de estado. Asimismo, se reconocieron los sistemas externos involucrados en la ejecución de los procesos de negocio, tales como Google Gemini (análisis de imágenes), OpenWeatherMap, Google Health API y Stripe, y se identificaron los pain points presentes a lo largo del flujo, los cuales evidencian fricciones críticas con impacto directo en la experiencia del usuario y en los resultados del negocio. En conjunto, estos hallazgos reflejan una arquitectura orientada a eventos, caracterizada por un alto grado de desacoplamiento y el uso de consistencia eventual entre los distintos componentes del sistema.
 
 Asimismo, se identificaron eventos de alta relevancia que actúan como mecanismos de propagación, especialmente aquellos asociados al registro de consumo nutricional, los cuales desencadenan procesos en múltiples bounded contexts como analítica, recomendaciones inteligentes y personalización de contenido nutricional.
 
@@ -545,93 +545,90 @@ Para poder apreciar mejor el Big Picture Event Storming, le recomendamos ingresa
 
 ## 2.5. Ubiquitous Language
 
-El presente Ubiquitous Language establece un conjunto estructurado de términos y conceptos clave propios del dominio de nuestra plataforma, con el propósito de definir un lenguaje común, preciso y libre de ambigüedades entre los distintos stakeholders y el equipo de desarrollo. Este glosario se fundamenta en los principios de Domain Driven Design, permitiendo alinear la comprensión del negocio de la nutrición personalizada, el seguimiento de métricas de salud y la generación de recomendaciones contextuales. Cada término ha sido definido considerando su significado específico dentro del dominio, garantizando consistencia semántica, trazabilidad conceptual y una comunicación efectiva que facilite el análisis, diseño e implementación de la solución.
+El presente Ubiquitous Language establece un conjunto estructurado de términos y conceptos clave propios del dominio de nuestra plataforma, con el propósito de definir un lenguaje común, preciso y libre de ambigüedades entre los distintos stakeholders y el equipo de desarrollo. Este glosario se fundamenta en los principios de Domain Driven Design, permitiendo alinear la comprensión del negocio de la nutrición personalizada, el seguimiento de métricas de salud y la generación de recomendaciones contextuales. Cada término ha sido definido considerando su significado específico dentro del dominio, garantizando consistencia semántica, trazabilidad conceptual y una comunicación efectiva que facilite el análisis, diseño e implementación de la solución. Los términos han sido contrastados contra la implementación real del backend (`nutrisense-platform`), por lo que la columna "Elemento en el modelo" referencia el agregado, entidad, value object o comando efectivamente implementado dentro de su Bounded Context.
 
+**User & Profile** — *Bounded Context: IAM*
 
-
-**User & Profile**
-
-| Term                                                    | Definition                                                                                                                              |
-|---------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------|
-| User (Usuario)                                          | The person using the platform to manage their nutrition, physical activity, and health goals.                                            |
-| User Profile (Perfil de Usuario)                        | The set of personal and health data for the user, such as age, sex, weight, height, activity level, and dietary restrictions.           |
-| Goal (Meta)                                             | The user's primary objective related to their physical state: losing weight, gaining muscle mass, or maintaining their current condition. |
-| Dietary Restrictions (Restricciones Alimentarias)       | Limitations on the user's diet due to allergies, intolerances, or medical conditions.                                                   |
-| Subscription Plan (Plan de Suscripción)                 | Access level contracted by the user (Basic, Pro, Premium) that determines available features.                                           |
+| Term                                                    | Definition                                                                                                                              | Elemento en el modelo |
+|---------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------|------------------------|
+| User (Usuario)                                          | The person using the platform to manage their nutrition, physical activity, and health goals.                                            | `User` (aggregate root) |
+| Personal & Health Data (Datos Personales y de Salud)    | Personal attributes captured directly on the user — name, email, date of birth, biological sex, height, activity level and preferred units/language. There is no separate "User Profile" aggregate; these are value objects owned by `User`. | `PersonName`, `Email`, `DateOfBirth`, `BiologicalSex`, `Height`, `ActivityLevel`, `PreferredUnits`, `PreferredLanguage` (value objects) |
+| Goal (Meta)                                             | The user's primary objective related to their physical state: losing weight, gaining muscle mass, or maintaining their current condition. | `GoalIntent` (value object), `UserGoal` (entity in BodyHealthMetrics), event `GoalDefined` |
+| Dietary Restriction (Restricción Alimentaria)           | Limitation on the user's diet due to allergies, intolerances, or medical conditions.                                                     | `DietaryRestriction` (entity), command `SetDietaryRestrictionsCommand` |
+| Subscription Plan (Plan de Suscripción)                 | Access level contracted by the user (Basic, Pro, Premium) that determines available features. Belongs to the Subscriptions Bounded Context, not IAM. | `SubscriptionPlan` (aggregate, Subscriptions BC) |
 
 ---
 
-**Body & Health Metrics**
+**Body & Health Metrics** — *Bounded Context: BodyHealthMetrics*
 
-| Term                                                    | Definition                                                                                                                              |
-|---------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------|
-| Weight (Peso)                                           | Body measurement of the user recorded periodically to evaluate progress.                                                                |
-| Height (Altura)                                         | Physical measurement used alongside weight to calculate health indicators.                                                              |
-| BMI / Body Mass Index (IMC / Índice de Masa Corporal)   | An indicator that relates weight and height to estimate the user's physical status.                                                     |
-| BMR / Basal Metabolic Rate (TMB / Tasa Metabólica Basal)| The amount of calories the body needs at rest for vital functions.                                                                      |
-| TDEE / Total Daily Energy Expenditure (Gasto Calórico Diario Total) | The total calories the user burns in a day, considering their physical activity.                                              |
-| Daily Calorie Target (Objetivo Calórico Diario)         | The number of calories the user should consume daily according to their goal.                                                           |
-
----
-
-**Nutrition Tracking**
-
-| Term                                                    | Definition                                                                                                                              |
-|---------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------|
-| Meal (Comida)                                           | Food intake recorded at specific times of the day: breakfast, lunch, dinner, or snack.                                                  |
-| Food Item (Alimento)                                    | Individual product consumed by the user with associated nutritional information.                                                         |
-| Nutrition Log (Registro Nutricional)                    | History of food consumed by the user, organized by day.                                                                                 |
-| Calories (Calorías)                                     | The unit of energy provided by the consumed food.                                                                                       |
-| Macronutrients / Macros (Macronutrientes)               | The primary components of food: proteins, carbohydrates, and fats.                                                                      |
-| Daily Intake (Consumo Diario)                           | Total calories and macronutrients consumed by the user in a day.                                                                        |
+| Term                                                    | Definition                                                                                                                              | Elemento en el modelo |
+|---------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------|------------------------|
+| Weight (Peso)                                           | Body measurement of the user recorded periodically to evaluate progress.                                                                | `WeightLog` (entity), `WeightKg` (value object), command `UpdateWeightCommand` |
+| Height (Altura)                                         | Physical measurement used alongside weight to calculate health indicators. Modeled as a value object on `User`, not on `BodyMetrics`.   | `Height` (value object, IAM) |
+| BMI / Body Mass Index (IMC / Índice de Masa Corporal)   | An indicator that relates weight and height to estimate the user's physical status.                                                     | `BmiResult` (value object), command `CalculateBmiCommand`, event `BmiCalculated` |
+| BMR / Basal Metabolic Rate (TMB / Tasa Metabólica Basal)| The amount of calories the body needs at rest for vital functions, computed via the Mifflin–St Jeor formula.                            | Command `CalculateBmrCommand`, event `BmrCalculated` (`IBodyMetricsCalculator`) |
+| TDEE / Total Daily Energy Expenditure (Gasto Calórico Diario Total) | The total calories the user burns in a day, considering their physical activity.                                              | Command `CalculateTdeeCommand`, event `TdeeCalculated` |
+| Daily Caloric Goal (Objetivo Calórico Diario)           | The number of calories the user should consume daily according to their goal.                                                           | Command `CalculateDailyCaloricGoalCommand`, event `DailyCaloricGoalSet` |
 
 ---
 
-**Smart Scan**
+**Nutrition Tracking** — *Bounded Context: NutritionTracking*
 
-| Term                                                    | Definition                                                                                                                              |
-|---------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------|
-| Smart Scan (Escaneo Inteligente)                        | A feature that analyzes images of food or menus to estimate their nutritional value.                                                    |
-| Dish Photo (Foto de Plato)                              | An image of food taken by the user to identify its components and calories.                                                             |
-| Menu Photo (Foto de Menú)                               | An image of a restaurant menu used to recommend healthy options.                                                                        |
-| Food Analysis (Análisis de Alimento)                    | The process of estimating calories and macronutrients from an image.                                                                    |
-| Manual Confirmation (Confirmación Manual)               | User validation of the analysis results before saving them.                                                                             |
-
----
-
-**Recommendations**
-
-| Term                                                    | Definition                                                                                                                              |
-|---------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------|
-| Recommendation (Recomendación)                          | Personalized suggestion of foods or meals based on the user's profile.                                                                  |
-| Context Aware Recommendation (Recomendación Contextual) | A recommendation that considers factors such as weather, location, and user status.                                                     |
-| Weather Condition (Condición Climática)                 | The state of the weather (heat, cold, etc.) that influences dietary recommendations.                                                    |
-| Travel Mode (Modo Viaje)                                | A feature that adapts recommendations based on the city or country where the user is located.                                           |
-| Pantry (Despensa)                                       | A list of ingredients available at home as recorded by the user.                                                                        |
-| Recipe Suggestion (Sugerencia de Receta)                | A recommendation for food preparation based on available ingredients and nutritional needs.                                             |
-| Macro Deficit (Déficit de Macronutrientes)              | The difference between the macronutrients consumed and those required for the day.                                                      |
+| Term                                                    | Definition                                                                                                                              | Elemento en el modelo |
+|---------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------|------------------------|
+| Meal (Comida)                                           | Food intake recorded at a specific time of day (breakfast, lunch, dinner, snack). There is no standalone `Meal` aggregate; entries are logged directly onto the `NutritionLog`. | `MealType` (enum), command `LogMealToDailyLogCommand` |
+| Food (Alimento)                                         | Individual product consumed by the user with associated nutritional information, sourced from USDA and enriched via DeepSeek.          | `Food` (aggregate root) |
+| Nutrition Log (Registro Nutricional)                    | History of food consumed by the user, organized by day.                                                                                 | `NutritionLog` (aggregate root) |
+| Macronutrients / Macros (Macronutrientes)               | The primary components of food: proteins, carbohydrates, and fats — tracked both as a goal and as a daily result.                       | `MacroTargets` (value object, BodyHealthMetrics), `DailyMacroSummary` (value object, NutritionTracking) |
+| Daily Intake (Consumo Diario)                           | Total calories and macronutrients consumed by the user in a day.                                                                        | `DailyMacroSummary`, query `GetDailyMacroSummaryQuery` |
 
 ---
 
-**Activity & Energy Balance**
+**Smart Scan** — *Bounded Context: NutritionTracking (powered by Google Gemini)*
 
-| Term                                                    | Definition                                                                                                                              |
-|---------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------|
-| Physical Activity (Actividad Física)                    | Exercise performed by the user that contributes to daily caloric expenditure.                                                           |
-| Active Calories (Calorías Activas)                      | Calories burned through physical activity.                                                                                              |
-| Energy Balance (Balance Calórico)                       | The relationship between calories consumed and calories burned in a day.                                                                |
+| Term                                                    | Definition                                                                                                                              | Elemento en el modelo |
+|---------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------|------------------------|
+| Smart Scan (Escaneo Inteligente)                        | A feature that analyzes images of food or menus via Google Gemini to estimate their nutritional value. Gated by plan (`smart-scan-dish`, `smart-scan-menu`). | `IDishVisionService`, `IMenuVisionService` (implemented by `GeminiDishVisionService`, `GeminiMenuVisionService`) |
+| Meal Photo (Foto de Comida)                             | An image of food taken by the user to identify its components and calories. Referred to in the codebase as "meal photo", not "dish photo". | Command `ScanMealPhotoCommand`, event `MealPhotoAnalyzed` |
+| Menu Photo (Foto de Menú)                               | An image of a restaurant menu used to recommend healthy options.                                                                        | Command `ScanMenuPhotoCommand`, event `MenuAnalyzed`, command `SelectMenuOptionCommand` |
+| Manual Confirmation (Confirmación Manual)               | User validation of the analysis results before saving them.                                                                             | Command `ConfirmScanResultCommand` |
 
 ---
 
-**Progress & Analytics**
+**Recommendations** — *Bounded Context: SmartRecommendations*
 
-| Term                                                    | Definition                                                                                                                              |
-|---------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------|
-| Progress (Progreso)                                     | The user's evolution regarding their goal, based on body metrics and consumption.                                                       |
-| Daily Summary (Resumen Diario)                          | An overview of calorie and macronutrient consumption against the daily target.                                                          |
-| Streak (Racha)                                          | The number of consecutive days in which the user records their full information.                                                        |
-| Alert (Alerta)                                          | A notification when the user exceeds or falls short of their nutritional goals.                                                         |
-| Trend (Tendencia)                                       | The pattern of change in metrics such as weight or consumption over time.                                                               |
+| Term                                                    | Definition                                                                                                                              | Elemento en el modelo |
+|---------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------|------------------------|
+| Recommendation (Recomendación)                          | Personalized suggestion of foods or meals based on the user's profile.                                                                  | `RecommendationCard` (entity), command `GenerateRecommendationCommand`, event `RecommendationGenerated` |
+| Context Aware Recommendation (Recomendación Contextual) | A recommendation that considers factors such as weather, location, and pantry contents.                                                 | Command `CheckWeatherAndProfileCommand`, `IWeatherService`, `IGeolocationService` |
+| Weather Condition (Condición Climática)                 | The state of the weather (heat, cold, rain, etc.) that influences dietary recommendations, sourced from OpenWeatherMap.                 | `WeatherCondition`, `WeatherType` (value objects), event `WeatherContextRetrieved` |
+| Travel Mode (Modo Viaje)                                | A feature that adapts recommendations based on the city or country where the user is located.                                           | Commands `EnableTravelModeCommand` / `DisableTravelModeCommand`, events `TravelModeActivated` / `TravelModeDeactivated` |
+| Pantry (Despensa)                                       | A list of ingredients available at home as recorded by the user.                                                                        | `Pantry` (aggregate root), `PantryItem` (entity) |
+| Recipe Suggestion (Sugerencia de Receta)                | A recommendation for food preparation based on available ingredients and nutritional needs.                                             | `Recipe` (aggregate root), command `SuggestRecipeCommand`, event `RecipeSuggested` |
+
+*Nota: "Macro Deficit" no está modelado como un concepto explícito del dominio; la comparación entre `MacroTargets` y `DailyMacroSummary` se resuelve en tiempo de consulta.*
+
+---
+
+**Activity & Energy Balance** — *Bounded Context: ActivityWearable*
+
+| Term                                                    | Definition                                                                                                                              | Elemento en el modelo |
+|---------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------|------------------------|
+| Physical Activity (Actividad Física)                    | Exercise performed by the user that contributes to daily caloric expenditure, logged manually or synced from Google Health.             | `ActivityLog` (aggregate root), command `LogManualActivityCommand`, `SyncActivityDataCommand` |
+| Active Calories (Calorías Activas)                      | Calories burned through physical activity.                                                                                              | Command `CalculateActiveCaloriesCommand`, event `ActiveCaloriesCalculated` |
+| Caloric Balance (Balance Calórico)                      | The relationship between calories consumed and calories burned in a day.                                                                | Command `AdjustCaloricBalanceCommand`, event `CaloricBalanceAdjusted` (`ICaloricBalanceCalculator`) |
+
+---
+
+**Progress & Analytics** — *Bounded Context: AnalyticsReporting*
+
+| Term                                                    | Definition                                                                                                                              | Elemento en el modelo |
+|---------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------|------------------------|
+| Progress (Progreso)                                     | The user's evolution regarding their goal, based on body metrics and consumption.                                                       | `ProgressSnapshot` (value object), command `CalculateProgressCommand`, event `ProgressCalculated` |
+| Dashboard (Panel de Progreso)                           | An aggregated view of calorie/macronutrient consumption, weight and streak against the user's targets. Not a standalone "Daily Summary" class — it is assembled on read from multiple contexts. | Command `ViewDashboardCommand`, event `DashboardViewed`, query `GetDashboardQuery` |
+| Usage Streak (Racha de Uso)                             | The number of consecutive days in which the user records their full information.                                                        | Command `UpdateUsageStreakCommand`, event `UsageStreakUpdated`, query `GetStreakQuery` (`IStreakCalculator`) |
+| Progress Chart / Visualization (Gráfico de Progreso)    | The visual representation of how a metric (weight, consumption, adherence) changes over time. There is no separate "Trend" class — trends are rendered through generated visualizations. | Command `GenerateVisualizationCommand`, event `VisualizationGenerated`, query `GetProgressChartQuery` |
+| PDF Report (Reporte PDF)                                | Exportable report of the user's analytics data (KPIs, historial de calorías, macros, peso y racha). Es un `premium`-tier entitlement (`pdf-reports`) generado client-side en el frontend, no en el backend. | Feature flag `pdf-reports` (`SubscriptionPlanSeeder`, backend) + `generateAnalyticsPdf` (`pdf-export.service.js`, frontend, vía `jsPDF`/`jspdf-autotable`) |
 
 ---
 
