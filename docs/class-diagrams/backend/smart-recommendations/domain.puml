@@ -9,14 +9,14 @@ package "NutriSense.SmartRecommendations.Domain" {
 
   package "Model.Aggregates" {
     class City {
-      +Id: int
-      +Key: string
-      +NameEn: string
-      +NameEs: string
-      +Country: string
-      +Lat: decimal
-      +Lng: decimal
-      +Timezone: string
+      -Id: int
+      -Key: string
+      -NameEn: string
+      -NameEs: string
+      -Country: string
+      -Lat: decimal
+      -Lng: decimal
+      -Timezone: string
       #City()
       +City(key, nameEn, nameEs, country, lat, lng, timezone)
       +{static} Import(name, nameEn?, nameEs?, country, lat, lng): City
@@ -25,29 +25,29 @@ package "NutriSense.SmartRecommendations.Domain" {
     }
 
     class IngredientCatalogItem {
-      +Id: int
-      +Key: string
-      +NameEn: string
-      +NameEs: string
-      +FoodId: int?
-      +Category: string
-      +DefaultUnit: string
-      +GramsPerUnit: decimal?
+      -Id: int
+      -Key: string
+      -NameEn: string
+      -NameEs: string
+      -FoodId: int?
+      -Category: string
+      -DefaultUnit: string
+      -GramsPerUnit: decimal?
       #IngredientCatalogItem()
       +IngredientCatalogItem(key, nameEn, nameEs, foodId, category, defaultUnit, gramsPerUnit)
     }
 
     ' LocationPreference is a partial class: LocationPreference.cs + LocationPreferenceAudit.cs (IAuditableEntity).
     class LocationPreference {
-      +Id: int
-      +UserId: int
-      +HomeCityId: int?
-      +CurrentCityId: int?
-      +TravelModeActive: bool
-      +IsManualOverride: bool
-      +LocationPermissionGranted: bool
-      +CreatedAt: DateTimeOffset?
-      +UpdatedAt: DateTimeOffset?
+      -Id: int
+      -UserId: int
+      -HomeCityId: int?
+      -CurrentCityId: int?
+      -TravelModeActive: bool
+      -IsManualOverride: bool
+      -LocationPermissionGranted: bool
+      -CreatedAt: DateTimeOffset?
+      -UpdatedAt: DateTimeOffset?
       #LocationPreference()
       +LocationPreference(userId: int)
       +EnableTravelMode(cityId: int): void
@@ -59,11 +59,11 @@ package "NutriSense.SmartRecommendations.Domain" {
 
     ' Pantry is a partial class: Pantry.cs + PantryAudit.cs (IAuditableEntity).
     class Pantry {
-      +Id: int
-      +UserId: int
-      +Items: IReadOnlyCollection<PantryItem>
-      +CreatedAt: DateTimeOffset?
-      +UpdatedAt: DateTimeOffset?
+      -Id: int
+      -UserId: int
+      -Items: IReadOnlyCollection<PantryItem>
+      -CreatedAt: DateTimeOffset?
+      -UpdatedAt: DateTimeOffset?
       #Pantry()
       +Pantry(userId: int)
       +AddItems(inputs: IEnumerable<PantryItemInput>): void
@@ -72,20 +72,20 @@ package "NutriSense.SmartRecommendations.Domain" {
     }
 
     class Recipe {
-      +Id: int
-      +Key: string
-      +NameEn: string
-      +NameEs: string
-      +GoalType: string
-      +PrepTimeMinutes: int
-      +Servings: int
-      +TotalCalories: decimal
-      +TotalProteinG: decimal
-      +TotalCarbsG: decimal
-      +TotalFatG: decimal
-      +TotalFiberG: decimal
-      +RestrictionsConflict: List<string>
-      +Ingredients: List<RecipeIngredientItem>
+      -Id: int
+      -Key: string
+      -NameEn: string
+      -NameEs: string
+      -GoalType: string
+      -PrepTimeMinutes: int
+      -Servings: int
+      -TotalCalories: decimal
+      -TotalProteinG: decimal
+      -TotalCarbsG: decimal
+      -TotalFatG: decimal
+      -TotalFiberG: decimal
+      -RestrictionsConflict: List<string>
+      -Ingredients: List<RecipeIngredientItem>
       #Recipe()
       +Recipe(key, nameEn, nameEs, goalType, prepTimeMinutes, servings, ...)
       +AddIngredient(ingredientCatalogItemId: int, quantity: decimal, unit: string): void
@@ -93,24 +93,24 @@ package "NutriSense.SmartRecommendations.Domain" {
 
     ' RecommendationCard is a partial class: RecommendationCard.cs + RecommendationCardAudit.cs (IAuditableEntity).
     class RecommendationCard {
-      +Id: int
-      +UserId: int
-      +CityId: int?
-      +WeatherType: string?
-      +GoalType: string?
-      +FoodId: int?
-      +FoodNameEn: string
-      +FoodNameEs: string
-      +EstimatedCalories: decimal
-      +EstimatedProteinG: decimal
-      +EstimatedCarbsG: decimal
-      +EstimatedFatG: decimal
-      +Badge: string
-      +ContextLabelEn: string
-      +ContextLabelEs: string
-      +RestrictionsConflict: List<string>
-      +IsActive: bool
-      +CreatedAt: DateTimeOffset
+      -Id: int
+      -UserId: int
+      -CityId: int?
+      -WeatherType: string?
+      -GoalType: string?
+      -FoodId: int?
+      -FoodNameEn: string
+      -FoodNameEs: string
+      -EstimatedCalories: decimal
+      -EstimatedProteinG: decimal
+      -EstimatedCarbsG: decimal
+      -EstimatedFatG: decimal
+      -Badge: string
+      -ContextLabelEn: string
+      -ContextLabelEs: string
+      -RestrictionsConflict: List<string>
+      -IsActive: bool
+      -CreatedAt: DateTimeOffset
       #RecommendationCard()
       +RecommendationCard(userId, foodNameEn, foodNameEs, calories, ...)
       +Deactivate(): void
@@ -119,23 +119,23 @@ package "NutriSense.SmartRecommendations.Domain" {
 
   package "Model.Entities" {
     class PantryItem {
-      +Id: int
-      +PantryId: int
-      +IngredientCatalogItemId: int
-      +Quantity: decimal
-      +Unit: string
-      +ExpiresAt: DateTimeOffset?
+      -Id: int
+      -PantryId: int
+      -IngredientCatalogItemId: int
+      -Quantity: decimal
+      -Unit: string
+      -ExpiresAt: DateTimeOffset?
       #PantryItem()
       +PantryItem(pantryId, ingredientCatalogItemId, quantity, unit)
       +UpdateQuantity(quantity: decimal, unit: string): void
     }
 
     class RecipeIngredientItem {
-      +Id: int
-      +RecipeId: int
-      +IngredientCatalogItemId: int
-      +Quantity: decimal
-      +Unit: string
+      -Id: int
+      -RecipeId: int
+      -IngredientCatalogItemId: int
+      -Quantity: decimal
+      -Unit: string
       #RecipeIngredientItem()
       +RecipeIngredientItem(recipeId, ingredientCatalogItemId, quantity, unit)
       +RecipeIngredientItem(ingredientCatalogItemId, quantity, unit)
@@ -145,23 +145,23 @@ package "NutriSense.SmartRecommendations.Domain" {
   package "Model.ValueObjects" {
     class Badge <<record>> {
       -{static} Allowed: string[]
-      +Value: string
+      -Value: string
     }
     class GeoCoordinate <<record>> {
-      +Lat: decimal
-      +Lng: decimal
+      -Lat: decimal
+      -Lng: decimal
     }
     class IngredientCategory <<record>> {
       -{static} Allowed: string[]
-      +Value: string
+      -Value: string
     }
     class WeatherCondition <<record>> {
       -{static} Allowed: string[]
-      +Value: string
+      -Value: string
     }
     class WeatherType <<record>> {
       -{static} Allowed: string[]
-      +Value: string
+      -Value: string
     }
   }
 

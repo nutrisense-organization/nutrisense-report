@@ -23,7 +23,7 @@ package "activity-wearable/infrastructure [stub]" {
 
 package "activity-wearable/presentation/routes" {
   class ActivityWearableRoutes <<router>> {
-    + activityWearableRoutes: RouteRecordRaw[]
+    - activityWearableRoutes: RouteRecordRaw[]
   }
 }
 

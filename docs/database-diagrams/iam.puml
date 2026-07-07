@@ -44,6 +44,15 @@ TABLE(user_sessions, "user_sessions") {
   created_at : DATETIME NOT NULL
 }
 
+TABLE(password_reset_tokens, "password_reset_tokens") {
+  PK(id) : INT AUTO_INCREMENT
+  --
+  FK(user_id) : INT NOT NULL
+  token : VARCHAR(64) NOT NULL
+  used : TINYINT(1) NOT NULL
+  expires_at : DATETIME NOT NULL
+}
+
 ' Constraints
 note right of users
   UNIQUE (email)  [ix_users_email]
@@ -59,8 +68,14 @@ note right of user_sessions
   INDEX (user_id)
 end note
 
+note right of password_reset_tokens
+  UNIQUE (token)  [ix_password_reset_tokens_token]
+  INDEX (user_id) [ix_password_reset_tokens_user_id]
+end note
+
 ' Relationships
-users ||--o{ dietary_restrictions : "declares\n(1 to 0..*)"
-users ||--o{ user_sessions        : "opens\n(1 to 0..*)"
+users ||--o{ dietary_restrictions  : "declares\n(1 to 0..*)"
+users ||--o{ user_sessions         : "opens\n(1 to 0..*)"
+users ||--o{ password_reset_tokens : "requests\n(1 to 0..*)"
 
 @enduml

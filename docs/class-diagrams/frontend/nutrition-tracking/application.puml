@@ -24,24 +24,24 @@ package "nutrition-tracking/application" {
 
   class useNutritionTrackingStore <<store>> {
     -- state --
-    + logs: NutritionLog[]
-    + foods: Food[]
-    + selectedDate: Date
-    + logsLoaded: boolean
-    + scanDishLoading: boolean
-    + scanMenuLoading: boolean
-    + dishScanResult: Object|null
-    + menuScanResult: Object|null
-    + calorieGoal: number
-    + proteinGoal: number
-    + errors: Error[]
+    - logs: NutritionLog[]
+    - foods: Food[]
+    - selectedDate: Date
+    - logsLoaded: boolean
+    - scanDishLoading: boolean
+    - scanMenuLoading: boolean
+    - dishScanResult: Object|null
+    - menuScanResult: Object|null
+    - calorieGoal: number
+    - proteinGoal: number
+    - errors: Error[]
     -- computed --
-    + logsForSelectedDate: NutritionLog[]
-    + logsByMealType: Record<string, NutritionLog[]>
-    + dailyCaloriesConsumed: number
-    + dailyMacros: Macros
-    + recentFoodIds: string[]
-    + isViewingToday: boolean
+    - logsForSelectedDate: NutritionLog[]
+    - logsByMealType: Record<string, NutritionLog[]>
+    - dailyCaloriesConsumed: number
+    - dailyMacros: Macros
+    - recentFoodIds: string[]
+    - isViewingToday: boolean
     -- actions --
     + setGoals(cal, prot): void
     + fetchLogs(userId): void

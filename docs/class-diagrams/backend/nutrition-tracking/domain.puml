@@ -10,51 +10,51 @@ package "NutriSense.NutritionTracking.Domain" {
   package "Model.Aggregates" {
     ' Food is a partial class: Food.cs + FoodAudit.cs (IAuditableEntity).
     class Food {
-      +Id: int
-      +Key: string
-      +Source: string
-      +ExternalId: string?
-      +NameEn: string
-      +NameEs: string
-      +Category: string
-      +ServingSizeG: decimal
-      +ServingUnit: string
-      +CaloriesPer100g: decimal
-      +ProteinPer100g: decimal
-      +CarbsPer100g: decimal
-      +FatPer100g: decimal
-      +FiberPer100g: decimal
-      +SugarPer100g: decimal
-      +Restrictions: List<string>
-      +CreatedAt: DateTimeOffset?
-      +UpdatedAt: DateTimeOffset?
+      -Id: int
+      -Key: string
+      -Source: string
+      -ExternalId: string?
+      -NameEn: string
+      -NameEs: string
+      -Category: string
+      -ServingSizeG: decimal
+      -ServingUnit: string
+      -CaloriesPer100g: decimal
+      -ProteinPer100g: decimal
+      -CarbsPer100g: decimal
+      -FatPer100g: decimal
+      -FiberPer100g: decimal
+      -SugarPer100g: decimal
+      -Restrictions: List<string>
+      -CreatedAt: DateTimeOffset?
+      -UpdatedAt: DateTimeOffset?
       #Food()
       +Food(command: RegisterFoodCommand)
     }
 
     ' NutritionLog is a partial class: NutritionLog.cs + NutritionLogAudit.cs (IAuditableEntity).
     class NutritionLog {
-      +Id: int
-      +UserId: int
-      +FoodId: int
-      +FoodNameEn: string
-      +FoodNameEs: string
-      +MealType: string
-      +Date: DateOnly
-      +QuantityG: decimal
-      +Calories: decimal
-      +ProteinG: decimal
-      +CarbsG: decimal
-      +FatG: decimal
-      +FiberG: decimal
-      +SugarG: decimal
-      +Source: string
-      +LoggedAt: DateTimeOffset
-      +ScanType: string?
-      +ScanConfidence: decimal?
-      +ScanImageUri: string?
-      +CreatedAt: DateTimeOffset?
-      +UpdatedAt: DateTimeOffset?
+      -Id: int
+      -UserId: int
+      -FoodId: int
+      -FoodNameEn: string
+      -FoodNameEs: string
+      -MealType: string
+      -Date: DateOnly
+      -QuantityG: decimal
+      -Calories: decimal
+      -ProteinG: decimal
+      -CarbsG: decimal
+      -FatG: decimal
+      -FiberG: decimal
+      -SugarG: decimal
+      -Source: string
+      -LoggedAt: DateTimeOffset
+      -ScanType: string?
+      -ScanConfidence: decimal?
+      -ScanImageUri: string?
+      -CreatedAt: DateTimeOffset?
+      -UpdatedAt: DateTimeOffset?
       #NutritionLog()
       +NutritionLog(command: LogMealToDailyLogCommand, food: Food)
       +NutritionLog(command: ConfirmScanResultCommand, food: Food, confidence: decimal, imageUri: string)
@@ -67,32 +67,32 @@ package "NutriSense.NutritionTracking.Domain" {
   package "Model.ValueObjects" {
     class FoodSource <<record>> {
       -{static} Valid: HashSet<string>
-      +Value: string
+      -Value: string
       +FoodSource(value: string)
     }
     class LogSource <<record>> {
       -{static} Valid: HashSet<string>
-      +Value: string
+      -Value: string
       +LogSource(value: string)
     }
     class MealType <<record>> {
       -{static} Valid: HashSet<string>
-      +Value: string
+      -Value: string
       +MealType(value: string)
     }
     class ServingUnit <<record>> {
       -{static} Valid: HashSet<string>
-      +Value: string
+      -Value: string
       +ServingUnit(value: string)
     }
     class DailyMacroSummary <<record>> {
-      +Date: DateOnly
-      +TotalCalories: decimal
-      +TotalProteinG: decimal
-      +TotalCarbsG: decimal
-      +TotalFatG: decimal
-      +TotalFiberG: decimal
-      +MealCount: int
+      -Date: DateOnly
+      -TotalCalories: decimal
+      -TotalProteinG: decimal
+      -TotalCarbsG: decimal
+      -TotalFatG: decimal
+      -TotalFiberG: decimal
+      -MealCount: int
     }
   }
 
@@ -161,24 +161,24 @@ package "NutriSense.NutritionTracking.Domain" {
       +RecognizeDishAsync(imageBase64OrUri: string, ct): Task<DishRecognitionResult>
     }
     class DetectedDishItem <<record>> {
-      +Name: string
-      +EstimatedQuantityG: decimal
+      -Name: string
+      -EstimatedQuantityG: decimal
     }
     class DishRecognitionResult <<record>> {
-      +Success: bool
-      +Items: IReadOnlyList<DetectedDishItem>
+      -Success: bool
+      -Items: IReadOnlyList<DetectedDishItem>
     }
 
     interface IMenuVisionService {
       +AnalyzeMenuAsync(imageUri: string, ct): Task<MenuRecognitionResult>
     }
     class MenuOption <<record>> {
-      +DishName: string
-      +EstimatedCalories: decimal?
+      -DishName: string
+      -EstimatedCalories: decimal?
     }
     class MenuRecognitionResult <<record>> {
-      +Success: bool
-      +Options: IEnumerable<MenuOption>
+      -Success: bool
+      -Options: IEnumerable<MenuOption>
     }
 
     interface IExternalFoodDataProvider {
@@ -190,10 +190,10 @@ package "NutriSense.NutritionTracking.Domain" {
       +EnrichBatchAsync(namesEn: IReadOnlyList<string>, ct): Task<IReadOnlyList<EnrichedFoodData>>
     }
     class EnrichedFoodData <<record>> {
-      +NameEn: string
-      +NameEs: string
-      +Category: string
-      +Restrictions: IReadOnlyList<string>
+      -NameEn: string
+      -NameEs: string
+      -Category: string
+      -Restrictions: IReadOnlyList<string>
     }
 
     interface IFoodNutritionEstimationService {

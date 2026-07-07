@@ -9,17 +9,17 @@ package "NutriSense.AnalyticsReporting" {
 
     package "Model.Aggregates" {
       class UserAnalytics <<aggregate root>> {
-        +Id: int
-        +UserId: int
-        +CurrentStreak: int
-        +LongestStreak: int
-        +LastLogDate: DateOnly?
-        +WeeklyCompletionRate: decimal
-        +LastAdherenceScore: decimal?
-        +LastProgressCalculatedAt: DateTimeOffset?
-        +ProgressSnapshots: IReadOnlyCollection<ProgressSnapshot>
-        +CreatedAt: DateTimeOffset?
-        +UpdatedAt: DateTimeOffset?
+        -Id: int
+        -UserId: int
+        -CurrentStreak: int
+        -LongestStreak: int
+        -LastLogDate: DateOnly?
+        -WeeklyCompletionRate: decimal
+        -LastAdherenceScore: decimal?
+        -LastProgressCalculatedAt: DateTimeOffset?
+        -ProgressSnapshots: IReadOnlyCollection<ProgressSnapshot>
+        -CreatedAt: DateTimeOffset?
+        -UpdatedAt: DateTimeOffset?
         +UpdateStreak(today: DateOnly): void
         +UpdateAdherence(score: decimal): void
         +AddProgressSnapshot(snapshot: ProgressSnapshot): void
@@ -29,77 +29,77 @@ package "NutriSense.AnalyticsReporting" {
 
     package "Model.Entities" {
       class ProgressSnapshot <<entity>> {
-        +Id: int
-        +UserAnalyticsId: int
-        +Date: DateOnly
-        +TotalCalories: decimal
-        +TotalProteinG: decimal
-        +TotalCarbsG: decimal
-        +TotalFatG: decimal
-        +AdherenceScore: decimal
-        +IsComplete: bool
-        +CreatedAt: DateTimeOffset
+        -Id: int
+        -UserAnalyticsId: int
+        -Date: DateOnly
+        -TotalCalories: decimal
+        -TotalProteinG: decimal
+        -TotalCarbsG: decimal
+        -TotalFatG: decimal
+        -AdherenceScore: decimal
+        -IsComplete: bool
+        -CreatedAt: DateTimeOffset
       }
     }
 
     package "Model.ValueObjects" {
       class AdherenceScore <<value object>> {
-        +Value: decimal
+        -Value: decimal
       }
     }
 
     package "Model.Commands" {
       class CalculateProgressCommand <<record>> {
-        +UserId: int
+        -UserId: int
       }
       class GenerateProgressInsightsCommand <<record>> {
-        +UserId: int
-        +Date: DateOnly?
+        -UserId: int
+        -Date: DateOnly?
       }
       class GenerateVisualizationCommand <<record>> {
-        +UserId: int
+        -UserId: int
       }
       class UpdateUsageStreakCommand <<record>> {
-        +UserId: int
+        -UserId: int
       }
       class ViewDashboardCommand <<record>> {
-        +UserId: int
+        -UserId: int
       }
     }
 
     package "Model.Queries" {
       class GetDashboardQuery <<record>> {
-        +UserId: int
-        +Date: DateOnly
+        -UserId: int
+        -Date: DateOnly
       }
       class GetProgressChartQuery <<record>> {
-        +UserId: int
-        +From: DateOnly
-        +To: DateOnly
+        -UserId: int
+        -From: DateOnly
+        -To: DateOnly
       }
       class GetStreakQuery <<record>> {
-        +UserId: int
+        -UserId: int
       }
     }
 
     package "Model.Events" {
       class DashboardViewed <<domain event>> {
-        +UserId: int
+        -UserId: int
       }
       class ProgressCalculated <<domain event>> {
-        +UserId: int
-        +AdherenceScore: decimal
+        -UserId: int
+        -AdherenceScore: decimal
       }
       class UsageStreakUpdated <<domain event>> {
-        +UserId: int
-        +CurrentStreak: int
+        -UserId: int
+        -CurrentStreak: int
       }
       class UserDataAggregated <<domain event>> {
-        +UserId: int
-        +Date: DateOnly
+        -UserId: int
+        -Date: DateOnly
       }
       class VisualizationGenerated <<domain event>> {
-        +UserId: int
+        -UserId: int
       }
     }
 

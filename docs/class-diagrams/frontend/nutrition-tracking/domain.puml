@@ -6,12 +6,12 @@ skinparam linetype ortho
 
 package "shared/domain/model [stubs]" {
   class Macros <<value object>> {
-    + calories: number
-    + proteinG: number
-    + carbsG: number
-    + fatG: number
-    + fiberG: number
-    + sugarG: number
+    - calories: number
+    - proteinG: number
+    - carbsG: number
+    - fatG: number
+    - fiberG: number
+    - sugarG: number
     --
     + add(other): Macros
     + scale(factor): Macros
@@ -27,14 +27,14 @@ package "iam/domain/model [stub]" {
 package "nutrition-tracking/domain/model" {
 
   class Food <<entity>> {
-    + id: string
-    + key: string
-    + name: string
-    + source: string
-    + externalId: string|null
-    + servingSizeG: number
-    + servingUnit: string
-    + restrictions: string[]
+    - id: string
+    - key: string
+    - name: string
+    - source: string
+    - externalId: string|null
+    - servingSizeG: number
+    - servingUnit: string
+    - restrictions: string[]
     --
     + macrosForQuantity(grams): Macros
     + macrosPerServing(): Macros
@@ -43,16 +43,16 @@ package "nutrition-tracking/domain/model" {
   }
 
   class NutritionLog <<entity>> {
-    + id: string
-    + userId: string
-    + foodId: string
-    + nameEn: string
-    + nameEs: string
-    + mealType: MealType
-    + date: string
-    + quantityG: number
-    + source: LogSource
-    + loggedAt: string
+    - id: string
+    - userId: string
+    - foodId: string
+    - nameEn: string
+    - nameEs: string
+    - mealType: MealType
+    - date: string
+    - quantityG: number
+    - source: LogSource
+    - loggedAt: string
     --
     + displayName(locale): string
     + macros(): Macros
@@ -62,14 +62,14 @@ package "nutrition-tracking/domain/model" {
   }
 
   class MealType <<value object>> {
-    + value: MealTypeValue
+    - value: MealTypeValue
     --
     + isBreakfast(): boolean
     + isMainMeal(): boolean
   }
 
   class LogSource <<value object>> {
-    + value: LogSourceValue
+    - value: LogSourceValue
     --
     + isManual(): boolean
     + isScanDish(): boolean
@@ -77,7 +77,7 @@ package "nutrition-tracking/domain/model" {
   }
 
   class FoodSource <<value object>> {
-    + value: FoodSourceValue
+    - value: FoodSourceValue
     --
     + isUsda(): boolean
     + isOpenFoodFacts(): boolean

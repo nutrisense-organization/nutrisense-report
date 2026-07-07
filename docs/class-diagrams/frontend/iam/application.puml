@@ -29,20 +29,20 @@ package "iam/application" {
 
   class useIamStore <<store>> {
     -- state --
-    + currentUser: User|null
-    + token: string|null
-    + sessionId: number|null
-    + sessions: UserSession[]
-    + dietaryRestrictions: DietaryRestriction[]
-    + userLoaded: boolean
-    + sessionsLoaded: boolean
-    + restrictionsLoaded: boolean
-    + errors: Error[]
+    - currentUser: User|null
+    - token: string|null
+    - sessionId: number|null
+    - sessions: UserSession[]
+    - dietaryRestrictions: DietaryRestriction[]
+    - userLoaded: boolean
+    - sessionsLoaded: boolean
+    - restrictionsLoaded: boolean
+    - errors: Error[]
     -- computed --
-    + isAuthenticated: boolean
-    + currentUserId: number|null
-    + firstName: string
-    + currentPlanTier: PlanTier|null
+    - isAuthenticated: boolean
+    - currentUserId: number|null
+    - firstName: string
+    - currentPlanTier: PlanTier|null
     -- actions --
     + hasFeature(minimumPlan): boolean
     + fetchCurrentUser(userId): Promise
