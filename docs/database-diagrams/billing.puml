@@ -44,6 +44,7 @@ TABLE(user_subscriptions, "user_subscriptions") {
   period_start : DATETIME NOT NULL
   period_end : DATETIME NOT NULL
   cancel_at_period_end : TINYINT(1) NOT NULL
+  stripe_customer_id : LONGTEXT
   stripe_subscription_id : LONGTEXT
   last_plan_change_at : DATETIME
   created_at : DATETIME

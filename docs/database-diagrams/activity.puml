@@ -14,7 +14,11 @@ TABLE(wearable_connections, "wearable_connections") {
   FK(user_id) : INT NOT NULL
   provider : VARCHAR(50) NOT NULL
   status : VARCHAR(20) NOT NULL
+  auto_sync_enabled : TINYINT(1) NOT NULL DEFAULT FALSE
   authorized_at : DATETIME NOT NULL
+  access_token : VARCHAR(2048)
+  refresh_token : VARCHAR(512)
+  token_expires_at : DATETIME
   last_synced_at : DATETIME
   created_at : DATETIME
   updated_at : DATETIME
@@ -39,14 +43,21 @@ TABLE(activity_logs, "activity_logs") {
 note right of wearable_connections
   INDEX (user_id, provider)
   [ix_wearable_connections_user_provider]
+  user_id -> IAM users.id
+  (logical ref, cross bounded-context,
+   no DB-level FK)
 end note
 
 note right of activity_logs
   INDEX (user_id, date)
   [ix_activity_logs_user_date]
+  user_id -> IAM users.id
+  (logical ref, cross bounded-context,
+   no DB-level FK)
 end note
 
 ' Relationships
-wearable_connections ||--o{ activity_logs : "syncs\n(1 to 0..*)"
+' Both aggregates are independent and are keyed by user_id
+' (each references IAM users). There is NO FK between them in the backend.
 
 @enduml
