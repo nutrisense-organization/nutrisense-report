@@ -28,45 +28,45 @@ package "smart-recommendations/application" {
 
   class useSmartRecommendationsStore <<store>> {
     -- state --
-    + recommendations: RecommendationCard[]
-    + recipes: Recipe[]
-    + pantryItems: PantryItem[]
-    + cities: City[]
-    + ingredientCatalog: IngredientCatalogItem[]
-    + weatherByCity: Record<number, Weather>
-    + travelModeActive: boolean
-    + homeCityId: number|string|null
-    + homeCityName: string
-    + travelCityId: number|string|null
-    + travelCityName: string
-    + currentCityId: number|string|null
-    + currentCityName: string
-    + userGoal: GoalTypeValue|null
-    + activeFilters: Object
-    + recommendationsLoaded: boolean
-    + pantryLoaded: boolean
-    + generating: boolean
-    + locationPermissionGranted: boolean
-    + macroProfile: MacroProfile|null
-    + profileFilterActive: boolean
-    + consumedCaloriesToday: number
-    + consumedProteinToday: number
-    + errors: Error[]
-    + userRestrictions: string[]
-    + userMedicalConditions: string[]
-    + pantryUserId: string|number|null
+    - recommendations: RecommendationCard[]
+    - recipes: Recipe[]
+    - pantryItems: PantryItem[]
+    - cities: City[]
+    - ingredientCatalog: IngredientCatalogItem[]
+    - weatherByCity: Record<number, Weather>
+    - travelModeActive: boolean
+    - homeCityId: number|string|null
+    - homeCityName: string
+    - travelCityId: number|string|null
+    - travelCityName: string
+    - currentCityId: number|string|null
+    - currentCityName: string
+    - userGoal: GoalTypeValue|null
+    - activeFilters: Object
+    - recommendationsLoaded: boolean
+    - pantryLoaded: boolean
+    - generating: boolean
+    - locationPermissionGranted: boolean
+    - macroProfile: MacroProfile|null
+    - profileFilterActive: boolean
+    - consumedCaloriesToday: number
+    - consumedProteinToday: number
+    - errors: Error[]
+    - userRestrictions: string[]
+    - userMedicalConditions: string[]
+    - pantryUserId: string|number|null
     -- computed --
-    + userForbiddenTags: string[]
-    + activeCityId: number|string|null
-    + homeCity: City|null
-    + activeCityName: string
-    + activeCity: City|null
-    + currentWeather: Weather|null
-    + filteredRecommendations: RecommendationCard[]
-    + pantryIngredientIds: number[]
-    + suggestedRecipes: Recipe[]
-    + partialMatchRecipes: Recipe[]
-    + feedRecipes: Recipe[]
+    - userForbiddenTags: string[]
+    - activeCityId: number|string|null
+    - homeCity: City|null
+    - activeCityName: string
+    - activeCity: City|null
+    - currentWeather: Weather|null
+    - filteredRecommendations: RecommendationCard[]
+    - pantryIngredientIds: number[]
+    - suggestedRecipes: Recipe[]
+    - partialMatchRecipes: Recipe[]
+    - feedRecipes: Recipe[]
     -- actions --
     + fetchRecommendations(userId): void
     + fetchRecipes(goal?): void

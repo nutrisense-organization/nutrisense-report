@@ -14,18 +14,18 @@ package "nutrition-tracking/domain/services [stub]" {
 
 package "nutrition-tracking/presentation/routes" {
   class NutritionTrackingRoutes <<router>> {
-    + nutrition-log -> NutritionLogView
-    + scan-dish -> ScanDishResultView
-    + scan-menu -> ScanMenuResultView
+    - nutrition-log -> NutritionLogView
+    - scan-dish -> ScanDishResultView
+    - scan-menu -> ScanMenuResultView
   }
 }
 
 package "nutrition-tracking/presentation/views" {
 
   class NutritionLogView <<view>> {
-    + activeTab: string
-    + dateLabel: string
-    + streakMet: boolean
+    - activeTab: string
+    - dateLabel: string
+    - streakMet: boolean
     --
     + openSearch(meal): void
     + selectFood(food): void
@@ -35,15 +35,15 @@ package "nutrition-tracking/presentation/views" {
   }
 
   class ScanDishResultView <<view>> {
-    + totals: Object
-    + dishBannerLevel: string|null
+    - totals: Object
+    - dishBannerLevel: string|null
     --
     + addAllToLog(): void
     + scanAgain(): void
   }
 
   class ScanMenuResultView <<view>> {
-    + menuItemBannerLevel: string|null
+    - menuItemBannerLevel: string|null
     --
     + openAddDialog(food): void
     + confirmAdd(): void
@@ -57,9 +57,9 @@ package "nutrition-tracking/presentation/components [unused]" {
   ' view (NutritionLogView renders its meal list and add/search modals inline).
   ' Kept here as dead-code artifacts, not as part of the active composition.
   class NutritionLogFormComponent <<component>> {
-    + foods: Food[]
-    + mealType: string
-    + conflictFlags: string[]
+    - foods: Food[]
+    - mealType: string
+    - conflictFlags: string[]
     --
     + onSearch(): void
     + selectFood(food): void
@@ -67,8 +67,8 @@ package "nutrition-tracking/presentation/components [unused]" {
   }
 
   class NutritionLogListComponent <<component>> {
-    + logs: NutritionLog[]
-    + loading: boolean
+    - logs: NutritionLog[]
+    - loading: boolean
     --
     + emit('remove', logId): void
   }

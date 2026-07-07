@@ -20,26 +20,26 @@ package "subscriptions-billing/application" {
 
   class useSubscriptionsBillingStore <<store>> {
     -- state --
-    + subscription: UserSubscription|null
-    + plans: SubscriptionPlan[]
-    + paymentHistory: PaymentRecord[]
-    + subscriptionLoaded: boolean
-    + loadedForUserId: string|null
-    + plansLoaded: boolean
-    + paymentHistoryLoaded: boolean
-    + changingPlanId: string|null
-    + paymentProcessing: boolean
-    + lastPaymentMethod: PaymentMethod|null
-    + paymentMethod: PaymentMethod|null
-    + paymentMethodLoaded: boolean
-    + errors: Error[]
+    - subscription: UserSubscription|null
+    - plans: SubscriptionPlan[]
+    - paymentHistory: PaymentRecord[]
+    - subscriptionLoaded: boolean
+    - loadedForUserId: string|null
+    - plansLoaded: boolean
+    - paymentHistoryLoaded: boolean
+    - changingPlanId: string|null
+    - paymentProcessing: boolean
+    - lastPaymentMethod: PaymentMethod|null
+    - paymentMethod: PaymentMethod|null
+    - paymentMethodLoaded: boolean
+    - errors: Error[]
     -- computed --
-    + currentPlan: SubscriptionPlan|null
-    + currentTier: PlanTier|null
-    + isActive: boolean
-    + willCancelAtPeriodEnd: boolean
-    + daysUntilRenewal: number|null
-    + renewalDateLabel: string
+    - currentPlan: SubscriptionPlan|null
+    - currentTier: PlanTier|null
+    - isActive: boolean
+    - willCancelAtPeriodEnd: boolean
+    - daysUntilRenewal: number|null
+    - renewalDateLabel: string
     -- actions --
     + hasAccess(featureName): boolean
     + checkSubscription(userId): Promise<boolean>

@@ -10,22 +10,22 @@ package "NutriSense.IAM.Domain" {
   package "Model.Aggregates" {
     ' User is a partial class: User.cs + UserAudit.cs (IAuditableEntity).
     class User {
-      +Id: UserId
-      +Email: Email
-      +PasswordHash: string
-      +Name: PersonName
-      +DateOfBirth: DateOfBirth?
-      +BiologicalSex: BiologicalSex?
-      +Height: Height?
-      +ActivityLevel: ActivityLevel?
-      +PreferredUnits: PreferredUnits
-      +PreferredLanguage: PreferredLanguage
-      +GoalIntent: GoalIntent?
-      +MedicalConditions: List<string>
-      +Sessions: List<UserSession>
-      +DietaryRestrictions: List<DietaryRestriction>
-      +CreatedAt: DateTimeOffset?
-      +UpdatedAt: DateTimeOffset?
+      -Id: UserId
+      -Email: Email
+      -PasswordHash: string
+      -Name: PersonName
+      -DateOfBirth: DateOfBirth?
+      -BiologicalSex: BiologicalSex?
+      -Height: Height?
+      -ActivityLevel: ActivityLevel?
+      -PreferredUnits: PreferredUnits
+      -PreferredLanguage: PreferredLanguage
+      -GoalIntent: GoalIntent?
+      -MedicalConditions: List<string>
+      -Sessions: List<UserSession>
+      -DietaryRestrictions: List<DietaryRestriction>
+      -CreatedAt: DateTimeOffset?
+      -UpdatedAt: DateTimeOffset?
       #User()
       +User(command: RegisterUserCommand, passwordHash: string)
       +Apply(command: UpdateProfileCommand): void
@@ -37,11 +37,11 @@ package "NutriSense.IAM.Domain" {
 
     ' Single-use password reset token, valid for one hour, invalidated once used.
     class PasswordResetToken {
-      +Id: int
-      +Token: string
-      +UserId: int
-      +ExpiresAt: DateTimeOffset
-      +Used: bool
+      -Id: int
+      -Token: string
+      -UserId: int
+      -ExpiresAt: DateTimeOffset
+      -Used: bool
       #PasswordResetToken()
       -PasswordResetToken(userId: int, token: string, expiresAt: DateTimeOffset)
       +{static} Create(userId: int): PasswordResetToken
@@ -53,20 +53,20 @@ package "NutriSense.IAM.Domain" {
 
   package "Model.Entities" {
     class UserSession {
-      +Id: int
-      +UserId: UserId
-      +DeviceLabel: string
-      +IsCurrent: bool
-      +CreatedAt: DateTimeOffset
-      +LastActiveAt: DateTimeOffset
+      -Id: int
+      -UserId: UserId
+      -DeviceLabel: string
+      -IsCurrent: bool
+      -CreatedAt: DateTimeOffset
+      -LastActiveAt: DateTimeOffset
       #UserSession()
       +UserSession(userId: UserId, deviceLabel: string)
       +End(): void
     }
     class DietaryRestriction {
-      +Id: int
-      +UserId: UserId
-      +Restriction: string
+      -Id: int
+      -UserId: UserId
+      -Restriction: string
       #DietaryRestriction()
       +DietaryRestriction(userId: UserId, restriction: string)
     }
@@ -74,54 +74,54 @@ package "NutriSense.IAM.Domain" {
 
   package "Model.ValueObjects" {
     class UserId <<record>> {
-      +Value: int
+      -Value: int
       +UserId(value: int)
       ~{static} FromRaw(value: int): UserId
     }
     class Email <<record>> {
-      +Value: string
+      -Value: string
       +Email(value: string)
     }
     class Password <<record>> {
-      +Value: string
+      -Value: string
       +Password(value: string)
     }
     class PersonName <<record>> {
-      +FirstName: string
-      +LastName: string
-      +FullName: string
+      -FirstName: string
+      -LastName: string
+      -FullName: string
       +PersonName(firstName: string, lastName: string)
     }
     class DateOfBirth <<record>> {
-      +Value: DateOnly
+      -Value: DateOnly
       +DateOfBirth(value: DateOnly)
     }
     class Height <<record>> {
-      +Centimeters: decimal
+      -Centimeters: decimal
       +Height(centimeters: decimal)
     }
     class BiologicalSex <<record>> {
       -{static} Allowed: HashSet<string>
-      +Value: string
+      -Value: string
       +BiologicalSex(value: string)
     }
     class ActivityLevel <<record>> {
       -{static} Allowed: HashSet<string>
-      +Value: string
+      -Value: string
       +ActivityLevel(value: string)
     }
     class GoalIntent <<record>> {
       -{static} Allowed: HashSet<string>
-      +Value: string
+      -Value: string
       +GoalIntent(value: string)
     }
     class PreferredLanguage <<record>> {
       -{static} Allowed: HashSet<string>
-      +Value: string
+      -Value: string
       +PreferredLanguage(value: string)
     }
     class PreferredUnits <<record>> {
-      +Value: string
+      -Value: string
       +PreferredUnits(value: string)
     }
   }

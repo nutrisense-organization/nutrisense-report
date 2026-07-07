@@ -23,16 +23,16 @@ package "NutriSense.SmartRecommendations.Infrastructure" {
       +GetCurrentAsync(cityId: int, ct): Task<WeatherSnapshot>
     }
     class OpenWeatherMapGeoEntry <<record>> {
-      +Name: string
-      +LocalNames: Dictionary<string, string>?
-      +Lat: decimal
-      +Lon: decimal
-      +Country: string
-      +State: string?
+      -Name: string
+      -LocalNames: Dictionary<string, string>?
+      -Lat: decimal
+      -Lon: decimal
+      -Country: string
+      -State: string?
     }
     class OpenWeatherMapResponse <<record>> {
-      +Weather: List<WeatherEntry>
-      +Main: MainBlock?
+      -Weather: List<WeatherEntry>
+      -Main: MainBlock?
     }
     class "OpenWeatherMapResponse.WeatherEntry" as WeatherEntry <<record>>
     class "OpenWeatherMapResponse.MainBlock" as MainBlock <<record>>

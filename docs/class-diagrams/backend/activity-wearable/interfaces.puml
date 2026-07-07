@@ -59,46 +59,46 @@ package "ActivityWearable.Interfaces" {
 
   package "REST.Resources" {
     class LogManualActivityResource {
-      +UserId: int
-      +Date: string
-      +ActivityType: string
-      +DurationMinutes: int
-      +Intensity: string
-      +CaloriesBurned: decimal
+      -UserId: int
+      -Date: string
+      -ActivityType: string
+      -DurationMinutes: int
+      -Intensity: string
+      -CaloriesBurned: decimal
     }
     class ActivityLogResource {
-      +Id: int
-      +UserId: int
-      +Date: string
-      +ActivityType: string
-      +DurationMinutes: int
-      +Intensity: string
-      +CaloriesBurned: decimal
-      +Source: string
-      +LoggedAt: DateTimeOffset
+      -Id: int
+      -UserId: int
+      -Date: string
+      -ActivityType: string
+      -DurationMinutes: int
+      -Intensity: string
+      -CaloriesBurned: decimal
+      -Source: string
+      -LoggedAt: DateTimeOffset
     }
     class DailyActivitySummaryResource {
-      +Date: string
-      +TotalCaloriesBurned: decimal
-      +TotalDurationMinutes: int
-      +ActivityCount: int
+      -Date: string
+      -TotalCaloriesBurned: decimal
+      -TotalDurationMinutes: int
+      -ActivityCount: int
     }
     class ConnectDeviceResource {
-      +UserId: int
-      +Provider: string
-      +OAuthCode: string
+      -UserId: int
+      -Provider: string
+      -OAuthCode: string
     }
     class SetAutoSyncResource {
-      +Enabled: bool
+      -Enabled: bool
     }
     class WearableConnectionResource {
-      +Id: int
-      +UserId: int
-      +Provider: string
-      +Status: string
-      +LastSyncedAt: DateTimeOffset?
-      +AuthorizedAt: DateTimeOffset
-      +AutoSyncEnabled: bool
+      -Id: int
+      -UserId: int
+      -Provider: string
+      -Status: string
+      -LastSyncedAt: DateTimeOffset?
+      -AuthorizedAt: DateTimeOffset
+      -AutoSyncEnabled: bool
     }
   }
 

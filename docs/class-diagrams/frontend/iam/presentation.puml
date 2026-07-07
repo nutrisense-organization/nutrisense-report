@@ -20,16 +20,16 @@ package "subscriptions-billing [stub]" {
 
 package "iam/presentation/routes" {
   class onboardingRoute <<route>> {
-    + path: '/onboarding'
-    + name: 'onboarding'
-    + meta: requiresAuth
+    - path: '/onboarding'
+    - name: 'onboarding'
+    - meta: requiresAuth
   }
   class iamRoutes <<routes>> {
-    + login
-    + register
-    + recover-password
-    + reset-password
-    + profile (+ children)
+    - login
+    - register
+    - recover-password
+    - reset-password
+    - profile (+ children)
   }
 }
 

@@ -44,11 +44,11 @@ package "NutriSense.NutritionTracking.Application" {
   package "Internal" {
     class ScannedDishItem <<record>>
     class ScanPreviewResult <<record>> {
-      +Items: IReadOnlyList<ScannedDishItem>
+      -Items: IReadOnlyList<ScannedDishItem>
     }
     class ScannedMenuOption <<record>>
     class MenuOptionsPreview <<record>> {
-      +Options: IReadOnlyList<ScannedMenuOption>
+      -Options: IReadOnlyList<ScannedMenuOption>
     }
 
     package "Internal.CommandServices" {

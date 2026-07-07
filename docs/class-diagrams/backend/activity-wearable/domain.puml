@@ -22,35 +22,35 @@ package "ActivityWearable.Domain" {
 
   package "Model.Aggregates" {
     class ActivityLog {
-      +Id: int
-      +UserId: int
-      +Date: DateOnly
-      +ActivityType: string
-      +DurationMinutes: int
-      +Intensity: string
-      +CaloriesBurned: decimal
-      +Source: string
-      +LoggedAt: DateTimeOffset
-      +CreatedAt: DateTimeOffset?
-      +UpdatedAt: DateTimeOffset?
+      -Id: int
+      -UserId: int
+      -Date: DateOnly
+      -ActivityType: string
+      -DurationMinutes: int
+      -Intensity: string
+      -CaloriesBurned: decimal
+      -Source: string
+      -LoggedAt: DateTimeOffset
+      -CreatedAt: DateTimeOffset?
+      -UpdatedAt: DateTimeOffset?
       #ActivityLog()
       +ActivityLog(command: LogManualActivityCommand)
       +ActivityLog(userId: int, date: DateOnly, activityType: string, durationMinutes: int, intensity: string, caloriesBurned: decimal, source: string)
     }
 
     class WearableConnection {
-      +Id: int
-      +UserId: int
-      +Provider: string
-      +Status: string
-      +LastSyncedAt: DateTimeOffset?
-      +AuthorizedAt: DateTimeOffset
-      +AutoSyncEnabled: bool
-      +AccessToken: string?
-      +RefreshToken: string?
-      +TokenExpiresAt: DateTimeOffset?
-      +CreatedAt: DateTimeOffset?
-      +UpdatedAt: DateTimeOffset?
+      -Id: int
+      -UserId: int
+      -Provider: string
+      -Status: string
+      -LastSyncedAt: DateTimeOffset?
+      -AuthorizedAt: DateTimeOffset
+      -AutoSyncEnabled: bool
+      -AccessToken: string?
+      -RefreshToken: string?
+      -TokenExpiresAt: DateTimeOffset?
+      -CreatedAt: DateTimeOffset?
+      -UpdatedAt: DateTimeOffset?
       #WearableConnection()
       +WearableConnection(command: ConnectDeviceCommand, authorizedAt: DateTimeOffset)
       +ApplyAuthorization(accessToken: string?, refreshToken: string?, expiresAt: DateTimeOffset?): void
@@ -62,110 +62,110 @@ package "ActivityWearable.Domain" {
 
   package "Model.ValueObjects" {
     class ActivityType {
-      +Value: string
+      -Value: string
       +ActivityType(value: string)
     }
     class Intensity {
       -{static} Valid: HashSet<string>
-      +Value: string
+      -Value: string
       +Intensity(value: string)
     }
     class ActivitySource {
       -{static} Valid: HashSet<string>
-      +Value: string
+      -Value: string
       +ActivitySource(value: string)
     }
     class WearableProvider {
       -{static} Valid: HashSet<string>
-      +Value: string
+      -Value: string
       +WearableProvider(value: string)
     }
     class WearableStatus {
       -{static} Valid: HashSet<string>
-      +Value: string
+      -Value: string
       +WearableStatus(value: string)
     }
   }
 
   package "Model.Commands" {
     class LogManualActivityCommand {
-      +UserId: int
-      +Date: DateOnly
-      +ActivityType: string
-      +DurationMinutes: int
-      +Intensity: string
-      +CaloriesBurned: decimal
+      -UserId: int
+      -Date: DateOnly
+      -ActivityType: string
+      -DurationMinutes: int
+      -Intensity: string
+      -CaloriesBurned: decimal
     }
     class DeleteActivityLogCommand {
-      +ActivityLogId: int
-      +UserId: int
+      -ActivityLogId: int
+      -UserId: int
     }
     class ConnectDeviceCommand {
-      +UserId: int
-      +Provider: string
-      +OAuthCode: string
+      -UserId: int
+      -Provider: string
+      -OAuthCode: string
     }
     class SyncActivityDataCommand {
-      +WearableConnectionId: int
+      -WearableConnectionId: int
     }
     class DisconnectDeviceCommand {
-      +WearableConnectionId: int
+      -WearableConnectionId: int
     }
     class SetAutoSyncCommand {
-      +WearableConnectionId: int
-      +Enabled: bool
+      -WearableConnectionId: int
+      -Enabled: bool
     }
     class AdjustCaloricBalanceCommand {
-      +UserId: int
-      +Date: DateOnly
+      -UserId: int
+      -Date: DateOnly
     }
     class CalculateActiveCaloriesCommand {
-      +UserId: int
-      +Date: DateOnly
+      -UserId: int
+      -Date: DateOnly
     }
   }
 
   package "Model.Queries" {
     class GetActivityLogsByUserQuery {
-      +UserId: int
-      +FromDate: DateOnly?
-      +ToDate: DateOnly?
+      -UserId: int
+      -FromDate: DateOnly?
+      -ToDate: DateOnly?
     }
     class GetDailyActivitySummaryQuery {
-      +UserId: int
-      +Date: DateOnly
+      -UserId: int
+      -Date: DateOnly
     }
     class DailyActivitySummary {
-      +Date: DateOnly
-      +TotalCaloriesBurned: decimal
-      +TotalDurationMinutes: int
-      +ActivityCount: int
+      -Date: DateOnly
+      -TotalCaloriesBurned: decimal
+      -TotalDurationMinutes: int
+      -ActivityCount: int
     }
     class GetWearableConnectionsByUserIdQuery {
-      +UserId: int
+      -UserId: int
     }
   }
 
   package "Model.Events" {
     class ActivityImported {
-      +UserId: int
-      +Date: DateOnly
-      +ActivitiesCount: int
+      -UserId: int
+      -Date: DateOnly
+      -ActivitiesCount: int
     }
     class ActiveCaloriesCalculated {
-      +UserId: int
-      +Date: DateOnly
-      +ActiveCalories: decimal
+      -UserId: int
+      -Date: DateOnly
+      -ActiveCalories: decimal
     }
     class CaloricBalanceAdjusted {
-      +UserId: int
-      +Date: DateOnly
-      +BalanceKcal: decimal
+      -UserId: int
+      -Date: DateOnly
+      -BalanceKcal: decimal
     }
     class DeviceConnected {
-      +UserId: int
-      +WearableConnectionId: int
-      +Provider: string
+      -UserId: int
+      -WearableConnectionId: int
+      -Provider: string
     }
   }
 
@@ -209,18 +209,18 @@ package "ActivityWearable.Domain" {
       +FetchActivitiesAsync(accessToken: string, from: DateOnly, to: DateOnly, ct: CancellationToken): Task<IEnumerable<ImportedActivity>>
     }
     class WearableAuthorization {
-      +Success: bool
-      +AccessToken: string?
-      +RefreshToken: string?
-      +ExpiresAt: DateTimeOffset?
-      +FailureReason: string?
+      -Success: bool
+      -AccessToken: string?
+      -RefreshToken: string?
+      -ExpiresAt: DateTimeOffset?
+      -FailureReason: string?
     }
     class ImportedActivity {
-      +ActivityType: string
-      +DurationMinutes: int
-      +Intensity: string
-      +CaloriesBurned: decimal
-      +Date: DateOnly
+      -ActivityType: string
+      -DurationMinutes: int
+      -Intensity: string
+      -CaloriesBurned: decimal
+      -Date: DateOnly
     }
   }
 }

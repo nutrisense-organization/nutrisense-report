@@ -31,18 +31,18 @@ package "NutriSense.NutritionTracking.Infrastructure" {
       +SearchAsync(query: string, maxResults: int, dataType: string, ct): Task<IReadOnlyList<ExternalFoodData>>
     }
     class UsdaSearchResponse <<record>> {
-      +Foods: List<UsdaFoodItem>?
+      -Foods: List<UsdaFoodItem>?
     }
     class UsdaFoodItem <<record>> {
-      +FdcId: int?
-      +Description: string?
-      +DataType: string?
-      +FoodNutrients: List<UsdaFoodNutrient>?
+      -FdcId: int?
+      -Description: string?
+      -DataType: string?
+      -FoodNutrients: List<UsdaFoodNutrient>?
     }
     class UsdaFoodNutrient <<record>> {
-      +NutrientName: string?
-      +UnitName: string?
-      +Value: double?
+      -NutrientName: string?
+      -UnitName: string?
+      -Value: double?
     }
   }
 
