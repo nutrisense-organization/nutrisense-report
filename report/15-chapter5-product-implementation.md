@@ -3223,8 +3223,8 @@ El tono de comunicación utilizado es consistente con la identidad del producto:
 
 | Atributo | Contenido |
 |----------|-----------|
-| **Duración** | 1:45 |
-|**Link**|[Link de about the product](https://upcedupe-my.sharepoint.com/:v:/g/personal/u202417857_upc_edu_pe/IQC99Ix3H4DyTLnbPWeVDs3sAXy-3Knv6vpS8sydz-4hWSg?e=Fuc5sK&nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJTdHJlYW1XZWJBcHAiLCJyZWZlcnJhbFZpZXciOiJTaGFyZURpYWxvZy1MaW5rIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXcifX0%3D)|
+| **Duración** | 2:10 |
+|**Link**|[Link de about the product](https://upcedupe-my.sharepoint.com/:v:/g/personal/u202417857_upc_edu_pe/IQBQmGiow07wS6p801TBvSwJAbY4JwsdP89LpreocQ3YHlI?nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJPbmVEcml2ZUZvckJ1c2luZXNzIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXciLCJyZWZlcnJhbFZpZXciOiJNeUZpbGVzTGlua0NvcHkifX0&e=7KCz91)|
 
 ---
 
@@ -3246,7 +3246,7 @@ El video incluye dos testimonios de usuarios reales que participaron en las entr
 
 > "Bajar de peso siempre había sido para mí una mezcla de cuadernos con calorías anotadas a mano y dietas que sacaba de internet, sin saber realmente si iba por buen camino. Con NutriSense puedo ver qué como y cómo voy evolucionando semana a semana, con datos reales y no solo con la báscula. Ya bajé un par de kilos, pero lo que más valoro es que por primera vez siento que tengo control sobre mis hábitos en lugar de estar improvisando."
 >
-> **Tatiana M., usuario NutriSense, segmento pérdida de peso**
+> **Larisa R., usuario NutriSense, segmento pérdida de peso**
 
 > "Sinceramente no creí que una app pudiera adaptarse a mi rutina de ganancia muscular sin que tuviera que pasar horas configurando todo a mano. El onboarding fue sencillo y rápido, y en poco tiempo ya tenía mi plan de calorías y macros listo. Lo que más me sorprendió fueron las recomendaciones del día a día: la app considera lo que tengo en casa antes de sugerirme qué cocinar, así que he dejado de comprar cosas que terminaba desperdiciando. Se siente hecha a mi medida y no como una plantilla genérica."
 >

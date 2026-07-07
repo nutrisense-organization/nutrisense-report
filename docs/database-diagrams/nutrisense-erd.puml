@@ -45,6 +45,15 @@ package "IAM" #E8F4FD {
     last_active_at : DATETIME NOT NULL
     created_at : DATETIME NOT NULL
   }
+
+  TABLE(password_reset_tokens, "password_reset_tokens") {
+    PK(id) : INT AUTO_INCREMENT
+    --
+    FK(user_id) : INT NOT NULL
+    token : VARCHAR(64) NOT NULL  <<UNIQUE>>
+    used : TINYINT(1) NOT NULL
+    expires_at : DATETIME NOT NULL
+  }
 }
 
 package "Nutrition Tracking" #FEF9E7 {
@@ -162,7 +171,11 @@ package "Activity & Wearable Sync" #FEF5E7 {
     FK(user_id) : INT NOT NULL
     provider : VARCHAR(50) NOT NULL
     status : VARCHAR(20) NOT NULL
+    auto_sync_enabled : TINYINT(1) NOT NULL DEFAULT FALSE
     authorized_at : DATETIME NOT NULL
+    access_token : VARCHAR(2048)
+    refresh_token : VARCHAR(512)
+    token_expires_at : DATETIME
     last_synced_at : DATETIME
     created_at : DATETIME
     updated_at : DATETIME
@@ -356,6 +369,7 @@ package "Subscriptions & Billing" #FDEDEC {
     period_start : DATETIME NOT NULL
     period_end : DATETIME NOT NULL
     cancel_at_period_end : TINYINT(1) NOT NULL
+    stripe_customer_id : LONGTEXT
     stripe_subscription_id : LONGTEXT
     last_plan_change_at : DATETIME
     created_at : DATETIME
@@ -375,8 +389,9 @@ package "Subscriptions & Billing" #FDEDEC {
 }
 
 ' ===== Intra-context relationships =====
-users ||--o{ dietary_restrictions : "declares"
-users ||--o{ user_sessions        : "opens"
+users ||--o{ dietary_restrictions  : "declares"
+users ||--o{ user_sessions         : "opens"
+users ||--o{ password_reset_tokens : "requests"
 
 foods ||--o{ nutrition_logs        : "logged as"
 
