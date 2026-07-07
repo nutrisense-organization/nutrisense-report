@@ -28,20 +28,20 @@ package "body-health-metrics/application" {
 
   class useBodyHealthMetricsStore <<store>> {
     -- state --
-    + bodyMeasurement: BodyMeasurement|null
-    + bodyMeasurements: BodyMeasurement[]
-    + weightLogs: WeightLog[]
-    + userGoal: UserGoal|null
-    + measurementLoaded: boolean
-    + weightLogsLoaded: boolean
-    + goalLoaded: boolean
-    + weightSaving: boolean
-    + userHeightCm: number|null
-    + errors: Error[]
+    - bodyMeasurement: BodyMeasurement|null
+    - bodyMeasurements: BodyMeasurement[]
+    - weightLogs: WeightLog[]
+    - userGoal: UserGoal|null
+    - measurementLoaded: boolean
+    - weightLogsLoaded: boolean
+    - goalLoaded: boolean
+    - weightSaving: boolean
+    - userHeightCm: number|null
+    - errors: Error[]
     -- computed --
-    + weightTrend: WeightLog[]
-    + todayWeightLog: WeightLog|null
-    + latestWeightKg: number|null
+    - weightTrend: WeightLog[]
+    - todayWeightLog: WeightLog|null
+    - latestWeightKg: number|null
     -- actions --
     + getBmi(weightKg, heightCm): BmiResult|null
     + getBmr(weightKg, heightCm, ageYears, sex): number|null

@@ -10,8 +10,8 @@ package "Nutrisense.Platform.Subscriptions" {
       +CompleteAsync(): Task
     }
     abstract class "Result<TValue, TError>" as Result {
-      +IsSuccess: bool
-      +IsFailure: bool
+      #IsSuccess: bool
+      #IsFailure: bool
     }
     interface IMediator {
       +PublishAsync(event: object): Task

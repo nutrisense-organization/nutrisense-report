@@ -15,30 +15,30 @@ package "external bounded contexts [stubs]" {
 
 package "body-health-metrics/presentation/routes" {
   class BodyHealthMetricsRoutes <<router>> {
-    + path: 'body-progress'
-    + name: 'body-progress'
-    + meta: { requiresAuth, title }
+    - path: 'body-progress'
+    - name: 'body-progress'
+    - meta: { requiresAuth, title }
   }
 }
 
 package "body-health-metrics/presentation/views" {
   class BodyProgressView <<view>> {
     -- state --
-    + newWeight: number|null
-    + showWeightForm: boolean
-    + weightError: string
-    + chartRange: string
+    - newWeight: number|null
+    - showWeightForm: boolean
+    - weightError: string
+    - chartRange: string
     -- computed --
-    + rangeTabs: Tab[]
-    + latestWeightLog: WeightLog|null
-    + bmi: BmiResult|null
-    + bmiLabel: string
-    + bmiColor: string
-    + bmr: number|null
-    + tdee: number|null
-    + filteredWeightLogs: WeightLog[]
-    + latestMeasurement: BodyMeasurement|null
-    + goalProgress: number
+    - rangeTabs: Tab[]
+    - latestWeightLog: WeightLog|null
+    - bmi: BmiResult|null
+    - bmiLabel: string
+    - bmiColor: string
+    - bmr: number|null
+    - tdee: number|null
+    - filteredWeightLogs: WeightLog[]
+    - latestMeasurement: BodyMeasurement|null
+    - goalProgress: number
     -- methods --
     + handleLogWeight(): void
   }
@@ -47,8 +47,8 @@ package "body-health-metrics/presentation/views" {
 package "body-health-metrics/presentation/components" {
   class WeightChartComponent <<component>> {
     -- props --
-    + weightLogs: WeightLog[]
-    + label: string
+    - weightLogs: WeightLog[]
+    - label: string
     -- methods --
     + buildChart(): void
   }

@@ -23,66 +23,66 @@ package "Nutrisense.BodyHealthMetrics.Interfaces" {
 
   package "REST.Resources" {
     class RegisterBodyMetricsResource <<record>> {
-      +UserId: int
-      +HeightCm: decimal
-      +WeightKg: decimal
-      +DateOfBirth: string
-      +BiologicalSex: string
-      +ActivityLevel: string
-      +Goal: string?
-      +WeeklyRateKg: decimal?
+      -UserId: int
+      -HeightCm: decimal
+      -WeightKg: decimal
+      -DateOfBirth: string
+      -BiologicalSex: string
+      -ActivityLevel: string
+      -Goal: string?
+      -WeeklyRateKg: decimal?
     }
     class UpdateWeightResource <<record>> {
-      +WeightKg: decimal
-      +Note: string?
+      -WeightKg: decimal
+      -Note: string?
     }
     class RegisterBodyMeasurementResource <<record>> {
-      +WaistCm: decimal
-      +NeckCm: decimal
+      -WaistCm: decimal
+      -NeckCm: decimal
     }
     class SetHealthGoalResource <<record>> {
-      +Goal: string
-      +TargetWeightKg: decimal
-      +WeeklyRateKg: decimal
+      -Goal: string
+      -TargetWeightKg: decimal
+      -WeeklyRateKg: decimal
     }
     class BodyMetricsResource <<record>> {
-      +UserId: int
-      +HeightCm: decimal
-      +DateOfBirth: string?
-      +BiologicalSex: string?
-      +ActivityLevel: string?
-      +CurrentWeightKg: decimal?
-      +BmiValue: decimal?
-      +BmiCategory: string?
-      +Bmr: decimal?
-      +Tdee: decimal?
-      +ActiveGoal: string?
-      +ActiveGoalStartWeightKg: decimal?
-      +ActiveGoalTargetWeightKg: decimal?
-      +ActiveGoalWeeklyRateKg: decimal?
-      +ActiveGoalSetAt: DateTimeOffset?
-      +ActiveGoalCaloricAdjustment: decimal?
-      +DailyCalories: int?
-      +ProteinG: decimal?
-      +CarbsG: decimal?
-      +FatG: decimal?
-      +FiberG: decimal?
+      -UserId: int
+      -HeightCm: decimal
+      -DateOfBirth: string?
+      -BiologicalSex: string?
+      -ActivityLevel: string?
+      -CurrentWeightKg: decimal?
+      -BmiValue: decimal?
+      -BmiCategory: string?
+      -Bmr: decimal?
+      -Tdee: decimal?
+      -ActiveGoal: string?
+      -ActiveGoalStartWeightKg: decimal?
+      -ActiveGoalTargetWeightKg: decimal?
+      -ActiveGoalWeeklyRateKg: decimal?
+      -ActiveGoalSetAt: DateTimeOffset?
+      -ActiveGoalCaloricAdjustment: decimal?
+      -DailyCalories: int?
+      -ProteinG: decimal?
+      -CarbsG: decimal?
+      -FatG: decimal?
+      -FiberG: decimal?
     }
     class BmiResource <<record>> {
-      +Value: decimal
-      +Category: string
+      -Value: decimal
+      -Category: string
     }
     class DailyCaloricGoalResource <<record>> {
-      +DailyCalories: int
-      +ProteinG: decimal
-      +CarbsG: decimal
-      +FatG: decimal
-      +FiberG: decimal
+      -DailyCalories: int
+      -ProteinG: decimal
+      -CarbsG: decimal
+      -FatG: decimal
+      -FiberG: decimal
     }
     class WeightLogResource <<record>> {
-      +WeightKg: decimal
-      +LoggedAt: DateTimeOffset
-      +Note: string?
+      -WeightKg: decimal
+      -LoggedAt: DateTimeOffset
+      -Note: string?
     }
   }
 
@@ -118,11 +118,11 @@ package "Nutrisense.BodyHealthMetrics.Interfaces" {
       +GetTdee(userId: int, ct): Task<decimal?>
     }
     class UserGoalSummaryItem <<record>> {
-      +GoalType: string
-      +DailyCalorieTarget: int
-      +ProteinTargetG: decimal
-      +CarbsTargetG: decimal
-      +FatTargetG: decimal
+      -GoalType: string
+      -DailyCalorieTarget: int
+      -ProteinTargetG: decimal
+      -CarbsTargetG: decimal
+      -FatTargetG: decimal
     }
   }
 }

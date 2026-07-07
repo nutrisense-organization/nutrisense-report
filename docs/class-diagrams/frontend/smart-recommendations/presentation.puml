@@ -30,19 +30,19 @@ package "body-health-metrics/application [stub]" {
 
 package "smart-recommendations/presentation/routes" {
   class SmartRecommendationsRoutes <<router>> {
-    + path: 'recommendations'
-    + name: 'recommendations'
-    + component: RecommendationsView
-    + meta: { requiresAuth: boolean, title: string }
+    - path: 'recommendations'
+    - name: 'recommendations'
+    - component: RecommendationsView
+    - meta: { requiresAuth: boolean, title: string }
   }
 }
 
 package "smart-recommendations/presentation/views" {
   class RecommendationsView <<view>> {
-    + activeTab: string
-    + unifiedFeed: Array<{type, item, isUnsafe}>
-    + filteredCities: Object[]
-    + filteredIngredients: IngredientCatalogItem[]
+    - activeTab: string
+    - unifiedFeed: Array<{type, item, isUnsafe}>
+    - filteredCities: Object[]
+    - filteredIngredients: IngredientCatalogItem[]
     --
     + handleLogDish(recommendation): void
     + handleRecipeDetail(recipe): void
@@ -60,28 +60,28 @@ package "smart-recommendations/presentation/views" {
 package "smart-recommendations/presentation/components" {
 
   class RecommendationCardComponent <<component>> {
-    + props: recommendation, projectedPct, bannerLevel, isUnsafe
-    + emits: log
+    - props: recommendation, projectedPct, bannerLevel, isUnsafe
+    - emits: log
   }
 
   class RecipeCardComponent <<component>> {
-    + props: recipe, pantryIngredientIds, missingLabel, projectedPct, bannerLevel, isUnsafe
-    + emits: detail
+    - props: recipe, pantryIngredientIds, missingLabel, projectedPct, bannerLevel, isUnsafe
+    - emits: detail
   }
 
   class RecipeDetailDialogComponent <<component>> {
-    + props: recipe, pantryIngredientIds, ingredientCatalog, visible
-    + emits: update:visible, log
+    - props: recipe, pantryIngredientIds, ingredientCatalog, visible
+    - emits: update:visible, log
   }
 
   class LogDishDialogComponent <<component>> {
-    + props: recommendation, food, visible
-    + emits: update:visible, confirm
+    - props: recommendation, food, visible
+    - emits: update:visible, confirm
   }
 
   class PantryListComponent <<component>> {
-    + props: pantryItems, ingredientCatalog, loading
-    + emits: remove, update-quantity
+    - props: pantryItems, ingredientCatalog, loading
+    - emits: remove, update-quantity
   }
 }
 

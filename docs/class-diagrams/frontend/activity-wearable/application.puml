@@ -19,20 +19,20 @@ package "activity-wearable/application" {
 
   class useActivityWearableStore <<store>> {
     -- state --
-    + activityLogs: ActivityLog[]
-    + wearableConnections: WearableConnection[]
-    + logsLoaded: boolean
-    + connectionsLoaded: boolean
-    + errors: Error[]
+    - activityLogs: ActivityLog[]
+    - wearableConnections: WearableConnection[]
+    - logsLoaded: boolean
+    - connectionsLoaded: boolean
+    - errors: Error[]
     -- computed --
-    + todayLogs: ActivityLog[]
-    + todayCaloriesBurned: number
-    + todayActiveMinutes: number
-    + healthConnection: WearableConnection|null
-    + isHealthConnected: boolean
-    + allLogsSorted: ActivityLog[]
-    + lastStrengthOrHiit: ActivityLog|null
-    + shouldShowPostWorkoutBanner: boolean
+    - todayLogs: ActivityLog[]
+    - todayCaloriesBurned: number
+    - todayActiveMinutes: number
+    - healthConnection: WearableConnection|null
+    - isHealthConnected: boolean
+    - allLogsSorted: ActivityLog[]
+    - lastStrengthOrHiit: ActivityLog|null
+    - shouldShowPostWorkoutBanner: boolean
     -- actions --
     + fetchActivityLogs(userId, from?, to?): void
     + logActivity(userId, activityData): void

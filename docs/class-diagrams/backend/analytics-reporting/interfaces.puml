@@ -16,35 +16,35 @@ package "NutriSense.AnalyticsReporting" {
 
     package "Resources" {
       class DashboardResource <<record>> {
-        +UserId: int
-        +Date: string
-        +TotalCalories: decimal
-        +TotalProteinG: decimal
-        +TotalCarbsG: decimal
-        +TotalFatG: decimal
-        +ActiveCaloriesBurned: decimal
-        +AdherenceScore: decimal?
-        +CurrentStreak: int
-        +WeeklyCompletionRate: decimal
+        -UserId: int
+        -Date: string
+        -TotalCalories: decimal
+        -TotalProteinG: decimal
+        -TotalCarbsG: decimal
+        -TotalFatG: decimal
+        -ActiveCaloriesBurned: decimal
+        -AdherenceScore: decimal?
+        -CurrentStreak: int
+        -WeeklyCompletionRate: decimal
       }
       class ProgressChartResource <<record>> {
-        +UserId: int
-        +From: string
-        +To: string
-        +Snapshots: IEnumerable<ProgressSnapshotResource>
+        -UserId: int
+        -From: string
+        -To: string
+        -Snapshots: IEnumerable<ProgressSnapshotResource>
       }
       class ProgressSnapshotResource <<record>> {
-        +Date: string
-        +TotalCalories: decimal
-        +AdherenceScore: decimal
+        -Date: string
+        -TotalCalories: decimal
+        -AdherenceScore: decimal
       }
       class StreakResource <<record>> {
-        +UserId: int
-        +CurrentStreak: int
-        +LongestStreak: int
-        +LastLogDate: string?
-        +WeeklyCompletionRate: decimal
-        +CompletedDates: IEnumerable<string>
+        -UserId: int
+        -CurrentStreak: int
+        -LongestStreak: int
+        -LastLogDate: string?
+        -WeeklyCompletionRate: decimal
+        -CompletedDates: IEnumerable<string>
       }
     }
 

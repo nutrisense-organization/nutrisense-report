@@ -10,12 +10,12 @@ package "subscriptions-billing/application [stub]" {
 
 package "subscriptions-billing/presentation/routes" {
   class SubscriptionsBillingRoutes <<router>> {
-    + subscribeRoute: RouteRecordRaw
-    + planSelectionRoute: RouteRecordRaw
-    + checkoutRoute: RouteRecordRaw
-    + paymentSuccessRoute: RouteRecordRaw
-    + subscriptionsBillingProfileChildren: RouteRecordRaw[]
-    + subscriptionsBillingRoutes: RouteRecordRaw[]
+    - subscribeRoute: RouteRecordRaw
+    - planSelectionRoute: RouteRecordRaw
+    - checkoutRoute: RouteRecordRaw
+    - paymentSuccessRoute: RouteRecordRaw
+    - subscriptionsBillingProfileChildren: RouteRecordRaw[]
+    - subscriptionsBillingRoutes: RouteRecordRaw[]
   }
 }
 
@@ -37,8 +37,8 @@ package "subscriptions-billing/presentation/components" {
 
 package "subscriptions-billing/presentation" {
   class FeatureI18n <<helper>> {
-    + FEATURE_I18N: Object
-    + HIDDEN_PLAN_FEATURES: Set
+    - FEATURE_I18N: Object
+    - HIDDEN_PLAN_FEATURES: Set
     + featureLabel(t, featureKey): string
   }
 }

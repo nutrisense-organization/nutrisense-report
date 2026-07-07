@@ -7,25 +7,25 @@ package "Nutrisense.BodyHealthMetrics.Domain" {
 
   package "Model.Aggregates" {
     class BodyMetrics {
-      +Id: int
-      +UserId: int
-      +HeightCm: decimal
-      +DateOfBirth: DateOnly?
-      +BiologicalSex: string?
-      +ActivityLevel: string?
-      +BmiValue: decimal?
-      +BmiCategory: string?
-      +Bmr: decimal?
-      +Tdee: decimal?
-      +MacroCalories: int?
-      +MacroProteinG: decimal?
-      +MacroCarbsG: decimal?
-      +MacroFatG: decimal?
-      +MacroFiberG: decimal?
-      +CreatedAt: DateTimeOffset?
-      +UpdatedAt: DateTimeOffset?
-      +Bmi: BmiResult?
-      +MacroTargets: MacroTargets?
+      -Id: int
+      -UserId: int
+      -HeightCm: decimal
+      -DateOfBirth: DateOnly?
+      -BiologicalSex: string?
+      -ActivityLevel: string?
+      -BmiValue: decimal?
+      -BmiCategory: string?
+      -Bmr: decimal?
+      -Tdee: decimal?
+      -MacroCalories: int?
+      -MacroProteinG: decimal?
+      -MacroCarbsG: decimal?
+      -MacroFatG: decimal?
+      -MacroFiberG: decimal?
+      -CreatedAt: DateTimeOffset?
+      -UpdatedAt: DateTimeOffset?
+      -Bmi: BmiResult?
+      -MacroTargets: MacroTargets?
       +BodyMetrics(command: RegisterBodyMetricsCommand)
       +LogWeight(weightKg: decimal, note: string?): WeightLog
       +LogMeasurement(waistCm: decimal, neckCm: decimal): BodyMeasurement
@@ -41,36 +41,36 @@ package "Nutrisense.BodyHealthMetrics.Domain" {
 
   package "Model.Entities" {
     class WeightLog {
-      +Id: int
-      +UserId: int
-      +WeightKg: WeightKg
-      +LoggedAt: DateTimeOffset
-      +Note: string?
+      -Id: int
+      -UserId: int
+      -WeightKg: WeightKg
+      -LoggedAt: DateTimeOffset
+      -Note: string?
     }
 
     class BodyMeasurement {
-      +Id: int
-      +UserId: int
-      +WaistCm: WaistMeasurement
-      +NeckCm: NeckMeasurement
-      +MeasuredAt: DateTimeOffset
+      -Id: int
+      -UserId: int
+      -WaistCm: WaistMeasurement
+      -NeckCm: NeckMeasurement
+      -MeasuredAt: DateTimeOffset
     }
 
     class UserGoal {
-      +Id: int
-      +UserId: int
-      +Goal: GoalType
-      +StartWeightKg: decimal
-      +TargetWeightKg: decimal
-      +WeeklyRateKg: WeeklyRate
-      +DailyCalorieTarget: int
-      +ProteinTargetG: decimal
-      +CarbsTargetG: decimal
-      +FatTargetG: decimal
-      +FiberTargetG: decimal
-      +CaloricAdjustment: decimal
-      +SetAt: DateTimeOffset
-      +Active: bool
+      -Id: int
+      -UserId: int
+      -Goal: GoalType
+      -StartWeightKg: decimal
+      -TargetWeightKg: decimal
+      -WeeklyRateKg: WeeklyRate
+      -DailyCalorieTarget: int
+      -ProteinTargetG: decimal
+      -CarbsTargetG: decimal
+      -FatTargetG: decimal
+      -FiberTargetG: decimal
+      -CaloricAdjustment: decimal
+      -SetAt: DateTimeOffset
+      -Active: bool
       +Deactivate(): void
       +SetCalculatedTargets(...): void
     }
@@ -78,122 +78,122 @@ package "Nutrisense.BodyHealthMetrics.Domain" {
 
   package "Model.ValueObjects" {
     class BmiResult <<record>> {
-      +Value: decimal
-      +Category: string
+      -Value: decimal
+      -Category: string
     }
 
     class GoalType <<record>> {
-      +Value: string
+      -Value: string
     }
 
     class MacroTargets <<record>> {
-      +Calories: int
-      +ProteinG: decimal
-      +CarbsG: decimal
-      +FatG: decimal
-      +FiberG: decimal
+      -Calories: int
+      -ProteinG: decimal
+      -CarbsG: decimal
+      -FatG: decimal
+      -FiberG: decimal
     }
 
     class WaistMeasurement <<record>> {
-      +Cm: decimal
+      -Cm: decimal
     }
 
     class NeckMeasurement <<record>> {
-      +Cm: decimal
+      -Cm: decimal
     }
 
     class WeeklyRate <<record>> {
-      +Value: decimal
+      -Value: decimal
     }
 
     class WeightKg <<record>> {
-      +Value: decimal
+      -Value: decimal
     }
   }
 
   package "Model.Commands" {
     class RegisterBodyMetricsCommand <<record>> {
-      +UserId: int
-      +HeightCm: decimal
-      +WeightKg: decimal
-      +DateOfBirth: DateOnly
-      +BiologicalSex: string
-      +ActivityLevel: string
-      +Goal: string?
-      +WeeklyRateKg: decimal?
+      -UserId: int
+      -HeightCm: decimal
+      -WeightKg: decimal
+      -DateOfBirth: DateOnly
+      -BiologicalSex: string
+      -ActivityLevel: string
+      -Goal: string?
+      -WeeklyRateKg: decimal?
     }
     class UpdateWeightCommand <<record>> {
-      +UserId: int
-      +WeightKg: decimal
-      +Note: string?
+      -UserId: int
+      -WeightKg: decimal
+      -Note: string?
     }
     class RegisterBodyMeasurementCommand <<record>> {
-      +UserId: int
-      +WaistCm: decimal
-      +NeckCm: decimal
+      -UserId: int
+      -WaistCm: decimal
+      -NeckCm: decimal
     }
     class SetHealthGoalCommand <<record>> {
-      +UserId: int
-      +Goal: string
-      +TargetWeightKg: decimal
-      +WeeklyRateKg: decimal
+      -UserId: int
+      -Goal: string
+      -TargetWeightKg: decimal
+      -WeeklyRateKg: decimal
     }
     class CalculateBmiCommand <<record>> {
-      +UserId: int
+      -UserId: int
     }
     class CalculateBmrCommand <<record>> {
-      +UserId: int
+      -UserId: int
     }
     class CalculateTdeeCommand <<record>> {
-      +UserId: int
+      -UserId: int
     }
     class CalculateDailyCaloricGoalCommand <<record>> {
-      +UserId: int
+      -UserId: int
     }
   }
 
   package "Model.Queries" {
     class GetBodyMetricsByUserIdQuery <<record>> {
-      +UserId: int
+      -UserId: int
     }
     class GetWeightHistoryByUserIdQuery <<record>> {
-      +UserId: int
-      +From: DateTimeOffset?
-      +To: DateTimeOffset?
+      -UserId: int
+      -From: DateTimeOffset?
+      -To: DateTimeOffset?
     }
   }
 
   package "Model.Events" {
     class BodyMetricsRegistered <<record>> {
-      +UserId: int
+      -UserId: int
     }
     class WeightUpdated <<record>> {
-      +UserId: int
-      +NewWeightKg: decimal
+      -UserId: int
+      -NewWeightKg: decimal
     }
     class BmiCalculated <<record>> {
-      +UserId: int
-      +Bmi: decimal
+      -UserId: int
+      -Bmi: decimal
     }
     class BmrCalculated <<record>> {
-      +UserId: int
-      +Bmr: decimal
+      -UserId: int
+      -Bmr: decimal
     }
     class TdeeCalculated <<record>> {
-      +UserId: int
-      +Tdee: decimal
+      -UserId: int
+      -Tdee: decimal
     }
     class GoalDefinedInMetrics <<record>> {
-      +UserId: int
-      +Goal: string
+      -UserId: int
+      -Goal: string
     }
     class DailyCaloricGoalSet <<record>> {
-      +UserId: int
-      +DailyCalories: int
-      +ProteinG: decimal
-      +CarbsG: decimal
-      +FatG: decimal
-      +FiberG: decimal
+      -UserId: int
+      -DailyCalories: int
+      -ProteinG: decimal
+      -CarbsG: decimal
+      -FatG: decimal
+      -FiberG: decimal
     }
   }
 

@@ -7,15 +7,15 @@ skinparam linetype ortho
 package "activity-wearable/domain/model" {
 
   class ActivityLog <<entity>> {
-    + id: string
-    + userId: string
-    + date: string
-    + activityType: ActivityType
-    + durationMinutes: number
-    + intensity: Intensity
-    + caloriesBurned: number
-    + source: string
-    + loggedAt: string
+    - id: string
+    - userId: string
+    - date: string
+    - activityType: ActivityType
+    - durationMinutes: number
+    - intensity: Intensity
+    - caloriesBurned: number
+    - source: string
+    - loggedAt: string
     --
     + isHighIntensity(): boolean
     + minutesSinceLogged(now?): number
@@ -24,13 +24,13 @@ package "activity-wearable/domain/model" {
   }
 
   class WearableConnection <<entity>> {
-    + id: string
-    + userId: string
-    + provider: WearableProvider
-    + status: WearableStatus
-    + lastSyncedAt: string|null
-    + authorizedAt: string
-    + autoSyncEnabled: boolean
+    - id: string
+    - userId: string
+    - provider: WearableProvider
+    - status: WearableStatus
+    - lastSyncedAt: string|null
+    - authorizedAt: string
+    - autoSyncEnabled: boolean
     --
     + isConnected(): boolean
     + needsSync(thresholdMinutes?): boolean
@@ -38,21 +38,21 @@ package "activity-wearable/domain/model" {
   }
 
   class ActivityType <<value object>> {
-    + value: ActivityTypeValue
+    - value: ActivityTypeValue
     --
     + triggersPostWorkoutBanner(): boolean
     + estimateCalories(intensityValue, durationMinutes): number
   }
 
   class Intensity <<value object>> {
-    + value: IntensityValue
+    - value: IntensityValue
     --
     + isHigh(): boolean
     + isLow(): boolean
   }
 
   class WearableProvider <<value object>> {
-    + value: WearableProviderValue
+    - value: WearableProviderValue
     --
     + isGoogleHealth(): boolean
     + isGoogleFit(): boolean
@@ -60,7 +60,7 @@ package "activity-wearable/domain/model" {
   }
 
   class WearableStatus <<value object>> {
-    + value: WearableStatusValue
+    - value: WearableStatusValue
     --
     + isConnected(): boolean
     + hasError(): boolean

@@ -6,47 +6,47 @@ skinparam linetype ortho
 
 package "shared/domain/model [stub]" {
   class Macros <<value object>> {
-    + calories: number
-    + proteinG: number
-    + carbsG: number
-    + fatG: number
-    + fiberG: number
+    - calories: number
+    - proteinG: number
+    - carbsG: number
+    - fatG: number
+    - fiberG: number
   }
 }
 
 package "smart-recommendations/domain/model" {
 
   class City <<entity>> {
-    + id: number
-    + key: string
-    + nameEn: string
-    + nameEs: string
-    + country: string
-    + lat: number
-    + lng: number
-    + timezone: string
+    - id: number
+    - key: string
+    - nameEn: string
+    - nameEs: string
+    - country: string
+    - lat: number
+    - lng: number
+    - timezone: string
   }
 
   class Weather <<value object>> {
-    + cityId: number
-    + tempC: number
-    + condition: WeatherConditionValue
-    + weatherType: WeatherTypeValue
-    + at: string
+    - cityId: number
+    - tempC: number
+    - condition: WeatherConditionValue
+    - weatherType: WeatherTypeValue
+    - at: string
     --
     + roundedTemp(): number
     + icon(): string
   }
 
   class WeatherCondition <<value object>> {
-    + value: WeatherConditionValue
+    - value: WeatherConditionValue
     --
     + isSunny(): boolean
     + isPrecipitating(): boolean
   }
 
   class WeatherType <<value object>> {
-    + value: WeatherTypeValue
+    - value: WeatherTypeValue
     --
     + isHot(): boolean
     + isCold(): boolean
@@ -55,14 +55,14 @@ package "smart-recommendations/domain/model" {
   }
 
   class LocationPreference <<entity>> {
-    + id: string
-    + userId: string
-    + homeCityId: string
-    + currentCityId: string
-    + travelModeActive: boolean
-    + isManualOverride: boolean
-    + locationPermissionGranted: boolean
-    + updatedAt: string
+    - id: string
+    - userId: string
+    - homeCityId: string
+    - currentCityId: string
+    - travelModeActive: boolean
+    - isManualOverride: boolean
+    - locationPermissionGranted: boolean
+    - updatedAt: string
     --
     + effectiveCityId(): string
     + isTraveling(): boolean
@@ -70,13 +70,13 @@ package "smart-recommendations/domain/model" {
   }
 
   class IngredientCatalogItem <<entity>> {
-    + id: number
-    + key: string
-    + nameEn: string
-    + nameEs: string
-    + foodId: number|null
-    + category: IngredientCategory
-    + defaultUnit: string
+    - id: number
+    - key: string
+    - nameEn: string
+    - nameEs: string
+    - foodId: number|null
+    - category: IngredientCategory
+    - defaultUnit: string
     --
     + normalizedGrams(quantity, unit): number
     + isMeasuredByUnit(): boolean
@@ -84,19 +84,19 @@ package "smart-recommendations/domain/model" {
   }
 
   class IngredientCategory <<value object>> {
-    + value: IngredientCategoryValue
+    - value: IngredientCategoryValue
     --
     + isProteinSource(): boolean
     + isCarbohydrateSource(): boolean
   }
 
   class PantryItem <<entity>> {
-    + id: string
-    + userId: string
-    + ingredientId: string
-    + quantity: number
-    + unit: string
-    + addedAt: string
+    - id: string
+    - userId: string
+    - ingredientId: string
+    - quantity: number
+    - unit: string
+    - addedAt: string
     --
     + normalizedQuantity(): number
     + normalizedUnit(): string
@@ -104,16 +104,16 @@ package "smart-recommendations/domain/model" {
   }
 
   class Recipe <<entity>> {
-    + id: number
-    + key: string
-    + nameEn: string
-    + nameEs: string
-    + goalType: string
-    + prepTimeMinutes: number
-    + servings: number
-    + totalMacros: Macros
-    + restrictionsConflict: string[]
-    + ingredients: RecipeIngredient[]
+    - id: number
+    - key: string
+    - nameEn: string
+    - nameEs: string
+    - goalType: string
+    - prepTimeMinutes: number
+    - servings: number
+    - totalMacros: Macros
+    - restrictionsConflict: string[]
+    - ingredients: RecipeIngredient[]
     --
     + conflictsWith(userRestrictionTags): boolean
     + matchesGoal(goal): boolean
@@ -122,25 +122,25 @@ package "smart-recommendations/domain/model" {
   }
 
   class RecommendationCard <<entity>> {
-    + id: number
-    + foodId: number|null
-    + foodNameEn: string
-    + foodNameEs: string
-    + estimatedCalories: number
-    + estimatedProteinG: number
-    + estimatedCarbsG: number
-    + estimatedFatG: number
-    + badge: BadgeValue
-    + contextLabelEn: string
-    + contextLabelEs: string
-    + restrictionsConflict: string[]
+    - id: number
+    - foodId: number|null
+    - foodNameEn: string
+    - foodNameEs: string
+    - estimatedCalories: number
+    - estimatedProteinG: number
+    - estimatedCarbsG: number
+    - estimatedFatG: number
+    - badge: BadgeValue
+    - contextLabelEn: string
+    - contextLabelEs: string
+    - restrictionsConflict: string[]
     --
     + conflictsWith(userRestrictionTags): boolean
     + isLocalDish(): boolean
   }
 
   class Badge <<value object>> {
-    + value: BadgeValue
+    - value: BadgeValue
     --
     + isLowCalorieFocus(): boolean
     + isMuscleGainFocus(): boolean
@@ -148,10 +148,10 @@ package "smart-recommendations/domain/model" {
   }
 
   class MacroProfile <<value object>> {
-    + minProteinG: number|null
-    + maxCalories: number|null
-    + prioritizeFiber: boolean
-    + labelKey: string
+    - minProteinG: number|null
+    - maxCalories: number|null
+    - prioritizeFiber: boolean
+    - labelKey: string
     --
     + {static} fromBmiAndGoal(bmiCategory, primaryGoal): MacroProfile|null
     + {static} score(calories, proteinG, profile): number

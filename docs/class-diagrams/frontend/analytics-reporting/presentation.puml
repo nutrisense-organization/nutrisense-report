@@ -14,7 +14,7 @@ package "analytics-reporting/infrastructure [stub]" {
 
 package "analytics-reporting/presentation/routes" {
   class AnalyticsReportingRoutes <<router>> {
-    + analyticsReportingRoutes: RouteRecordRaw[]
+    - analyticsReportingRoutes: RouteRecordRaw[]
   }
 }
 
@@ -25,20 +25,20 @@ package "analytics-reporting/presentation/views" {
 
 package "analytics-reporting/presentation/components" {
   class KpiCardComponent <<component>> {
-    + label: string
-    + value: string|number
-    + unit: string
-    + icon: string
-    + color: string
-    + loading: boolean
+    - label: string
+    - value: string|number
+    - unit: string
+    - icon: string
+    - color: string
+    - loading: boolean
   }
   class MacroDonutChartComponent <<component>> {
-    + proteinG: number
-    + carbsG: number
-    + fatG: number
-    + proteinLabel: string
-    + carbsLabel: string
-    + fatLabel: string
+    - proteinG: number
+    - carbsG: number
+    - fatG: number
+    - proteinLabel: string
+    - carbsLabel: string
+    - fatLabel: string
   }
 }
 

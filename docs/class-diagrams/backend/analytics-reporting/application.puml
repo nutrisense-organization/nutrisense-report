@@ -40,35 +40,35 @@ package "NutriSense.AnalyticsReporting" {
 
     package "Internal (Read Models)" {
       class DashboardData <<record>> {
-        +UserId: int
-        +Date: DateOnly
-        +TotalCalories: decimal
-        +TotalProteinG: decimal
-        +TotalCarbsG: decimal
-        +TotalFatG: decimal
-        +ActiveCaloriesBurned: decimal
-        +AdherenceScore: decimal?
-        +CurrentStreak: int
-        +WeeklyCompletionRate: decimal
+        -UserId: int
+        -Date: DateOnly
+        -TotalCalories: decimal
+        -TotalProteinG: decimal
+        -TotalCarbsG: decimal
+        -TotalFatG: decimal
+        -ActiveCaloriesBurned: decimal
+        -AdherenceScore: decimal?
+        -CurrentStreak: int
+        -WeeklyCompletionRate: decimal
       }
       class ProgressChartData <<record>> {
-        +UserId: int
-        +From: DateOnly
-        +To: DateOnly
-        +Snapshots: IEnumerable<ProgressSnapshotDto>
+        -UserId: int
+        -From: DateOnly
+        -To: DateOnly
+        -Snapshots: IEnumerable<ProgressSnapshotDto>
       }
       class ProgressSnapshotDto <<record>> {
-        +Date: DateOnly
-        +TotalCalories: decimal
-        +AdherenceScore: decimal
+        -Date: DateOnly
+        -TotalCalories: decimal
+        -AdherenceScore: decimal
       }
       class StreakData <<record>> {
-        +UserId: int
-        +CurrentStreak: int
-        +LongestStreak: int
-        +LastLogDate: DateOnly?
-        +WeeklyCompletionRate: decimal
-        +CompletedDates: IReadOnlyList<DateOnly>
+        -UserId: int
+        -CurrentStreak: int
+        -LongestStreak: int
+        -LastLogDate: DateOnly?
+        -WeeklyCompletionRate: decimal
+        -CompletedDates: IReadOnlyList<DateOnly>
       }
     }
 

@@ -7,14 +7,14 @@ skinparam linetype ortho
 package "subscriptions-billing/domain/model" {
 
   class PaymentMethod <<entity>> {
-    + id: string
-    + userId: string
-    + lastFour: string
-    + brand: CardBrand
-    + expiryMonth: number
-    + expiryYear: number
-    + cardholderName: string
-    + createdAt: string
+    - id: string
+    - userId: string
+    - lastFour: string
+    - brand: CardBrand
+    - expiryMonth: number
+    - expiryYear: number
+    - cardholderName: string
+    - createdAt: string
     --
     + maskedNumber(): string
     + expiryLabel(): string
@@ -22,12 +22,12 @@ package "subscriptions-billing/domain/model" {
   }
 
   class SubscriptionPlan <<entity>> {
-    + id: number
-    + key: string
-    + priceMonthly: number
-    + priceAnnual: number|null
-    + currency: string
-    + features: string[]
+    - id: number
+    - key: string
+    - priceMonthly: number
+    - priceAnnual: number|null
+    - currency: string
+    - features: string[]
     --
     + hasFeature(feature): boolean
     + isFree(): boolean
@@ -37,18 +37,18 @@ package "subscriptions-billing/domain/model" {
   }
 
   class UserSubscription <<entity>> {
-    + id: number
-    + userId: number
-    + planId: number
-    + planKey: string
-    + status: SubscriptionStatus
-    + billingPeriod: BillingPeriod
-    + periodStart: string|null
-    + periodEnd: string|null
-    + cancelAtPeriodEnd: boolean
-    + stripeSubscriptionId: string|null
-    + lastPlanChangeAt: string|null
-    + paymentMethodId: number|null
+    - id: number
+    - userId: number
+    - planId: number
+    - planKey: string
+    - status: SubscriptionStatus
+    - billingPeriod: BillingPeriod
+    - periodStart: string|null
+    - periodEnd: string|null
+    - cancelAtPeriodEnd: boolean
+    - stripeSubscriptionId: string|null
+    - lastPlanChangeAt: string|null
+    - paymentMethodId: number|null
     --
     + isActive(): boolean
     + willCancel(): boolean
@@ -60,16 +60,16 @@ package "subscriptions-billing/domain/model" {
   }
 
   class PaymentRecord <<entity>> {
-    + id: number
-    + userSubscriptionId: number
-    + amount: number
-    + amountUsd: number
-    + currency: string
-    + status: string
-    + processedAt: string|null
-    + paidAt: string|null
-    + stripePaymentIntentId: string|null
-    + type: string
+    - id: number
+    - userSubscriptionId: number
+    - amount: number
+    - amountUsd: number
+    - currency: string
+    - status: string
+    - processedAt: string|null
+    - paidAt: string|null
+    - stripePaymentIntentId: string|null
+    - type: string
     --
     + isPaid(): boolean
     + isFailed(): boolean
@@ -80,7 +80,7 @@ package "subscriptions-billing/domain/model" {
   }
 
   class BillingPeriod <<value object>> {
-    + value: BillingPeriodValue
+    - value: BillingPeriodValue
     --
     + isFree(): boolean
     + isMonthly(): boolean
@@ -89,7 +89,7 @@ package "subscriptions-billing/domain/model" {
   }
 
   class SubscriptionStatus <<value object>> {
-    + value: SubscriptionStatusValue
+    - value: SubscriptionStatusValue
     --
     + isActive(): boolean
     + isCancelled(): boolean
@@ -99,7 +99,7 @@ package "subscriptions-billing/domain/model" {
   }
 
   class PlanTier <<value object>> {
-    + value: PlanTierValue
+    - value: PlanTierValue
     --
     + isAtLeast(minimum): boolean
     + historyLimitDays(): number

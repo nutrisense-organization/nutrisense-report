@@ -32,9 +32,9 @@ package "NutriSense.IAM.Application" {
 
   package "Internal" {
     class LoginResult <<record>> {
-      +UserId: UserId
-      +Token: string
-      +SessionId: int
+      -UserId: UserId
+      -Token: string
+      -SessionId: int
     }
 
     package "Internal.CommandServices" {

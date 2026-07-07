@@ -6,7 +6,7 @@ skinparam linetype ortho
 
 package "shared/domain/model [stubs]" {
   class GoalType <<value object>> {
-    + value: GoalTypeValue
+    - value: GoalTypeValue
     --
     + isWeightLoss(): boolean
     + isMuscleGain(): boolean
@@ -22,22 +22,22 @@ package "shared/infrastructure [stubs]" {
 package "body-health-metrics/domain/model" {
 
   class BodyMeasurement <<entity>> {
-    + id: string
-    + userId: string
-    + waistCm: number
-    + neckCm: number
-    + measuredAt: string
+    - id: string
+    - userId: string
+    - waistCm: number
+    - neckCm: number
+    - measuredAt: string
     --
     + dateLabel(): string
     + estimatedBodyFatPercent(heightCm): number
   }
 
   class WeightLog <<entity>> {
-    + id: string
-    + userId: string
-    + weightKg: number
-    + loggedAt: string
-    + note: string|null
+    - id: string
+    - userId: string
+    - weightKg: number
+    - loggedAt: string
+    - note: string|null
     --
     + dateLabel(): string
     + isToday(): boolean
@@ -45,16 +45,16 @@ package "body-health-metrics/domain/model" {
   }
 
   class UserGoal <<entity>> {
-    + id: string
-    + userId: string
-    + goal: GoalType
-    + startWeightKg: number
-    + targetWeightKg: number
-    + weeklyRate: WeeklyRate
-    + macroTargets: MacroTargets
-    + caloricAdjustment: number
-    + setAt: string
-    + active: boolean
+    - id: string
+    - userId: string
+    - goal: GoalType
+    - startWeightKg: number
+    - targetWeightKg: number
+    - weeklyRate: WeeklyRate
+    - macroTargets: MacroTargets
+    - caloricAdjustment: number
+    - setAt: string
+    - active: boolean
     --
     + isActive(): boolean
     + estimatedWeeksToGoal(currentWeightKg): number
@@ -64,8 +64,8 @@ package "body-health-metrics/domain/model" {
   }
 
   class BmiResult <<value object>> {
-    + value: number
-    + category: BmiCategory
+    - value: number
+    - category: BmiCategory
     --
     + isNormal(): boolean
     + isUnderweight(): boolean
@@ -73,11 +73,11 @@ package "body-health-metrics/domain/model" {
   }
 
   class MacroTargets <<value object>> {
-    + dailyCalorieTarget: number
-    + proteinTargetG: number
-    + carbsTargetG: number
-    + fatTargetG: number
-    + fiberTargetG: number
+    - dailyCalorieTarget: number
+    - proteinTargetG: number
+    - carbsTargetG: number
+    - fatTargetG: number
+    - fiberTargetG: number
     --
     + proteinRatio(): number
     + carbsRatio(): number
@@ -88,7 +88,7 @@ package "body-health-metrics/domain/model" {
     + {static} CONSERVATIVE_KG: number
     + {static} MODERATE_KG: number
     + {static} AGGRESSIVE_KG: number
-    + kgPerWeek: number
+    - kgPerWeek: number
     --
     + isAggressive(): boolean
     + label(): string

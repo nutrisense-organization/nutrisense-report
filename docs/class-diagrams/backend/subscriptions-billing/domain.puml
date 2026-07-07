@@ -20,8 +20,8 @@ package "Nutrisense.Platform.Subscriptions" {
     }
 
     abstract class DomainEventBase {
-      +EventId: Guid
-      +OccurredAt: DateTimeOffset
+      #EventId: Guid
+      #OccurredAt: DateTimeOffset
     }
   }
 
@@ -29,23 +29,23 @@ package "Nutrisense.Platform.Subscriptions" {
 
     package "Model.Aggregates" {
       class UserSubscription {
-        +Id: int
-        +UserId: int
-        +PlanId: int
-        +PlanKey: string
-        +Status: string
-        +BillingPeriod: string
-        +PeriodStart: DateTimeOffset
-        +PeriodEnd: DateTimeOffset
-        +CancelAtPeriodEnd: bool
-        +StripeSubscriptionId: string?
-        +StripeCustomerId: string?
-        +LastPlanChangeAt: DateTimeOffset?
-        +PaymentMethodId: int?
+        -Id: int
+        -UserId: int
+        -PlanId: int
+        -PlanKey: string
+        -Status: string
+        -BillingPeriod: string
+        -PeriodStart: DateTimeOffset
+        -PeriodEnd: DateTimeOffset
+        -CancelAtPeriodEnd: bool
+        -StripeSubscriptionId: string?
+        -StripeCustomerId: string?
+        -LastPlanChangeAt: DateTimeOffset?
+        -PaymentMethodId: int?
         -_paymentRecords: List<PaymentRecord>
-        +PaymentRecords: IReadOnlyCollection<PaymentRecord>
-        +CreatedAt: DateTimeOffset?
-        +UpdatedAt: DateTimeOffset?
+        -PaymentRecords: IReadOnlyCollection<PaymentRecord>
+        -CreatedAt: DateTimeOffset?
+        -UpdatedAt: DateTimeOffset?
         +ApplyPayment(record: PaymentRecord): void
         +ApplyStripeCustomer(stripeCustomerId: string): void
         +ApplyActivation(): void
@@ -56,160 +56,160 @@ package "Nutrisense.Platform.Subscriptions" {
       }
 
       class SubscriptionPlan {
-        +Id: int
-        +Key: string
-        +PriceMonthly: decimal
-        +PriceAnnual: decimal?
-        +Features: List<string>
-        +Currency: string
+        -Id: int
+        -Key: string
+        -PriceMonthly: decimal
+        -PriceAnnual: decimal?
+        -Features: List<string>
+        -Currency: string
         +GetEffectivePrice(billingPeriod: string): decimal
       }
 
       class PaymentMethod {
-        +Id: int
-        +UserId: int
-        +LastFour: string
-        +Brand: string
-        +ExpiryMonth: int
-        +ExpiryYear: int
-        +CardholderName: string
-        +StripePaymentMethodId: string
-        +CreatedAt: DateTimeOffset?
-        +UpdatedAt: DateTimeOffset?
+        -Id: int
+        -UserId: int
+        -LastFour: string
+        -Brand: string
+        -ExpiryMonth: int
+        -ExpiryYear: int
+        -CardholderName: string
+        -StripePaymentMethodId: string
+        -CreatedAt: DateTimeOffset?
+        -UpdatedAt: DateTimeOffset?
       }
     }
 
     package "Model.Entities" {
       class PaymentRecord {
-        +Id: int
-        +UserSubscriptionId: int
-        +Amount: decimal
-        +Currency: string
-        +Status: string
-        +ProcessedAt: DateTimeOffset
-        +StripePaymentIntentId: string?
+        -Id: int
+        -UserSubscriptionId: int
+        -Amount: decimal
+        -Currency: string
+        -Status: string
+        -ProcessedAt: DateTimeOffset
+        -StripePaymentIntentId: string?
       }
     }
 
     package "Model.ValueObjects" {
       class Money <<record>> {
-        +Amount: decimal
-        +Currency: string
+        -Amount: decimal
+        -Currency: string
       }
       class BillingPeriod <<record>> {
         +{static} Monthly: string
         +{static} Annual: string
-        +Value: string
+        -Value: string
       }
       class SubscriptionStatus <<record>> {
-        +Value: string
+        -Value: string
       }
       class PlanKey <<record>> {
-        +Value: string
+        -Value: string
       }
       class CardBrand <<record>> {
-        +Value: string
+        -Value: string
       }
       class CardExpiry <<record>> {
-        +Month: int
-        +Year: int
+        -Month: int
+        -Year: int
       }
     }
 
     package "Model.Commands" {
       class SelectSubscriptionPlanCommand <<record>> {
-        +UserId: int
-        +PlanKey: string
-        +PaymentMethodId: int
-        +BillingPeriod: string
+        -UserId: int
+        -PlanKey: string
+        -PaymentMethodId: int
+        -BillingPeriod: string
       }
       class ChangeSubscriptionPlanCommand <<record>> {
-        +UserSubscriptionId: int
-        +NewPlanKey: string
-        +BillingPeriod: string
-        +PaymentMethodId: int?
+        -UserSubscriptionId: int
+        -NewPlanKey: string
+        -BillingPeriod: string
+        -PaymentMethodId: int?
       }
       class CancelSubscriptionCommand <<record>> {
-        +UserSubscriptionId: int
-        +CancelAtPeriodEnd: bool
+        -UserSubscriptionId: int
+        -CancelAtPeriodEnd: bool
       }
       class RenewSubscriptionCommand <<record>> {
-        +UserSubscriptionId: int
+        -UserSubscriptionId: int
       }
       class ActivateSubscriptionCommand <<record>> {
-        +UserSubscriptionId: int
+        -UserSubscriptionId: int
       }
       class SubmitPaymentCommand <<record>> {
-        +UserSubscriptionId: int
+        -UserSubscriptionId: int
       }
       class EnablePlanFeaturesCommand <<record>> {
-        +UserSubscriptionId: int
+        -UserSubscriptionId: int
       }
       class DisablePlanFeaturesCommand <<record>> {
-        +UserSubscriptionId: int
+        -UserSubscriptionId: int
       }
       class RegisterPaymentMethodCommand <<record>> {
-        +UserId: int
-        +LastFour: string
-        +Brand: string
-        +ExpiryMonth: int
-        +ExpiryYear: int
-        +CardholderName: string
-        +StripePaymentMethodId: string
+        -UserId: int
+        -LastFour: string
+        -Brand: string
+        -ExpiryMonth: int
+        -ExpiryYear: int
+        -CardholderName: string
+        -StripePaymentMethodId: string
       }
     }
 
     package "Model.Queries" {
       class GetUserSubscriptionByUserIdQuery <<record>> {
-        +UserId: int
+        -UserId: int
       }
       class GetAllSubscriptionPlansQuery <<record>>
       class GetSubscriptionPlanByKeyQuery <<record>> {
-        +Key: string
+        -Key: string
       }
       class GetPaymentMethodsByUserIdQuery <<record>> {
-        +UserId: int
+        -UserId: int
       }
       class GetPaymentHistoryBySubscriptionIdQuery <<record>> {
-        +SubscriptionId: int
+        -SubscriptionId: int
       }
     }
 
     package "Model.Events" {
       class PlanSelected <<record>> {
-        +UserSubscriptionId: int
-        +UserId: int
-        +PlanKey: string
+        -UserSubscriptionId: int
+        -UserId: int
+        -PlanKey: string
       }
       class PaymentSuccessful <<record>> {
-        +UserSubscriptionId: int
-        +UserId: int
-        +Amount: decimal
+        -UserSubscriptionId: int
+        -UserId: int
+        -Amount: decimal
       }
       class SubscriptionActivated <<record>> {
-        +UserSubscriptionId: int
-        +UserId: int
+        -UserSubscriptionId: int
+        -UserId: int
       }
       class SubscriptionCancelled <<record>> {
-        +UserSubscriptionId: int
-        +UserId: int
+        -UserSubscriptionId: int
+        -UserId: int
       }
       class SubscriptionRenewed <<record>> {
-        +UserSubscriptionId: int
-        +UserId: int
+        -UserSubscriptionId: int
+        -UserId: int
       }
       class PlanChanged <<record>> {
-        +UserSubscriptionId: int
-        +UserId: int
-        +OldPlanKey: string
-        +NewPlanKey: string
+        -UserSubscriptionId: int
+        -UserId: int
+        -OldPlanKey: string
+        -NewPlanKey: string
       }
       class BenefitsEnabled <<record>> {
-        +UserId: int
-        +PlanKey: string
+        -UserId: int
+        -PlanKey: string
       }
       class BenefitsDisabled <<record>> {
-        +UserId: int
+        -UserId: int
       }
     }
 
@@ -232,9 +232,9 @@ package "Nutrisense.Platform.Subscriptions" {
         +ChargeAsync(stripeCustomerId: string, stripePaymentMethodId: string, amount: Money): Task<PaymentResult>
       }
       class PaymentResult <<record>> {
-        +Success: bool
-        +StripePaymentIntentId: string?
-        +FailureReason: string?
+        -Success: bool
+        -StripePaymentIntentId: string?
+        -FailureReason: string?
       }
     }
 

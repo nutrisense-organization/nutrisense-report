@@ -17,21 +17,21 @@ package "analytics-reporting/application" {
 
   class useAnalyticsReportingStore <<store>> {
     -- state --
-    + streak: StreakRecord|null
-    + selectedRange: '7d'|'30d'|'90d'|'custom'
-    + customStartDate: Date|null
-    + customEndDate: Date|null
-    + streakLoaded: boolean
-    + errors: Error[]
-    + lastRefreshed: number
-    + dashboard: Object|null
-    + progress: Object|null
+    - streak: StreakRecord|null
+    - selectedRange: '7d'|'30d'|'90d'|'custom'
+    - customStartDate: Date|null
+    - customEndDate: Date|null
+    - streakLoaded: boolean
+    - errors: Error[]
+    - lastRefreshed: number
+    - dashboard: Object|null
+    - progress: Object|null
     -- computed --
-    + dateRange: { start: Date, end: Date }
-    + streakAtRisk: boolean
-    + streakBroken: boolean
-    + streakMessage: string
-    + weeklyCompletionPercent: number
+    - dateRange: { start: Date, end: Date }
+    - streakAtRisk: boolean
+    - streakBroken: boolean
+    - streakMessage: string
+    - weeklyCompletionPercent: number
     -- actions --
     + fetchStreak(userId): void
     + fetchDashboard(userId, date): void

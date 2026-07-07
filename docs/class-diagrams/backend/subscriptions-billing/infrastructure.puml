@@ -10,7 +10,7 @@ package "Nutrisense.Platform.Subscriptions" {
       #Context: AppDbContext
     }
     class AppDbContext {
-      +SubscriptionPlans: DbSet<SubscriptionPlan>
+      -SubscriptionPlans: DbSet<SubscriptionPlan>
     }
     interface "IEntityTypeConfiguration<TEntity>" as IEntityTypeConfiguration {
       +Configure(builder): void

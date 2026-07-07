@@ -7,11 +7,11 @@ skinparam linetype ortho
 package "analytics-reporting/domain/model" {
 
   class StreakRecord <<entity>> {
-    + currentStreak: number
-    + longestStreak: number
-    + lastLogDate: string|null
-    + weeklyCompletionRate: number
-    + weeklyCompletionDays: boolean[]
+    - currentStreak: number
+    - longestStreak: number
+    - lastLogDate: string|null
+    - weeklyCompletionRate: number
+    - weeklyCompletionDays: boolean[]
     --
     + isBroken(): boolean
     + isAtRisk(): boolean
