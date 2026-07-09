@@ -328,11 +328,11 @@ Para comprender de manera integral las necesidades, comportamientos y motivacion
 
 **Segmento 1: Pérdida de peso**
 
-![nombre](../assets/img/chapter2-neeedfinding-images/JorgeDelAguilaVacalla(2).png)
+![nombre](../assets/img/chapter2-neeedfinding-images/JorgeDelAguilaVacalla(2).jpeg)
 
 **Segmento 2: Ganancia de masa muscular**
 
-![nombre](../assets/img/chapter2-neeedfinding-images/DaphneFaustorVergaray(1).png)
+![nombre](../assets/img/chapter2-neeedfinding-images/DaphneFaustorVergaray(1).jpeg)
 
 ### 2.3.2. User Task Matrix
 
