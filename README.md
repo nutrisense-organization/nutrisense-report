@@ -14,7 +14,7 @@
 
 12053
 
-**Informe de Trabajo: TB2**
+**Informe del Trabajo Final**
 
 **Docente**
 
